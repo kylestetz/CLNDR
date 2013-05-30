@@ -1,7 +1,7 @@
 CLNDR.js
 ========
 
-CLNDR is a jQuery calendar plugin. It was created- you've heard this before- out of frustration at the lack of truly dynamic front-end calendar plugins out there.
+CLNDR is a jQuery calendar plugin. It was created- you've heard this before- out of frustration with the lack of truly dynamic front-end calendar plugins out there.
 
 You Write The Markup
 --------------------
