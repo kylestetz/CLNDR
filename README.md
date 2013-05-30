@@ -65,6 +65,8 @@ CLNDR looks through the objects in your events array for a `date` field. In your
 Usage
 =====
 
+CLNDR leans on the awesome work done in underscore.js and moment.js- these are requirements. Do be sure to include them in your <head> before clndr.js.
+
 The bare minimum (CLNDR includes a default template):
 
 ```javascript
@@ -127,3 +129,7 @@ Todo
 CLNDR is brand new and it needs a lot of work. For example, it doesn't yet return the instance of `clndr`, so you can't pass it events after it has been instantiated or trigger it to change the month using javascript.
 
 Some concerns: the entire template must be re-rendered and events bound each time the user changes the month. This isn't terrible, but I'm not 100% on whether or not this is well structured for JS garbage collection to do its thing; right now it uses `$('.clndr').children().remove()` to clear all DOM elements and event handlers.
+
+- Add passthrough option to change underscore's template settings if the user isn't into ERB delimiters.
+- Add passthrough option to change moment.js's language settings
+- Add option to change daysOfTheWeek array to custom set of 7 characters
