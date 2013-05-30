@@ -120,7 +120,7 @@ days: [ { day, classes, id, events, date } ]
 // the month name- don't forget that you can do things like month.substring(0, 1) and month.toLowerCase() in your template
 month: "May"
 // the year that the calendar is currently focused on
-year: 2013
+year: "2013"
 ```
 
 Todo
