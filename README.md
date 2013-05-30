@@ -106,6 +106,21 @@ $('.parent-element').clndr({
 });
 ```
 
+All of the things you have access to in your template:
+
+```javascript
+// an array of day-of-the-week abbreviations, shifted as requested using the weekOffset parameter.
+daysOfTheWeek: ['S', 'M', 'T', etc...]
+// the number of 7-block calendar rows, in the event that you want to do some looping with it
+numberOfRows: 5
+// the days object, documented in more detail above
+days: [ { day, classes, id, events, date } ]
+// the month name- don't forget that you can do things like month.substring(0, 1) and month.toLowerCase() in your template
+month: "May"
+// the year that the calendar is currently focused on
+year: 2013
+```
+
 Todo
 ====
 
