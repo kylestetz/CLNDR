@@ -83,7 +83,7 @@ $('.parent-element').clndr({
   // start the week off on Sunday (0), Monday (1), etc. Sunday is the default.
   weekOffset: 0,
   // determines which month to start with using either a date string or a moment object.
-  startWithMonth: "YYYY-MM-DD" or moment()
+  startWithMonth: "YYYY-MM-DD" or moment(),
   // callbacks!
   clickEvents: {
     // fired whenever a calendar box is clicked.
