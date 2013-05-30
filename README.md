@@ -65,7 +65,7 @@ CLNDR looks through the objects in your events array for a `date` field. In your
 Usage
 =====
 
-CLNDR leans on the awesome work done in underscore.js and moment.js- these are requirements. Do be sure to include them in your `<head>` before clndr.js.
+CLNDR leans on the awesome work done in underscore.js and moment.js- these are requirements. Do be sure to include them in your `<head>` before clndr.js. It is a jQuery plugin, so naturally you'll need that as well.
 
 The bare minimum (CLNDR includes a default template):
 
