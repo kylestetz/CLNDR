@@ -1,0 +1,283 @@
+@import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono);
+
+.clearfix:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
+
+.clearfix {
+    display: inline-block;
+}
+
+html[xmlns] .clearfix {
+    display: block;
+}
+
+* html .clearfix {
+    height: 1%;
+}
+
+.noselect
+{
+    -webkit-user-select: none; /* Chrome/Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+ */
+}
+
+//////////////////////////////////
+
+@clndr-border: 1px solid #000;
+
+.cal1
+{
+    margin: 30px auto;
+    max-width: 600px;
+    font-family: 'Droid Sans Mono';
+    font-size: 14px;
+
+    .clndr
+    {
+        .clndr-controls
+        {
+            .clearfix;
+            width: 100%;
+            position: relative;
+            margin-bottom: 10px;
+
+            .month
+            {
+                float: left;
+                width: 33%;
+                text-align: center;
+            }
+
+            .clndr-control-button
+            {
+                float: left;
+                width: 33%;
+
+                &.rightalign
+                {
+                    text-align: right;
+                    width: 34%;
+                }
+                .clndr-next-button
+                {
+                    cursor: pointer;
+                    .noselect;
+                    &:hover { background: #ddd; }
+                }
+                .clndr-previous-button
+                {
+                    cursor: pointer;
+                    .noselect;
+                    &:hover { background: #ddd; }
+                }
+            }
+        }
+
+        .clndr-table
+        {
+            table-layout: fixed;
+            width: 100%;
+
+            .header-days
+            {
+                height: 30px;
+                font-size: 10px;
+                background: #0D70A6;
+
+                .header-day
+                {
+                    vertical-align: middle;
+                    text-align: center;
+                    border-left: @clndr-border;
+                    border-top: @clndr-border;
+
+                    color: #fff;
+
+                    &:last-child
+                    {
+                        border-right: @clndr-border;
+                    }
+                }
+            }
+
+            tr
+            {
+                height: 85px;
+
+                td
+                {
+                    vertical-align: top;
+                }
+
+                .day
+                {
+                    border-left: @clndr-border;
+                    border-top: @clndr-border;
+                    width: 100%;
+                    height: inherit;
+
+                    &:hover { background: #eee; }
+
+                    &.today
+                    {
+                        background: #9AD6E3;
+                        &:hover { background: darken(#9AD6E3, 10%); }
+                        &.event
+                        {
+                            background: mix(#B4E09F, #9AD6E3);
+                        }
+                    }
+
+                    &.event
+                    {
+                        background: #B4E09F;
+                        &:hover
+                        {
+                            background: darken(#B4E09F, 10%);
+                        }
+                    }
+
+                    &:last-child
+                    {
+                        border-right: @clndr-border;
+                    }
+
+                    .day-contents
+                    {
+                        box-sizing: border-box;
+                        width: 100%;
+                        height: 100%;
+                        padding: 8px;
+                        font-size: 12px;
+                        text-align: right;
+                    }
+                }
+
+                .empty
+                {
+                    border-left: @clndr-border;
+                    border-top: @clndr-border;
+                    width: 100%;
+                    height: inherit;
+                    background: #eee;
+
+                    &:hover { background: #ddd; }
+
+                    &:last-child
+                    {
+                        border-right: @clndr-border;
+                    }
+                }
+
+                &:last-child
+                {
+                    .day
+                    {
+                        border-bottom: @clndr-border;
+                    }
+
+                    .empty
+                    {
+                        border-bottom: @clndr-border;
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+@box-size: 25px;
+
+.cal2
+{
+    max-width: 177px;
+    margin: 0 auto;
+
+    font-family: 'Droid Sans Mono';
+
+    .clndr
+    {
+        .clndr-controls
+        {
+            display: block;
+            .clearfix;
+            width: 100%;
+            margin-bottom: 3px;
+
+            .clndr-previous-button
+            {
+                float: left;
+                width: 10%;
+                text-align: left;
+                cursor: pointer;
+                .noselect;
+                &:hover
+                {
+                    background-color: #f4f4f4;
+                }
+            }
+            .month
+            {
+                float: left;
+                width: 80%;
+                text-align: center;
+            }
+            .clndr-next-button
+            {
+                float: left;
+                width: 10%;
+                text-align: right;
+                cursor: pointer;
+                .noselect;
+                &:hover
+                {
+                    background-color: #f4f4f4;
+                }
+            }
+        }
+
+        .clndr-grid
+        {
+            text-align: center;
+            border: 1px solid #FF4545;
+            .clearfix;
+
+            .header-day
+            {
+                float: left;
+                width: @box-size;
+                height: @box-size;
+                // padding-top: 5px;
+                background: #FF4545;
+            }
+
+            .day
+            {
+                float: left;
+                width: @box-size;
+                height: @box-size;
+
+                &.event
+                {
+                    background-color: #B4E09F;
+                }
+            }
+
+            .empty
+            {
+                float: left;
+                width: @box-size;
+                height: @box-size;
+                background: #ddd;
+            }
+        }
+    }
+}
