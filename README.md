@@ -133,3 +133,5 @@ Some concerns: the entire template must be re-rendered and events bound each tim
 - Add passthrough option to change underscore's template settings if the user isn't into ERB delimiters.
 - Add passthrough option to change moment.js's language settings
 - Add option to change daysOfTheWeek array to custom set of 7 characters
+
+And of course, wouldn't it be cool if this were also a node module that sent down the first month pre-rendered? 'Working on it.'
