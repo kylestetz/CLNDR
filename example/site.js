@@ -18,7 +18,8 @@ $('.cal1').clndr({
 
 $('.cal2').clndr({
   template: $('#template-calendar').html(),
-  events: eventArray
+  events: eventArray,
+  startWithMonth: moment().add('month', 1)
 });
 
 // $('.hey').clndr({

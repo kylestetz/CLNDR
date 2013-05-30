@@ -51,6 +51,7 @@
     var defaults = {
         template: clndrTemplate,
         weekOffset: 0,
+        startWithMonth: null,
         clickEvents: {
             click: null,
             nextMonth: null,
@@ -85,7 +86,11 @@
         // it's a moment object, which allows us to poke at it a little if we need to.
         // this will serve as the basis for switching between months & is the go-to
         // internally if we want to know which month we're currently at.
-        this.month = moment();
+        if(this.options.startWithMonth) {
+            this.month = moment(this.options.startWithMonth);
+        } else {
+            this.month = moment();
+        }
 
         this._defaults = defaults;
         this._name = pluginName;
