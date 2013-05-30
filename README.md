@@ -56,7 +56,7 @@ CLNDR accepts event objects in the form:
 
 ```javascript
 events = [
-  { date: "YYYY-MM-DD or some other moment.js-recognizable format", and: "anything else" }
+  { date: "YYYY-MM-DD or some other ISO Date format", and: "anything else" }
 ]
 ```
 
