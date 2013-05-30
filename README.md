@@ -10,7 +10,7 @@ There are wonderful and feature-rich calendar modules out there and they all suf
 
 CLNDR doesn't generate markup (well, it has some reasonable defaults, but that's an aside). Instead, CLNDR asks you to create a template and in return it supplies your template with a great set of objects that will get you up and running in a few lines.
 
-The 'Days' Object
+The 'Days' Array
 ----------------
 
 Here's a typical CLNDR template. It's got a controller section and a grid section.
@@ -35,7 +35,7 @@ Here's a typical CLNDR template. It's got a controller section and a grid sectio
 </div>
 ```
 
-The `days` array contains most of the stuff we need to make a calendar. It's structure looks like this:
+The `days` array contains most of the stuff we need to make a calendar. Its structure looks like this:
 ```javascript
 {
   day: 5,
@@ -52,7 +52,7 @@ This makes quick work of generating a grid. `days.classes` contains extra classe
 Pass In Your Events
 -------------------
 
-CLNDR accepts event objects in the form
+CLNDR accepts event objects in the form:
 
 ```javascript
 events = [
@@ -60,7 +60,7 @@ events = [
 ]
 ```
 
-CLNDR looks through the objects in your events array for a `date` field. In your template the `days` array will auto-magically contain these event objects in their entirety.
+CLNDR looks through the objects in your events array for a `date` field. In your template the `days` array will auto-magically contain these event objects in their entirety. See the examples for a demonstration of how events populate the `days` array.
 
 Usage
 =====
@@ -82,6 +82,8 @@ $('.parent-element').clndr({
   template: clndrTemplate,
   // start the week off on Sunday (0), Monday (1), etc. Sunday is the default.
   weekOffset: 0,
+  // determines which month to start with using either a date string or a moment object.
+  startWithMonth: "YYYY-MM-DD" or moment(),
   // callbacks!
   clickEvents: {
     // fired whenever a calendar box is clicked.
@@ -123,6 +125,19 @@ month: "May"
 year: "2013"
 ```
 
+Template Requirements
+---------------------
+
+CLNDR is structured so that you don't really _need_ anything in your template... If you don't include any markup it just won't do anything cool. If you want to take advantage of click callbacks you'll need to give your grid boxes the `targets.day` class (it's `'day'` by default) and you'll need to set the id to the `days[index].id` provided in the template. To illustrate:
+
+```javascript
+<% _.each(days, function(day){ %>
+  <div class='<%= day.classes %>' id='<%= day.id %>'><%= day.day %></div>
+<% }); %>
+```
+
+Currently CLNDR sets the id to `'calendar-day-2013-05-30'` and uses it to determine the date when a user clicks on it.
+
 Todo
 ====
 
@@ -133,5 +148,7 @@ Some concerns: the entire template must be re-rendered and events bound each tim
 - Add passthrough option to change underscore's template settings if the user isn't into ERB delimiters.
 - Add passthrough option to change moment.js's language settings
 - Add option to change daysOfTheWeek array to custom set of 7 characters
+- Figure out what could make for a better mobile experience... perhaps touch events?
+- Use HTML5 data- attributes instead of looking at a div's id to determine the date (this will require coordination with the user/supplier of the template). Perhaps it can look for data- attributes and use the existing id implementation if it doesn't find them.
 
 And of course, wouldn't it be cool if this were also a node module that sent down the first month pre-rendered? 'Working on it.'
