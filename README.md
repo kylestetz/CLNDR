@@ -61,3 +61,54 @@ events = [
 ```
 
 CLNDR looks through the objects in your events array for a `date` field. In your template the `days` array will auto-magically contain these event objects in their entirety.
+
+Usage
+=====
+
+The bare minimum (CLNDR includes a default template):
+
+```javascript
+$('.parent-element').clndr();
+```
+
+With all of the available options:
+
+```javascript
+$('.parent-element').clndr({
+  // the template: this could be stored in markup as a <script type="text/template">
+  // or pulled in as a string
+  template: clndrTemplate,
+  // start the week off on Sunday (0), Monday (1), etc. Sunday is the default.
+  weekOffset: 0,
+  // callbacks!
+  clickEvents: {
+    // fired whenever a calendar box is clicked.
+    // returns a 'target' object containing the DOM element, any events, and the date as a moment.js object.
+    click: function(target){ },
+    // fired when a user goes forward a month. returns a moment.js object set to the correct month.
+    nextMonth: function(month){ },
+    // fired when a user goes back a month. returns a moment.js object set to the correct month.
+    previousMonth: function(month){ },
+    // fired when a user goes back or forward a month. returns a moment.js object set to the correct month.
+    onMonthChange: function(month){ }
+  },
+  // the target classnames that CLNDR will look for to bind events. these are the defaults.
+  targets: {
+    nextButton: 'clndr-next-button',
+    previousButton: 'clndr-previous-button',
+    day: 'day',
+    empty: 'empty'
+  },
+  // an array of event objects
+  events: [],
+  // a callback when the calendar is done rendering. This is a good place to bind custom event handlers.
+  doneRendering: function(){ }
+});
+```
+
+Todo
+====
+
+CLNDR is brand new and it needs a lot of work. For example, it doesn't yet return the instance of `clndr`, so you can't pass it events after it has been instantiated or trigger it to change the month using javascript.
+
+Some concerns: the entire template must be re-rendered and events bound each time the user changes the month. This isn't terrible, but I'm not 100% on whether or not this is well structured for JS garbage collection to do its thing; right now it uses `$('.clndr').children().remove()` to clear all DOM elements and event handlers.
