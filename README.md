@@ -193,9 +193,12 @@ Underscore Template Delimiters
 
 If you're not a fan of `<% %>` and `<%= %>` style delimiters you can provide Underscore.js with alternatives in the form of regular expressions. There are three delimiters...
 
-*interpolate*, which outputs a string (this is `<%= %>` by default)
-*escape*, for escaping HTML (this is `<%- %>` by default)
-*evaluate*, for evaluating javascript (this is `<% %>` by default)
+**interpolate**, which outputs a string (this is `<%= %>` by default)
+
+**escape**, for escaping HTML (this is `<%- %>` by default)
+
+**evaluate**, for evaluating javascript (this is `<% %>` by default)
+
 
 If you're more comfortable with Jinja2/Twig/Nunjucks style delimiters, simply call this before you instantiate your clndr:
 
