@@ -42,7 +42,7 @@ The `days` array contains most of the stuff we need to make a calendar. Its stru
   classes: "day",
   id: "calendar-day-2013-05-29",
   events: [],
-  date: moment("2013-05-29")
+  date: moment("2013-05-29"),
 }
 ```
 
@@ -77,7 +77,7 @@ With all of the available options:
 
 ```javascript
 $('.parent-element').clndr({
-  // the template: this could be stored in markup as a <script type="text/template">
+  // the template: this could be stored in markup as a <script type="text/template"></script>
   // or pulled in as a string
   template: clndrTemplate,
   // start the week off on Sunday (0), Monday (1), etc. Sunday is the default.
@@ -93,7 +93,7 @@ $('.parent-element').clndr({
     nextMonth: function(month){ },
     // fired when a user goes back a month. returns a moment.js object set to the correct month.
     previousMonth: function(month){ },
-    // fired when a user goes back or forward a month. returns a moment.js object set to the correct month.
+    // fired when a user goes back OR forward a month. returns a moment.js object set to the correct month.
     onMonthChange: function(month){ }
   },
   // the target classnames that CLNDR will look for to bind events. these are the defaults.
@@ -105,6 +105,8 @@ $('.parent-element').clndr({
   },
   // an array of event objects
   events: [],
+  // if you're supplying an events array, dateParameter points to the field in your event object containing a date string. It's set to 'date' by default.
+  dateParameter: 'date',
   // a callback when the calendar is done rendering. This is a good place to bind custom event handlers.
   doneRendering: function(){ }
 });
@@ -125,6 +127,38 @@ month: "May"
 year: "2013"
 ```
 
+Returning the Instance
+----------------------
+
+It's possible to save the clndr object in order to call it from JS later. There are functions to increment or set the month or year. You can also provide a new events array.
+
+```javascript
+// Create a Clndr and save the instance as theCalendarInstance
+var theCalendarInstance = $('#myCalendar').clndr();
+
+// Go to the next month
+theCalendarInstance.forward();
+
+// Go to the previous month
+theCalendarInstance.back();
+
+// Set the month using a number from 0-11 or a month name
+theCalendarInstance.setMonth(0);
+theCalendarInstance.setMonth('February');
+
+// Go to the next year
+theCalendarInstance.nextYear();
+
+// Go to the previous year
+theCalendarInstance.previousYear();
+
+// Set the year
+theCalendarInstance.setYear(1997);
+
+// Change the events. Note that this triggers a re-render of the calendar.
+theCalendarInstance.setEvents(newEventsArray);
+```
+
 Template Requirements
 ---------------------
 
@@ -138,17 +172,44 @@ CLNDR is structured so that you don't really _need_ anything in your template...
 
 Currently CLNDR sets the id to `'calendar-day-2013-05-30'` and uses it to determine the date when a user clicks on it.
 
+
+Some Configuration
+==================
+
+Internationalization
+--------------------
+
+Clndr has support for internationalization insofar as Moment.js supports it. By configuring your Moment.js instance to a different language, which you can read more about [here](http://momentjs.com/docs/#/i18n/), you are configuring Clndr as well. One notable exception is the daysOfTheWeek array, which does not currently take language into account. This can be overcome by changing it in your clndr instance:
+
+```javascript
+// let's make our day abbreviations in french
+clndrInstance.daysOfTheWeek = ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
+```
+
+And don't forget that there's no requirement to use daysOfTheWeek- if instead you call `days[index].date.format('dddd')` from within your template you will be taking advantage of the current language setting in your Moment.js instance.
+
+Underscore Template Delimiters
+------------------------------
+
+If you're not a fan of `<% %>` and `<%= %>` style delimiters you can provide Underscore.js with alternatives in the form of regular expressions. There are three delimiters...
+
+*interpolate*, which outputs a string (this is `<%= %>` by default)
+*escape*, for escaping HTML (this is `<%- %>` by default)
+*evaluate*, for evaluating javascript (this is `<% %>` by default)
+
+If you're more comfortable with Jinja2/Twig/Nunjucks style delimiters, simply call this before you instantiate your clndr:
+
+```javascript
+// switch to Jinja2/Twig/Nunjucks-style delimiters
+_.templateSettings = {
+  interpolate: /\{\{(.+?)\}\}/g,
+  escape: /\{\{\-(.+?)\}\}/g,
+  evaluate: /\{\%(.+?)\%\}/g
+};
+```
+
 Todo
 ====
 
-CLNDR is brand new and it needs a lot of work. For example, it doesn't yet return the instance of `clndr`, so you can't pass it events after it has been instantiated or trigger it to change the month using javascript.
-
-Some concerns: the entire template must be re-rendered and events bound each time the user changes the month. This isn't terrible, but I'm not 100% on whether or not this is well structured for JS garbage collection to do its thing; right now it uses `$('.clndr').children().remove()` to clear all DOM elements and event handlers.
-
-- Add passthrough option to change underscore's template settings if the user isn't into ERB delimiters.
-- Add passthrough option to change moment.js's language settings
-- Add option to change daysOfTheWeek array to custom set of 7 characters
 - Figure out what could make for a better mobile experience... perhaps touch events?
-- Use HTML5 data- attributes instead of looking at a div's id to determine the date (this will require coordination with the user/supplier of the template). Perhaps it can look for data- attributes and use the existing id implementation if it doesn't find them.
-
-And of course, wouldn't it be cool if this were also a node module that sent down the first month pre-rendered? 'Working on it.'
+- Node.js module for server-side rendering of the initial calendar.
