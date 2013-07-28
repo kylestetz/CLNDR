@@ -186,7 +186,7 @@ Clndr has support for internationalization insofar as Moment.js supports it. By 
 clndrInstance.daysOfTheWeek = ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
 ```
 
-And don't forget that there's no requirement to use daysOfTheWeek- if instead you call `days[index].date.format('dddd')` from within your template you will be taking advantage of the current language setting in your Moment.js instance.
+And don't forget that there's no requirement to use `daysOfTheWeek`- if instead you call `days[index].date.format('dddd')` from within your template you will be taking advantage of the current language setting in your Moment.js instance.
 
 Underscore Template Delimiters
 ------------------------------
