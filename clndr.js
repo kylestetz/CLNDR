@@ -148,9 +148,9 @@
     }
 
     // filter the events list (if it exists) to events that are happening this month
-    var eventsThisMonth = [];
+    this.eventsThisMonth = [];
     if(this.options.events.length) {
-      eventsThisMonth = _.filter(this.options.events, function(event) {
+      this.eventsThisMonth = _.filter(this.options.events, function(event) {
         return event._clndrDateObject.format("YYYY-MM") == currentMonth.format("YYYY-MM");
       });
     }
@@ -160,7 +160,7 @@
     for(var i = 1; i <= numOfDays; i++) {
 
       var eventsToday = [];
-      _.each(eventsThisMonth, function(event) {
+      _.each(this.eventsThisMonth, function(event) {
         // keep in mind that the events here already passed the month/year test.
         // now all we have to compare is the moment.date(), which returns the day of the month.
         if(event._clndrDateObject.date() == i) {
@@ -212,7 +212,8 @@
       numberOfRows: Math.ceil(days.length / 7),
       days: days,
       month: this.month.format('MMMM'),
-      year: this.month.year()
+      year: this.month.year(),
+      eventsThisMonth: this.eventsThisMonth
     };
 
     // render the calendar with the data above & bind events to its elements
