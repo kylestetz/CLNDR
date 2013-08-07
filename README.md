@@ -52,7 +52,7 @@ This makes quick work of generating a grid. `days.classes` contains extra classe
 Pass In Your Events
 -------------------
 
-CLNDR accepts event objects in the form:
+CLNDR accepts events as an array of objects:
 
 ```javascript
 events = [
@@ -60,7 +60,7 @@ events = [
 ]
 ```
 
-CLNDR looks through the objects in your events array for a `date` field. In your template the `days` array will auto-magically contain these event objects in their entirety. See the examples for a demonstration of how events populate the `days` array.
+CLNDR looks through the objects in your events array for a `date` field unless you specify otherwise using the `dateParameter` option. In your template the `days` array will auto-magically contain these event objects in their entirety. See the examples for a demonstration of how events populate the `days` array.
 
 Usage
 =====
