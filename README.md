@@ -42,12 +42,11 @@ The `days` array contains most of the stuff we need to make a calendar. Its stru
   classes: "day",
   id: "calendar-day-2013-05-29",
   events: [],
-  date: moment("2013-05-29"),
+  date: moment("2013-05-29")
 }
 ```
 
 This makes quick work of generating a grid. `days.classes` contains extra classes depending on the circumstance: if a given day is today, 'today' will show up, as well as an 'event' class when an event lands on that day.
-
 
 Pass In Your Events
 -------------------
@@ -125,6 +124,8 @@ days: [ { day, classes, id, events, date } ]
 month: "May"
 // the year that the calendar is currently focused on
 year: "2013"
+// all of the events happening this month
+eventsThisMonth: [ ]
 ```
 
 Returning the Instance
@@ -176,6 +177,25 @@ Currently CLNDR sets the id to `'calendar-day-2013-05-30'` and uses it to determ
 Some Configuration
 ==================
 
+Template Rendering Engine (experimental)
+----------------------------------------
+
+You can pass in a `render` function as an option, for example:
+
+```javascript
+var precompiledTemplate = myRenderingEngine.template( $('#my-template').html() );
+
+$('#my-calendar').clndr({
+  render: function(data) {
+    return precompiledTemplate(data);
+  }
+});
+```
+
+where the function must return the HTML result of the rendering operation. In this case you would precompile your template elsewhere in your code, since CLNDR only cares about your template if it's going to use underscore.
+
+At the moment underscore is still required in the event that you use a different templating engine. Removing underscore from this plugin is a todo.
+
 Internationalization
 --------------------
 
@@ -214,5 +234,7 @@ _.templateSettings = {
 Todo
 ====
 
-- Figure out what could make for a better mobile experience... perhaps touch events?
+- Only use underscore for template rendering (remove all other instances of underscore code in favor of vanilla JS)
+- Tests!
+- Improve mobile experience
 - Node.js module for server-side rendering of the initial calendar.

@@ -46,7 +46,7 @@
 
   var pluginName = 'clndr';
 
-  var version = "1.0.0";
+  var version = "1.0.1";
 
   var defaults = {
     template: clndrTemplate,
@@ -66,7 +66,8 @@
     },
     events: [],
     dateParameter: 'date',
-    doneRendering: null
+    doneRendering: null,
+    render: null
   };
 
   // The actual plugin constructor
@@ -111,7 +112,9 @@
     }
 
     // we can compile this to save time rendering, since we know it'll never change.
-    this.compiledClndrTemplate = _.template(this.options.template);
+    if(!this.options.render) {
+      this.compiledClndrTemplate = _.template(this.options.template);
+    }
 
     // create the parent element that will hold the plugin & save it for later
     $(this.element).html("<div class='clndr'></div>");
@@ -217,7 +220,11 @@
     };
 
     // render the calendar with the data above & bind events to its elements
-    this.calendarContainer.html(this.compiledClndrTemplate(data));
+    if(!this.options.render) {
+      this.calendarContainer.html(this.compiledClndrTemplate(data));
+    } else {
+      this.calendarContainer.html(this.options.render(data));
+    }
     this.bindEvents();
     if(this.options.doneRendering) {
       this.options.doneRendering();
