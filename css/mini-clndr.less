@@ -1,0 +1,215 @@
+// @light-gray:  #dedede;
+@black-text:  #212121;
+@trans-white: rgba(255, 255, 255, 0.5);
+@time: 0.5s;
+@time-quick: 0.25s;
+
+.noselect
+{
+  -webkit-user-select: none; /* Chrome/Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+ */
+}
+
+.vertical-padding(@size: 5px)
+{
+  padding-top: @size;
+  padding-bottom: @size;
+}
+
+#mini-clndr
+{
+  font-family: Asap, Helvetica, Arial;
+  margin: 0 auto;
+  width: 294px;
+  -moz-box-shadow: 4px 4px 0 darken(@dark-gray, 5%);
+  -webkit-box-shadow: 4px 4px 0 darken(@dark-gray, 5%);
+  box-shadow: 4px 4px 0 darken(@dark-gray, 5%);
+}
+
+#mini-clndr .clndr
+{
+  overflow: hidden;
+  border-bottom: 7px solid @dark-green;
+
+  .controls
+  {
+    background-color: @dark-green;
+    color: white;
+
+    .clndr-previous-button, .clndr-next-button
+    {
+      width: 15%;
+      .vertical-padding;
+      display: inline-block;
+      text-align: center;
+      cursor: pointer;
+      .noselect;
+      .transition(background-color @time);
+      &:hover
+      {
+        background-color: darken(@dark-green, 10%);
+      }
+    }
+    .month
+    {
+      width: 70%;
+      .vertical-padding;
+      display: inline-block;
+      text-align: center;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+  }
+
+  .days-container
+  {
+    position: relative;
+    width: 294px;
+    height: 186px;
+    .clearfix;
+
+    .days
+    {
+      position: absolute;
+      left: 0;
+      width: 294px;
+      height: 186px;
+      .transition(left @time);
+      background-color: @light-gray;
+
+      .day, .empty
+      {
+        width: 42px;
+        display: inline-block;
+        .vertical-padding(8px);
+
+        font-size: 12px;
+        // font-weight: 700;
+        text-align: center;
+        color: @black-text;
+
+        border-right: 1px solid @trans-white;
+        border-bottom: 1px solid @trans-white;
+
+        &.event
+        {
+          background-color: darken(@light-gray, 10%);
+          .transition(background-color @time);
+          cursor: pointer;
+          &:hover
+          {
+            background-color: darken(@light-gray, 20%);
+          }
+        }
+      }
+
+      .empty
+      {
+        height: 31px;
+        vertical-align: bottom;
+      }
+
+      .headers
+      {
+        background-color: @light-green;
+        .vertical-padding;
+
+        .day-header
+        {
+          width: 42px;
+          display: inline-block;
+          text-align: center;
+          color: white;
+        }
+      }
+    }
+
+    .events
+    {
+      position: absolute;
+      left: 294px;
+      width: 294px;
+      height: 186px;
+      .transition(left @time);
+      background-color: @light-gray;
+
+      .headers
+      {
+        position: relative;
+      }
+
+      .event-header
+      {
+        width: 100%;
+        background-color: @light-green;
+        .vertical-padding;
+        text-align: center;
+        color: white;
+      }
+
+      .x-button
+      {
+        position: absolute;
+        font-size: 80%;
+        top: 7px;
+        left: 20px;
+        cursor: pointer;
+        .transition(color @time-quick);
+        &:hover
+        {
+          color: white;
+        }
+      }
+
+      .events-list
+      {
+        overflow: scroll;
+        height: 155px;
+
+        .event
+        {
+          .vertical-padding(8px);
+          padding-left: 10px;
+          border-bottom: 1px solid @trans-white;
+          .transition(background-color @time-quick);
+
+          &:hover
+          {
+            background-color: lighten(@light-gray, 4%);
+          }
+
+          a
+          {
+            position: relative;
+            font-size: 12px;
+            // font-weight: 700;
+            letter-spacing: 1px;
+            background-color: transparent;
+            color: @black-text;
+            text-decoration: none;
+            .transition(color @time-quick);
+            &:hover
+            {
+              background-color: transparent;
+              color: @dark-green;
+            }
+          }
+        }
+      }
+    }
+
+    &.show-events
+    {
+      .days
+      {
+        left: -294px;
+      }
+      .events
+      {
+        left: 0;
+      }
+    }
+  }
+}

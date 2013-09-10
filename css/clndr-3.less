@@ -1,0 +1,56 @@
+#clndr-3
+{
+  max-width: 400px;
+  margin: 0 auto;
+  background-color: #f4f4f4;
+  -moz-box-shadow: 4px 4px 0 darken(@dark-gray, 5%);
+  -webkit-box-shadow: 4px 4px 0 darken(@dark-gray, 5%);
+  box-shadow: 4px 4px 0 darken(@dark-gray, 5%);
+
+  padding-bottom: 12px;
+
+  .month-bar
+  {
+    text-align: center;
+    padding: 12px;
+  }
+
+  .days-of-the-week
+  {
+    width: 100%;
+    // background-color: @light-gray;
+    .header-day
+    {
+      .clearfix;
+      float: left;
+      width: 14.2857%;
+      padding: 12px 0;
+      text-align: center;
+    }
+  }
+
+  .days
+  {
+    .day, .empty
+    {
+      float: left;
+      width: 14.2857%;
+      padding: 12px 0;
+      text-align: center;
+
+      &.today
+      {
+        background-color: @light-gray;
+        -moz-box-shadow: inset 0 0 8px #d4d4d4;
+        -webkit-box-shadow: inset 0 0 8px #d4d4d4;
+        box-shadow: inset 0 0 8px #d4d4d4;
+      }
+
+      &.event
+      {
+        color: @blue;
+      }
+    }
+  }
+
+}

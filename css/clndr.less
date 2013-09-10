@@ -1,0 +1,216 @@
+@import url(http://fonts.googleapis.com/css?family=Asap:400,700);
+@import url(http://fonts.googleapis.com/css?family=Inconsolata:400,700);
+@import 'full-clndr.less';
+@import 'mini-clndr.less';
+@import 'clndr-3.less';
+
+*
+{
+  margin: 0;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
+body
+{
+  font-family: Inconsolata, Monaco, 'Andale Mono', Courier;
+  font-size: 18px;
+  color: #212121;
+
+  h1,h2,h3,h4,h5,h6
+  {
+    margin-bottom: 1em;
+    color: white;
+    text-shadow: 1px 1px 1px #212121;
+  }
+}
+
+p
+{
+  line-height: 1.5em;
+  margin-bottom: 1em;
+}
+
+p + h3
+{
+  margin-top: 3em;
+}
+
+a
+{
+  text-decoration: none;
+  background-color: @light-gray;
+  color: @dark-blue;
+  padding: 0 2px;
+  border-radius: 2px;
+  .transition(background-color 0.2s, color 0.4s;);
+  &:hover
+  {
+    background-color: lighten(@blue, 10%);
+    color: #212121;
+  }
+}
+
+span.code
+{
+  padding: 0 2px;
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 2px;
+}
+
+.block
+{
+  padding: 80px 0;
+  width: 100%;
+}
+
+.inner
+{
+  max-width: 960px;
+  padding: 0 20px;
+  margin: 0 auto;
+}
+
+.clearfix:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
+
+.clearfix {
+    display: inline-block;
+}
+
+html[xmlns] .clearfix {
+    display: block;
+}
+
+* html .clearfix {
+    height: 1%;
+}
+
+strong
+{
+  font-weight: 700;
+}
+
+.transition(@props)
+{
+  -webkit-transition: @props;
+  -moz-transition: @props;
+  -ms-transition: @props;
+  -o-transition: @props;
+  transition: @props;
+}
+
+// some colors
+
+@red: #ff5a45;
+@blue: #71bbd2;
+@dark-blue: #3883a3;
+@dark-green:  #69a776;
+@light-green: #97ce7f;
+@dark-gray: #414141;
+@light-gray: #ebebeb;
+@yellow: #ddca9a;
+
+.bg-gray
+{
+  background-color: @dark-gray;
+}
+
+.bg-red
+{
+  background-color: @red;
+  a
+  {
+    color: @red;
+    &:hover
+    {
+      background-color: lighten(@red, 20%);
+      color: #212121;
+    }
+  }
+}
+
+.bg-blue
+{
+  background-color: @blue;
+}
+
+.bg-green
+{
+  background-color: @light-green;
+}
+
+.bg-yellow
+{
+  background-color: @yellow;
+}
+
+// structure
+.header
+{
+  padding: 30px 0;
+}
+
+.clndr-logo
+{
+  margin: 0 auto;
+  width: 113px;
+  height: 113px;
+  background-image: url('/images/clndr-logo.svg');
+}
+
+.banner-text
+{
+  text-align: center;
+  color: #f4f4f4;
+  letter-spacing: 1px;
+  font-weight: normal;
+  text-shadow: 2px 2px 2px #212121;
+  &.below
+  {
+    margin-top: 30px;
+    a
+    {
+      background-color: transparent;
+      color: @light-green;
+      &:hover
+      {
+        color: lighten(@light-green, 20%);
+      }
+    }
+  }
+}
+
+.more-space
+{
+  margin-top: 3em;
+}
+
+@media all and (max-width: 768px)
+{
+  #full-clndr
+  {
+    .clndr-grid
+    {
+      width: 100%;
+      border: none;
+    }
+    .event-listing
+    {
+      display: none;
+    }
+  }
+
+  code[class*="language-"],
+  pre[class*="language-"]
+  {
+    font-size: 14px;
+  }
+}

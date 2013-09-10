@@ -1,0 +1,91 @@
+#full-clndr
+{
+  background-color: @light-gray;
+  font-weight: 700;
+  -moz-box-shadow: 4px 4px 0 darken(@dark-gray, 5%);
+  -webkit-box-shadow: 4px 4px 0 darken(@dark-gray, 5%);
+  box-shadow: 4px 4px 0 darken(@dark-gray, 5%);
+
+  .clndr-grid
+  {
+    float: left;
+    width: 65%;
+    border-right: 2px solid white;
+
+    .days-of-the-week
+    {
+      width: 100%;
+      background-color: @dark-blue;
+
+      .header-day
+      {
+        float: left;
+        width: 14.2857%;
+        padding: 14px;
+        text-align: center;
+        color: white;
+      }
+    }
+
+    .days
+    {
+      width: 100%;
+
+      .day, .empty
+      {
+        float: left;
+        width: 14.2857%;
+        height: 66px;
+        padding: 24px 0;
+
+        text-align: center;
+        color: #4f4f4f;
+        background-color: @light-gray;
+        border-bottom: 2px solid white;
+
+        background-image: url('/images/triangle.svg');
+        background-size: cover;
+        background-position: center;
+
+        &.event
+        {
+          .day-number
+          {
+            padding-bottom: 4px;
+            border-bottom: 2px solid @dark-blue;
+          }
+        }
+      }
+
+      .today
+      {
+        background-color: white;
+        background-image: none;
+      }
+    }
+  }
+
+  .event-listing
+  {
+    float: left;
+    width: 35%;
+
+    .event-listing-title
+    {
+      padding: 14px;
+      background-color: @blue;
+      text-align: center;
+      color: white;
+      letter-spacing: 1px;
+    }
+    .event-item
+    {
+      padding: 14px;
+      color: #4f4f4f;
+    }
+    .event-item-location
+    {
+      font-weight: 400;
+    }
+  }
+}

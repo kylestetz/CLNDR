@@ -1,0 +1,365 @@
+<!--
+             ,--,
+          ,---.'|           ,--.
+  ,----.. |   | :         ,--.'|   ,---,   ,-.----.
+ /   /   \:   : |     ,--,:  : | .'  .' `\ \    /  \
+|   :     |   ' :  ,`--.'`|  ' ,---.'     \;   :    \
+.   |  ;. ;   ; '  |   :  :  | |   |  .`\  |   | .\ :
+.   ; /--`'   | |__:   |   \ | :   : |  '  .   : |: |
+;   | ;   |   | :.'|   : '  '; |   ' '  ;  |   |  \ :
+|   : |   '   :    '   ' ;.    '   | ;  .  |   : .  /
+.   | '___|   |  ./|   | | \   |   | :  |  ;   | |  \
+'   ; : .';   : ;  '   : |  ; .'   : | /  ;|   | ;\  \
+'   | '/  |   ,/   |   | '`--' |   | '` ,/ :   ' | \.'
+|   :    /'---'    '   : |     ;   :  .'   :   : :-'
+ \   \ .'  .--.    ;   |.'     |   ,.'     |   |.'
+  `---`  .--,`| .--.--.'       '---'       `---'
+         |  |. /  /    '
+         '--`_|  :  /`./
+         ,--,'|  :  ;_
+         |  | '\  \    `.
+         :  | | `----.   \
+ ___   __|  : '/  /`--'  /
+/  .\.'__/\_: '--'.     /
+\  ; |   :    : `--'---'
+ `--" \   \  /
+       `--`-'
+ -->
+<html>
+<head>
+  <script type="text/javascript">less= { env: 'development' }</script>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <link rel="stylesheet" type="text/css" href="/css/prism.css" />
+  <link rel="stylesheet/less" type="text/css" href="/css/clndr.less" />
+  <script src="/js/less.js" type="text/javascript"></script>
+  <script src="/js/prism.js" type="text/javascript"></script>
+  <script src="/js/jquery2.js" type="text/javascript"></script>
+  <script src="/js/underscore.js" type="text/javascript"></script>
+  <script src="/js/moment.js" type="text/javascript"></script>
+  <script src="/js/clndr.js" type="text/javascript"></script>
+  <script src="/js/site.js" type="text/javascript"></script>
+</head>
+<body>
+
+  <div class="wrap">
+
+    <div class="block bg-red header">
+      <div class="clndr-logo"></div>
+    </div>
+
+    <div class="block bg-gray">
+      <div class="inner">
+
+        <h1 class="banner-text">CLNDR.js ~ A jQuery Calendar Plugin</h1>
+
+        <div id="full-clndr" class="clearfix">
+          <script type="text/template" id="full-clndr-template">
+            <div class="clndr-grid">
+              <div class="days-of-the-week clearfix">
+                <% _.each(daysOfTheWeek, function(day) { %>
+                  <div class="header-day"><%= day %></div>
+                <% }); %>
+              </div>
+              <div class="days clearfix">
+                <% _.each(days, function(day) { %>
+                  <div class="<%= day.classes %>" id="<%= day.id %>"><span class="day-number"><%= day.day %></span></div>
+                <% }); %>
+              </div>
+            </div>
+            <div class="event-listing">
+              <div class="event-listing-title">EVENTS THIS MONTH</div>
+              <% _.each(eventsThisMonth, function(event) { %>
+                  <div class="event-item">
+                    <div class="event-item-name"><%= event.title %></div>
+                    <div class="event-item-location"><%= event.location %></div>
+                  </div>
+                <% }); %>
+            </div>
+          </script>
+        </div>
+
+        <h3 class="banner-text below">Get the code at <a href="http://github.com/kylestetz/CLNDR">http://github.com/kylestetz/CLNDR</a></h3>
+
+      </div>
+    </div>
+
+    <div class="block bg-blue">
+      <div class="inner">
+        <h3>Here's The Deal</h3>
+        <p>CLNDR is a jQuery plugin for creating calendars. Unlike most calendar plugins, this one doesn't generate markup. Instead you provide an Underscore.js HTML template and in return CLNDR gives you a wealth of data to use within it.</p>
+        <p>CLNDR is free of opinions about markup and style: it is the high-speed chassis on which you build the vehicle of your dreams.</p>
+        <p>For a little backstory and a soft introduction to the concepts in CLNDR, check out this article: <a href="#">Calendars &amp; Re- Re-inventing the Wheel</a>.</p>
+
+        <h3>Here's How You Use It</h3>
+        <p>Just call <span class="code">clndr()</span> on the container.</p>
+
+        <pre><code class="language-javascript">
+// this will use clndr's default template, which you probably don't want.
+$('#calendar').clndr();
+
+// so instead, pass in your template as a string!
+$('#calendar').clndr({
+  template: $('#calendar-template').html()
+});
+
+// there are a lot of options. the rabbit hole is deep.
+$('#calendar').clndr({
+  template: $('#calendar-template').html(),
+  events: [
+    { date: '2013-09-09', title: 'CLNDR GitHub Page Finished', url: 'http://github.com/kylestetz/CLNDR' }
+  ],
+  clickEvents: {
+    click: function(target) {
+      console.log(target);
+    },
+    onMonthChange: function(month) {
+      console.log('you just went to ' + month.format('MMMM, YYYY'));
+    }
+  },
+  doneRendering: function() {
+    console.log('this would be a fine place to attach custom event handlers.');
+  }
+});
+        </code></pre>
+      </div>
+    </div>
+
+    <div class="block bg-gray">
+      <div class="inner">
+
+        <div id="mini-clndr">
+          <script id="mini-clndr-template" type="text/template">
+
+            <div class="controls">
+              <div class="clndr-previous-button">&lsaquo;</div><div class="month"><%= month %></div><div class="clndr-next-button">&rsaquo;</div>
+            </div>
+
+            <div class="days-container">
+              <div class="days">
+                <div class="headers">
+                  <% _.each(daysOfTheWeek, function(day) { %><div class="day-header"><%= day %></div><% }); %>
+                </div>
+                <% _.each(days, function(day) { %><div class="<%= day.classes %>" id="<%= day.id %>"><%= day.day %></div><% }); %>
+              </div>
+              <div class="events">
+                <div class="headers">
+                  <div class="x-button">x</div>
+                  <div class="event-header">EVENTS</div>
+                </div>
+                <div class="events-list">
+                  <% _.each(eventsThisMonth, function(event) { %>
+                    <div class="event">
+                      <a href="<%= event.url %>"><%= moment(event.date).format('MMMM Do') %>: <%= event.title %></a>
+                    </div>
+                  <% }); %>
+                </div>
+              </div>
+            </div>
+
+          </script>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="block bg-green">
+      <div class="inner">
+
+        <h3>How does it work?</h3>
+        <p>CLNDR takes your template and injects some data into it. The data contains everything you need to create a calendar. Here's what you get:</p>
+
+        <pre><code class="language-javascript">
+daysOfTheWeek: ['S', 'M', 'T', 'W', 'T', 'F', 'S']
+numberOfRows: 5
+days: [
+  {
+    day: '1',
+    classes: 'day today event',
+    id: 'calendar-day-2013-09-01',
+    events: [ ],
+    date: moment('2013-09-01')
+  },
+  ...
+]
+month: 'September'
+year: '2013'
+eventsThisMonth: [ ]
+        </code></pre>
+
+        <p>Most notable is the <span class="code">days</span> array, which contains an entire grid. We can loop through it in our template to make all of the markup:</p>
+
+        <pre><code class="language-markup">
+&lt;% _.each(days, function(day) { %&gt;
+    &lt;div class="&lt;%= day.classes %&gt;"&gt;&lt;%= day.day %&gt;&lt;/div&gt;
+&lt;% }); %&gt;
+        </code></pre>
+
+        <h3 class="more-space">Automatic Mouse Events</h3>
+        <p>CLNDR looks for next and previous buttons in your template. These buttons trigger the calendar to be redrawn with a new month. By default the classes are <span class="code">clndr-next-button</span> and <span class="code">clndr-previous-button</span>, however we can specify our own by passing in some options.</p>
+
+        <pre><code class="language-markup">
+&lt;div class="clndr-controls"&gt;
+  &lt;div class="clndr-previous-button"&gt;&lsaquo;&lt;/div&gt;
+  &lt;div class="month"&gt;&lt;%= month %&gt;&lt;/div&gt;
+  &lt;div class="clndr-next-button"&gt;&rsaquo;&lt;/div&gt;
+&lt;/div&gt;
+&lt;% _.each(days, function(day) { %&gt;
+    &lt;div class="&lt;%= day.classes %&gt;"&gt;&lt;%= day.day %&gt;&lt;/div&gt;
+&lt;% }); %&gt;
+        </code></pre>
+
+        <h3 class="more-space">Event Sorting</h3>
+        <p>CLNDR takes an array of event objects and weaves them into the days array in your template. This means you can pass in as many events as you want and CLNDR will make sure they show up when you need them. In addition to exposing all of the data in your event object, the class <span class="code">event</span> will be added to the <span class="code">days.classes</span> string for easy styling.</p>
+
+        <p>If you're looking to get all the events for the month in one array, you've got <span class="code">eventsThisMonth</span> as well. Here's the markup for the first calendar on this page:</p>
+
+        <pre><code class="language-markup">
+&lt;div class="clndr-grid"&gt;
+  &lt;div class="days-of-the-week clearfix"&gt;
+    &lt;% _.each(daysOfTheWeek, function(day) { %&gt;
+      &lt;div class="header-day"&gt;&lt;%= day %&gt;&lt;/div&gt;
+    &lt;% }); %&gt;
+  &lt;/div&gt;
+  &lt;div class="days clearfix"&gt;
+    &lt;% _.each(days, function(day) { %&gt;
+      &lt;div class="&lt;%= day.classes %&gt;" id="&lt;%= day.id %&gt;"&gt;
+        &lt;span class="day-number"&gt;&lt;%= day.day %&gt;&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;% }); %&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="event-listing"&gt;
+  &lt;div class="event-listing-title"&gt;EVENTS THIS MONTH&lt;/div&gt;
+  &lt;% _.each(eventsThisMonth, function(event) { %&gt;
+      &lt;div class="event-item"&gt;
+        &lt;div class="event-item-name"&gt;&lt;%= event.name %&gt;&lt;/div&gt;
+        &lt;div class="event-item-location"&gt;&lt;%= event.location %&gt;&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;% }); %&gt;
+&lt;/div&gt;
+        </code></pre>
+      </div>
+    </div>
+
+
+    <div class="block bg-gray">
+      <div class="inner">
+
+        <div id="clndr-3">
+          <script type="text/template" id="clndr-3-template">
+            <div class="month-bar"><%= month %></div>
+            <div class="clndr-grid">
+              <div class="days-of-the-week clearfix">
+                <% _.each(daysOfTheWeek, function(day) { %>
+                  <div class="header-day"><%= day %></div>
+                <% }); %>
+              </div>
+              <div class="days clearfix">
+                <% _.each(days, function(day) { %>
+                  <div class="<%= day.classes %>" id="<%= day.id %>"><span class="day-number"><%= day.day %></span></div>
+                <% }); %>
+              </div>
+            </div>
+          </script>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="block bg-yellow">
+      <div class="inner">
+        <h3>Tell me about the Options.</h3>
+        <p>All of the available options:</p>
+
+        <pre><code class="language-javascript">
+$('.parent-element').clndr({
+  // the template: this could be stored in markup as a &lt;script type="text/template"&gt;&lt;/script&gt;
+  // or pulled in as a string
+  template: clndrTemplate,
+  // start the week off on Sunday (0), Monday (1), etc. Sunday is the default.
+  weekOffset: 0,
+  // determines which month to start with using either a date string or a moment object.
+  startWithMonth: "YYYY-MM-DD" or moment(),
+  // callbacks!
+  clickEvents: {
+    // fired whenever a calendar box is clicked.
+    // returns a 'target' object containing the DOM element, any events, and the date as a moment.js object.
+    click: function(target){ },
+    // fired when a user goes forward a month. returns a moment.js object set to the correct month.
+    nextMonth: function(month){ },
+    // fired when a user goes back a month. returns a moment.js object set to the correct month.
+    previousMonth: function(month){ },
+    // fired when a user goes back OR forward a month. returns a moment.js object set to the correct month.
+    onMonthChange: function(month){ }
+  },
+  // the target classnames that CLNDR will look for to bind events. these are the defaults.
+  targets: {
+    nextButton: 'clndr-next-button',
+    previousButton: 'clndr-previous-button',
+    day: 'day',
+    empty: 'empty'
+  },
+  // an array of event objects
+  events: [],
+  // if you're supplying an events array, dateParameter points to the
+  // field in your event object containing a date string. It's set to 'date' by default.
+  dateParameter: 'date',
+  // a callback when the calendar is done rendering. This is a good place to bind custom event handlers.
+  doneRendering: function(){ }
+});
+        </code></pre>
+
+        <h3 class="more-space">I want the instance so I can do stuff with it.</h3>
+        <p>You can save your clndr instance to a variable and mess with it later:</p>
+
+        <pre><code class="language-javascript">
+// Create a Clndr and save the instance as theCalendarInstance
+var theCalendarInstance = $('#myCalendar').clndr();
+
+// Go to the next month
+theCalendarInstance.forward();
+
+// Go to the previous month
+theCalendarInstance.back();
+
+// Set the month using a number from 0-11 or a month name
+theCalendarInstance.setMonth(0);
+theCalendarInstance.setMonth('February');
+
+// Go to the next year
+theCalendarInstance.nextYear();
+
+// Go to the previous year
+theCalendarInstance.previousYear();
+
+// Set the year
+theCalendarInstance.setYear(1997);
+
+// Change the events. Note that this triggers a re-render of the calendar.
+theCalendarInstance.setEvents(newEventsArray);
+        </code></pre>
+
+        <p>Want to play with an instance of CLNDR right now? Open the developer console and poke at the variable <span class="code">clndr</span>, which controls the first calendar on this page.</p>
+
+        <h3>There's more to know: head over to the GitHub.</h3>
+        <p>If you've still got questions, the GitHub readme probably has some answers ~ <a href="http://github.com/kylestetz/CLNDR">CLNDR on GitHub</a>. If not, open issues and make pull requests!</p>
+      </div>
+    </div>
+
+    <div class="block bg-gray header">
+      <div class="inner">
+        <div class="clndr-logo"></div>
+      </div>
+    </div>
+
+    <div class="block bg-red">
+      <div class="inner">
+        <h2>Many Thanks</h2>
+        <p>CLNDR is made possible because of the work of many awesome projects: <a href="http://jquery.com/">jQuery</a>, <a href="http://underscorejs.org/">Underscore.js</a>, and <a href="http://momentjs.com/">Moment.js</a>. CLNDR is developed by <a href="http://github.com/kylestetz">Kyle Stetz</a> and is used and supported by the team at <a href="http://punkave.com">P'unk Avenue</a>.</p>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
