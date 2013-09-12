@@ -245,3 +245,5 @@ Todo
 - Tests!
 - Improve mobile experience
 - Node.js module for server-side rendering of the initial calendar.
+
+<a href="http://punkave.com/"><img src="https://raw.github.com/punkave/jquery-selective/master/logos/logo-box-builtby.png" /></a>
