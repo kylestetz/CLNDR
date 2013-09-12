@@ -12,6 +12,11 @@ There are wonderful and feature-rich calendar modules out there and they all suf
 
 CLNDR doesn't generate markup (well, it has some reasonable defaults, but that's an aside). Instead, CLNDR asks you to create a template and in return it supplies your template with a great set of objects that will get you up and running in a few lines.
 
+Dependencies
+------------
+
+jQuery, Underscore.js, and Moment.js are depended upon. Removing underscore.js as a dependency is high on the list of TODOs, as is documenting more thoroughly what versions of jQuery and Moment CLNDR requires.
+
 The 'Days' Array
 ----------------
 
