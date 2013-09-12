@@ -15,7 +15,7 @@ CLNDR doesn't generate markup (well, it has some reasonable defaults, but that's
 Dependencies
 ------------
 
-jQuery, Underscore.js, and Moment.js are depended upon. Removing underscore.js as a dependency is high on the list of TODOs, as is documenting more thoroughly what versions of jQuery and Moment CLNDR requires.
+[jQuery](http://jquery.com/download/), [Underscore.js](http://underscorejs.org/, and [Moment.js](http://momentjs.com/) are depended upon. Removing underscore.js as a dependency is high on the list of TODOs, as is documenting more thoroughly what versions of jQuery and Moment CLNDR requires.
 
 The 'Days' Array
 ----------------
