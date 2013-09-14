@@ -6,13 +6,13 @@
   "version": "1.0.0",
   "author": {
     "name": "Kyle Stetz",
-    "url": "http:/github.com/kylestetz"
+    "url": "https://github.com/kylestetz"
   },
   "maintainers": [
     {
       "name": "Kyle Stetz",
       "email": "kyle@punkave.com",
-      "url": "http:/punkave.com"
+      "url": "http://punkave.com"
     }
   ],
   "licenses": [
