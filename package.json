@@ -1,0 +1,11 @@
+{
+  "name": "clndr",
+  "version": "1.0.0",
+  "description": "Development environment for clndr.js",
+  "author": "Kyle Stetz",
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "*",
+    "grunt-contrib-uglify": "~0.2.4"
+  }
+}

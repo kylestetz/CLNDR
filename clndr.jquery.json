@@ -1,0 +1,33 @@
+{
+  "name": "clndr",
+  "title": "CLNDR",
+  "description": "CLNDR is a calendar plugin that uses HTML templates, allowing you to write custom markup and styles that have access to useful calendar data.",
+  "keywords": ["calendar", "ui", "date", "punkave"],
+  "version": "1.0.0",
+  "author": {
+    "name": "Kyle Stetz",
+    "url": "http:/github.com/kylestetz"
+  },
+  "maintainers": [
+    {
+      "name": "Kyle Stetz",
+      "email": "kyle@punkave.com",
+      "url": "http:/punkave.com"
+    }
+  ],
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/kylestetz/CLNDR/LICENSE.md"
+    }
+  ],
+  "bugs": "https://github.com/kylestetz/CLNDR/issues",
+  "homepage": "https://kylestetz.github.io/CLNDR/",
+  "docs": "https://github.com/kylestetz/CLNDR",
+  "download": "https://github.com/kylestetz/CLNDR",
+  "dependencies": {
+    "jquery": ">=1.9",
+    "underscore": ">=1.4.4",
+    "moment": ">=2.0.0"
+  }
+}
