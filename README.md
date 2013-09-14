@@ -5,6 +5,11 @@ CLNDR is a jQuery calendar plugin. It was created- you've heard this before- out
 
 To see it in action, go to http://kylestetz.github.io/CLNDR.
 
+Recent Changes
+--------------
+
+Thanks to everyone for their interest! Things just got shuffled around a bit to accommodate a grunt workflow. The fully-commented source version is `src/clndr.js`, while `clndr.js` and `clndr.min.js` are meant for development & production, respectively. In addition, CLNDR is now registered as a jQuery plugin, so you can now track versions through the tags in this repo.
+
 You Write The Markup
 --------------------
 
@@ -114,7 +119,9 @@ $('.parent-element').clndr({
   // if you're supplying an events array, dateParameter points to the field in your event object containing a date string. It's set to 'date' by default.
   dateParameter: 'date',
   // a callback when the calendar is done rendering. This is a good place to bind custom event handlers.
-  doneRendering: function(){ }
+  doneRendering: function(){ },
+  // anything you want access to in your template
+  extras: { }
 });
 ```
 
@@ -132,7 +139,9 @@ month: "May"
 // the year that the calendar is currently focused on
 year: "2013"
 // all of the events happening this month
-eventsThisMonth: [ ]
+eventsThisMonth: [ ],
+// anything you passed into the 'extras' property when creating the clndr
+extras: { }
 ```
 
 Returning the Instance
@@ -245,5 +254,10 @@ Todo
 - Tests!
 - Improve mobile experience
 - Node.js module for server-side rendering of the initial calendar.
+
+Changelog
+=========
+
+v1.0.0 ~ 2013-09-14: Officially v1.0.0! Added `extras` option, which exposes the `extras` variable in your template, allowing you to pass in arbitrary objects & synchronous functions for use inside of your template.
 
 <a href="http://punkave.com/"><img src="https://raw.github.com/punkave/jquery-selective/master/logos/logo-box-builtby.png" /></a>
