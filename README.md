@@ -20,7 +20,7 @@ CLNDR doesn't generate markup (well, it has some reasonable defaults, but that's
 Dependencies
 ------------
 
-[jQuery](http://jquery.com/download/), [Underscore.js](http://underscorejs.org/), and [Moment.js](http://momentjs.com/) are depended upon. Removing underscore.js as a dependency is high on the list of TODOs, as is documenting more thoroughly what versions of jQuery and Moment CLNDR requires.
+[jQuery](http://jquery.com/download/) and [Moment.js](http://momentjs.com/) are depended upon. By default CLNDR tries to use [Underscore.js](http://underscorejs.org/)'s `_.template()` function, however if you specify a custom rendering function (see documentation below) underscore will not be used at all.
 
 The 'Days' Array
 ----------------
@@ -76,7 +76,7 @@ CLNDR looks through the objects in your events array for a `date` field unless y
 Usage
 =====
 
-CLNDR leans on the awesome work done in underscore.js and moment.js- these are requirements. Do be sure to include them in your `<head>` before clndr.js. It is a jQuery plugin, so naturally you'll need that as well.
+CLNDR leans on the awesome work done in underscore.js and moment.js- these are requirements (unless you are using a different rendering engine, in which case underscore is not a requirement). Do be sure to include them in your `<head>` before clndr.js. It is a jQuery plugin, so naturally you'll need that as well.
 
 The bare minimum (CLNDR includes a default template):
 
@@ -210,7 +210,9 @@ $('#my-calendar').clndr({
 
 where the function must return the HTML result of the rendering operation. In this case you would precompile your template elsewhere in your code, since CLNDR only cares about your template if it's going to use underscore.
 
-At the moment underscore is still required in the event that you use a different templating engine. Removing underscore from this plugin is a todo.
+If you are using your own render method, underscore.js is NOT a dependency of this plugin.
+
+CLNDR has been tested successfully with [doT.js](http://olado.github.io/doT/). Please get in touch if you have success with other languages and they will be documented here.
 
 Internationalization
 --------------------
@@ -250,14 +252,13 @@ _.templateSettings = {
 Todo
 ====
 
-- Only use underscore for template rendering (remove all other instances of underscore code in favor of vanilla JS)
 - Tests!
 - Improve mobile experience
 - Node.js module for server-side rendering of the initial calendar.
 
 Changelog
 =========
-
-v1.0.0 ~ 2013-09-14: Officially v1.0.0! Added `extras` option, which exposes the `extras` variable in your template, allowing you to pass in arbitrary objects & synchronous functions for use inside of your template.
+`v1.0.3 ~ 2013-09-14`: Underscore.js is now only relied upon for its `_.template()` function, which means if you are using your own rendering engine you do NOT need underscore to use CLNDR.js
+`v1.0.0 ~ 2013-09-14`: Officially v1.0.0! Added `extras` option, which exposes the `extras` variable in your template, allowing you to pass in arbitrary objects & synchronous functions for use inside of your template.
 
 <a href="http://punkave.com/"><img src="https://raw.github.com/punkave/jquery-selective/master/logos/logo-box-builtby.png" /></a>
