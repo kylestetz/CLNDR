@@ -1,4 +1,4 @@
-/*!              ~ CLNDR v1.0.2 ~ 
+/*!              ~ CLNDR v1.0.3 ~ 
  * ============================================== 
  *       https://github.com/kylestetz/CLNDR 
  * ============================================== 
@@ -13,7 +13,7 @@
         this.month = this.options.startWithMonth ? moment(this.options.startWithMonth) : moment(), 
         this._defaults = defaults, this._name = pluginName, this.init();
     }
-    var clndrTemplate = "<div class='clndr-controls'><div class='clndr-control-button'><span class='clndr-previous-button'>previous</span></div><div class='month'><%= month %></div><div class='clndr-control-button rightalign'><span class='clndr-next-button'>next</span></div></div><table class='clndr-table' border='0' cellspacing='0' cellpadding='0'><thead><tr class='header-days'><% _.each(daysOfTheWeek, function(dayOfTheWeek) { %><td class='header-day'><%= dayOfTheWeek %></td><% }); %></tr></thead><tbody><% for(var i = 0; i < numberOfRows; i++){ %><tr><% for(var j = 0; j < 7; j++){ %><% var d = j + i * 7; %><td class='<%= days[d].classes %>' id='<%= days[d].id %>'><div class='day-contents'><%= days[d].day %></div></td><% } %></tr><% } %></tbody></table>", pluginName = "clndr", defaults = {
+    var clndrTemplate = "<div class='clndr-controls'><div class='clndr-control-button'><span class='clndr-previous-button'>previous</span></div><div class='month'><%= month %></div><div class='clndr-control-button rightalign'><span class='clndr-next-button'>next</span></div></div><table class='clndr-table' border='0' cellspacing='0' cellpadding='0'><thead><tr class='header-days'><% for(var i = 0; i < daysOfTheWeek.length; i++) { %><td class='header-day'><%= daysOfTheWeek[i] %></td><% } %></tr></thead><tbody><% for(var i = 0; i < numberOfRows; i++){ %><tr><% for(var j = 0; j < 7; j++){ %><% var d = j + i * 7; %><td class='<%= days[d].classes %>' id='<%= days[d].id %>'><div class='day-contents'><%= days[d].day %></div></td><% } %></tr><% } %></tbody></table>", pluginName = "clndr", defaults = {
         template: clndrTemplate,
         weekOffset: 0,
         startWithMonth: null,
@@ -36,7 +36,8 @@
         render: null
     };
     Clndr.prototype.init = function() {
-        this.daysOfTheWeek = this.options.weekOffset ? this.shiftWeekdayLabels(this.options.weekOffset) : [ "S", "M", "T", "W", "T", "F", "S" ], 
+        if (this.daysOfTheWeek = this.options.weekOffset ? this.shiftWeekdayLabels(this.options.weekOffset) : [ "S", "M", "T", "W", "T", "F", "S" ], 
+        !this.options.render && "undefined" == typeof _) throw new Error("Underscore was not found. Please include underscore.js OR provide a custom render function.");
         this.options.render || (this.compiledClndrTemplate = _.template(this.options.template)), 
         $(this.element).html("<div class='clndr'></div>"), this.calendarContainer = $(".clndr", this.element), 
         this.render();
@@ -48,14 +49,12 @@
         var date = currentMonth.startOf("month"), now = moment(), diff = date.day() - this.options.weekOffset;
         0 > diff && (diff += 7);
         for (var i = 0; diff > i; i++) daysArray.push(this.calendarDay());
-        this.eventsThisMonth = [], this.options.events.length && (this.eventsThisMonth = _.filter(this.options.events, function(event) {
+        this.eventsThisMonth = [], this.options.events.length && (this.eventsThisMonth = this.options.events.filter(function(event) {
             return event._clndrDateObject.format("YYYY-MM") == currentMonth.format("YYYY-MM");
         }));
         for (var numOfDays = date.daysInMonth(), i = 1; numOfDays >= i; i++) {
-            var eventsToday = [];
-            _.each(this.eventsThisMonth, function(event) {
-                event._clndrDateObject.date() == i && eventsToday.push(event);
-            });
+            var eventsToday = [], j = 0, l = this.eventsThisMonth.length;
+            for (j; l > j; j++) this.eventsThisMonth[j]._clndrDateObject.date() == i && eventsToday.push(this.eventsThisMonth[i]);
             var currentDay = moment([ currentMonth.year(), currentMonth.month(), i ]), extraClasses = "";
             now.format("YYYY-MM-DD") == currentDay.format("YYYY-MM-DD") && (extraClasses += " today"), 
             eventsToday.length && (extraClasses += " event"), daysArray.push(this.calendarDay({
@@ -111,7 +110,7 @@
         };
         if (targetWasDay) {
             var dateString = currentTarget.id.replace("calendar-day-", "");
-            target.date = moment(dateString), this.options.events && (target.events = _.filter(this.options.events, function(event) {
+            target.date = moment(dateString), this.options.events && (target.events = this.options.events.filter(function(event) {
                 return event._clndrDateObject.format("YYYY-MM-DD") == dateString;
             }));
         }
@@ -145,10 +144,9 @@
     }, Clndr.prototype.setEvents = function(events) {
         this.options.events = this.addMomentObjectToEvents(events), calendar.render();
     }, Clndr.prototype.addMomentObjectToEvents = function(events) {
-        var self = this;
-        return _.each(events, function(event) {
-            event._clndrDateObject = moment(event[self.options.dateParameter]);
-        }), events;
+        var self = this, i = 0, l = events.length;
+        for (i; l > i; i++) events[i]._clndrDateObject = moment(events[i][self.options.dateParameter]);
+        return events;
     }, Clndr.prototype.calendarDay = function(options) {
         var defaults = {
             day: "",

@@ -28,9 +28,9 @@
   "<table class='clndr-table' border='0' cellspacing='0' cellpadding='0'>" +
     "<thead>" +
     "<tr class='header-days'>" +
-    "<% _.each(daysOfTheWeek, function(dayOfTheWeek) { %>" +
-      "<td class='header-day'><%= dayOfTheWeek %></td>" +
-    "<% }); %>" +
+    "<% for(var i = 0; i < daysOfTheWeek.length; i++) { %>" +
+      "<td class='header-day'><%= daysOfTheWeek[i] %></td>" +
+    "<% } %>" +
     "</tr>" +
     "</thead>" +
     "<tbody>" +
@@ -112,8 +112,12 @@
       this.daysOfTheWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
     }
 
-    // we can compile this to save time rendering, since we know it'll never change.
-    if(!this.options.render) {
+    // quick & dirty test to make sure rendering is possible.
+    if( !this.options.render && typeof _ === 'undefined' ) {
+      throw new Error("Underscore was not found. Please include underscore.js OR provide a custom render function.")
+    }
+    if( !this.options.render ) {
+      // we're just going ahead and using underscore here if no render method has been supplied.
       this.compiledClndrTemplate = _.template(this.options.template);
     }
 
@@ -154,7 +158,7 @@
     // filter the events list (if it exists) to events that are happening this month
     this.eventsThisMonth = [];
     if(this.options.events.length) {
-      this.eventsThisMonth = _.filter(this.options.events, function(event) {
+      this.eventsThisMonth = this.options.events.filter( function(event) {
         return event._clndrDateObject.format("YYYY-MM") == currentMonth.format("YYYY-MM");
       });
     }
@@ -164,13 +168,15 @@
     for(var i = 1; i <= numOfDays; i++) {
 
       var eventsToday = [];
-      _.each(this.eventsThisMonth, function(event) {
+
+      var j = 0, l = this.eventsThisMonth.length;
+      for(j; j < l; j++) {
         // keep in mind that the events here already passed the month/year test.
         // now all we have to compare is the moment.date(), which returns the day of the month.
-        if(event._clndrDateObject.date() == i) {
-          eventsToday.push(event);
+        if( this.eventsThisMonth[j]._clndrDateObject.date() == i ) {
+          eventsToday.push( this.eventsThisMonth[i] );
         }
-      });
+      }
 
       var currentDay = moment([currentMonth.year(), currentMonth.month(), i]);
 
@@ -273,7 +279,7 @@
       // do we have events?
       if(this.options.events) {
         // are any of the events happening today?
-        target.events = _.filter(this.options.events, function(event) {
+        target.events = this.options.events.filter( function(event) {
           // filter the dates down to the ones that match.
           return event._clndrDateObject.format('YYYY-MM-DD') == dateString;
         });
@@ -359,9 +365,12 @@
 
   Clndr.prototype.addMomentObjectToEvents = function(events) {
     var self = this;
-    _.each(events, function(event) {
-      event._clndrDateObject = moment(event[ self.options.dateParameter ]);
-    });
+    var i = 0, l = events.length;
+    for(i; i < l; i++) {
+      // stuff a _clndrDateObject in each event, which really, REALLY should not be
+      // overriding any existing object... Man that would be weird.
+      events[i]._clndrDateObject = moment( events[i][self.options.dateParameter] );
+    }
     return events;
   }
 
