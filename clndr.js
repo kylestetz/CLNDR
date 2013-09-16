@@ -54,7 +54,7 @@
         }));
         for (var numOfDays = date.daysInMonth(), i = 1; numOfDays >= i; i++) {
             var eventsToday = [], j = 0, l = this.eventsThisMonth.length;
-            for (j; l > j; j++) this.eventsThisMonth[j]._clndrDateObject.date() == i && eventsToday.push(this.eventsThisMonth[i]);
+            for (j; l > j; j++) this.eventsThisMonth[j]._clndrDateObject.date() == i && eventsToday.push(this.eventsThisMonth[j]);
             var currentDay = moment([ currentMonth.year(), currentMonth.month(), i ]), extraClasses = "";
             now.format("YYYY-MM-DD") == currentDay.format("YYYY-MM-DD") && (extraClasses += " today"), 
             eventsToday.length && (extraClasses += " event"), daysArray.push(this.calendarDay({
