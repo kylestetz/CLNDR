@@ -258,6 +258,7 @@ Todo
 
 Changelog
 =========
+`v1.0.4` ~ fixed a bug in `setEvents` and event population where events would show up null.
 `v1.0.3 ~ 2013-09-14`: Underscore.js is now only relied upon for its `_.template()` function, which means if you are using your own rendering engine you do NOT need underscore to use CLNDR.js
 `v1.0.0 ~ 2013-09-14`: Officially v1.0.0! Added `extras` option, which exposes the `extras` variable in your template, allowing you to pass in arbitrary objects & synchronous functions for use inside of your template.
 
