@@ -174,7 +174,7 @@
         // keep in mind that the events here already passed the month/year test.
         // now all we have to compare is the moment.date(), which returns the day of the month.
         if( this.eventsThisMonth[j]._clndrDateObject.date() == i ) {
-          eventsToday.push( this.eventsThisMonth[i] );
+          eventsToday.push( this.eventsThisMonth[j] );
         }
       }
 
@@ -360,7 +360,7 @@
     // go through each event and add a moment object
     this.options.events = this.addMomentObjectToEvents(events);
 
-    calendar.render();
+    this.render();
   };
 
   Clndr.prototype.addMomentObjectToEvents = function(events) {
