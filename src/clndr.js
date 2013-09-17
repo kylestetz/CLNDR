@@ -375,6 +375,13 @@
     this.render();
   };
 
+  Clndr.prototype.addEvents = function(events) {
+    // go through each event and add a moment object
+    this.options.events = $.merge(this.options.events, this.addMomentObjectToEvents(events));
+
+    this.render();
+  };
+
   Clndr.prototype.addMomentObjectToEvents = function(events) {
     var self = this;
     var i = 0, l = events.length;
