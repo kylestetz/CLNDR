@@ -21,11 +21,13 @@
             click: null,
             nextMonth: null,
             previousMonth: null,
+            today: null,
             onMonthChange: null
         },
         targets: {
             nextButton: "clndr-next-button",
             previousButton: "clndr-previous-button",
+            todayButton: "clndr-today-button",
             day: "day",
             empty: "empty"
         },
@@ -101,7 +103,9 @@
             context: this
         }, this.backAction), $("." + this.options.targets.nextButton, this.element).on("click", {
             context: this
-        }, this.forwardAction);
+        }, this.forwardAction), $("." + this.options.targets.todayButton, this.element).on("click", {
+            context: this
+        }, this.todayAction);
     }, Clndr.prototype.buildTargetObject = function(currentTarget, targetWasDay) {
         var target = {
             element: currentTarget,
@@ -122,6 +126,9 @@
     }, Clndr.prototype.backAction = function(event) {
         event.data.context.month.subtract("months", 1), event.data.context.options.clickEvents.previousMonth && event.data.context.options.clickEvents.previousMonth(event.data.context.month), 
         event.data.context.options.clickEvents.onMonthChange && event.data.context.options.clickEvents.onMonthChange(event.data.context.month), 
+        event.data.context.render();
+    }, Clndr.prototype.todayAction = function(event) {
+        event.data.context.month = moment(), event.data.context.options.clickEvents.today && event.data.context.options.clickEvents.today(event.data.context.month), 
         event.data.context.render();
     }, Clndr.prototype.forward = function() {
         this.month.add("months", 1), this.render();
