@@ -70,7 +70,8 @@
     extras: null,
     dateParameter: 'date',
     doneRendering: null,
-    render: null
+    render: null,
+    daysOfTheWeek: ['S', 'M', 'T', 'W', 'T', 'F', 'S']
   };
 
   // The actual plugin constructor
@@ -111,7 +112,7 @@
     if(this.options.weekOffset) {
       this.daysOfTheWeek = this.shiftWeekdayLabels(this.options.weekOffset);
     } else {
-      this.daysOfTheWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+      this.daysOfTheWeek = this.options.daysOfTheWeek;
     }
 
     // quick & dirty test to make sure rendering is possible.
@@ -132,7 +133,7 @@
   };
 
   Clndr.prototype.shiftWeekdayLabels = function(offset) {
-    var days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+    var days = this.options.daysOfTheWeek;
     for(var i = 0; i < offset; i++) {
       days.push( days.shift() );
     }

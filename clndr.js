@@ -35,16 +35,17 @@
         extras: null,
         dateParameter: "date",
         doneRendering: null,
-        render: null
+        render: null,
+        daysOfTheWeek: [ "S", "M", "T", "W", "T", "F", "S" ]
     };
     Clndr.prototype.init = function() {
-        if (this.daysOfTheWeek = this.options.weekOffset ? this.shiftWeekdayLabels(this.options.weekOffset) : [ "S", "M", "T", "W", "T", "F", "S" ], 
+        if (this.daysOfTheWeek = this.options.weekOffset ? this.shiftWeekdayLabels(this.options.weekOffset) : this.options.daysOfTheWeek, 
         !this.options.render && "undefined" == typeof _) throw new Error("Underscore was not found. Please include underscore.js OR provide a custom render function.");
         this.options.render || (this.compiledClndrTemplate = _.template(this.options.template)), 
         $(this.element).html("<div class='clndr'></div>"), this.calendarContainer = $(".clndr", this.element), 
         this.render();
     }, Clndr.prototype.shiftWeekdayLabels = function(offset) {
-        for (var days = [ "S", "M", "T", "W", "T", "F", "S" ], i = 0; offset > i; i++) days.push(days.shift());
+        for (var days = this.options.daysOfTheWeek, i = 0; offset > i; i++) days.push(days.shift());
         return days;
     }, Clndr.prototype.createDaysObject = function(currentMonth) {
         daysArray = [];
