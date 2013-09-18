@@ -134,28 +134,29 @@
         event.data.context.month = moment(), event.data.context.options.clickEvents.today && event.data.context.options.clickEvents.today(event.data.context.month), 
         event.data.context.render();
     }, Clndr.prototype.forward = function() {
-        this.month.add("months", 1), this.render();
+        return this.month.add("months", 1), this.render(), this;
     }, Clndr.prototype.back = function() {
-        this.month.subtract("months", 1), this.render();
+        return this.month.subtract("months", 1), this.render(), this;
     }, Clndr.prototype.next = function() {
-        this.forward();
+        return this.forward(), this;
     }, Clndr.prototype.previous = function() {
-        this.back();
+        return this.back(), this;
     }, Clndr.prototype.setMonth = function(newMonth) {
-        this.month.month(newMonth), this.render();
+        return this.month.month(newMonth), this.render(), this;
     }, Clndr.prototype.setYear = function(newYear) {
-        this.month.year(newYear), this.render();
+        return this.month.year(newYear), this.render(), this;
     }, Clndr.prototype.nextYear = function() {
-        this.month.add("year", 1), this.render();
+        return this.month.add("year", 1), this.render(), this;
     }, Clndr.prototype.previousYear = function() {
-        this.month.subtract("year", 1), this.render();
+        return this.month.subtract("year", 1), this.render(), this;
     }, Clndr.prototype.setYear = function(newYear) {
-        this.month.year(newYear), this.render();
+        return this.month.year(newYear), this.render(), this;
     }, Clndr.prototype.setEvents = function(events) {
-        this.options.events = this.addMomentObjectToEvents(events), this.render();
+        return this.options.events = this.addMomentObjectToEvents(events), this.render(), 
+        this;
     }, Clndr.prototype.addEvents = function(events) {
-        this.options.events = $.merge(this.options.events, this.addMomentObjectToEvents(events)), 
-        this.render();
+        return this.options.events = $.merge(this.options.events, this.addMomentObjectToEvents(events)), 
+        this.render(), this;
     }, Clndr.prototype.addMomentObjectToEvents = function(events) {
         var self = this, i = 0, l = events.length;
         for (i; l > i; i++) events[i]._clndrDateObject = moment(events[i][self.options.dateParameter]);

@@ -329,46 +329,55 @@
   Clndr.prototype.forward = function() {
     this.month.add('months', 1);
     this.render();
+    return this;
   }
 
   Clndr.prototype.back = function() {
     this.month.subtract('months', 1);
     this.render();
+    return this;
   }
 
   // alternate names for convenience
   Clndr.prototype.next = function() {
     this.forward();
+    return this;
   }
 
   Clndr.prototype.previous = function() {
     this.back();
+    return this;
   }
 
   Clndr.prototype.setMonth = function(newMonth) {
     // accepts 0 - 11 or a full/partial month name e.g. "Jan", "February", "Mar"
     this.month.month(newMonth);
     this.render();
+    return this;
   }
 
   Clndr.prototype.setYear = function(newYear) {
     this.month.year(newYear);
     this.render();
+    return this;
   }
 
   Clndr.prototype.nextYear = function() {
     this.month.add('year', 1);
     this.render();
+    return this;
   }
 
   Clndr.prototype.previousYear = function() {
     this.month.subtract('year', 1);
     this.render();
+    return this;
   }
 
   Clndr.prototype.setYear = function(newYear) {
     this.month.year(newYear);
     this.render();
+    return this;
   }
 
   Clndr.prototype.setEvents = function(events) {
@@ -376,6 +385,7 @@
     this.options.events = this.addMomentObjectToEvents(events);
 
     this.render();
+    return this;
   };
 
   Clndr.prototype.addEvents = function(events) {
@@ -383,6 +393,7 @@
     this.options.events = $.merge(this.options.events, this.addMomentObjectToEvents(events));
 
     this.render();
+    return this;
   };
 
   Clndr.prototype.addMomentObjectToEvents = function(events) {
