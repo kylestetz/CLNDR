@@ -116,12 +116,15 @@
     }
 
     // quick & dirty test to make sure rendering is possible.
-    if( !this.options.render && typeof _ === 'undefined' ) {
-      throw new Error("Underscore was not found. Please include underscore.js OR provide a custom render function.")
-    }
-    if( !this.options.render ) {
-      // we're just going ahead and using underscore here if no render method has been supplied.
-      this.compiledClndrTemplate = _.template(this.options.template);
+    if( !$.isFunction(this.options.render) ) {
+      this.options.render = null;
+      if (typeof _ === 'undefined') {
+        throw new Error("Underscore was not found. Please include underscore.js OR provide a custom render function.");
+      }
+      else {
+        // we're just going ahead and using underscore here if no render method has been supplied.
+        this.compiledClndrTemplate = _.template(this.options.template);
+      }
     }
 
     // create the parent element that will hold the plugin & save it for later

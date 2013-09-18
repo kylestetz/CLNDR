@@ -40,8 +40,10 @@
     };
     Clndr.prototype.init = function() {
         if (this.daysOfTheWeek = this.options.weekOffset ? this.shiftWeekdayLabels(this.options.weekOffset) : this.options.daysOfTheWeek, 
-        !this.options.render && "undefined" == typeof _) throw new Error("Underscore was not found. Please include underscore.js OR provide a custom render function.");
-        this.options.render || (this.compiledClndrTemplate = _.template(this.options.template)), 
+        !$.isFunction(this.options.render)) {
+            if (this.options.render = null, "undefined" == typeof _) throw new Error("Underscore was not found. Please include underscore.js OR provide a custom render function.");
+            this.compiledClndrTemplate = _.template(this.options.template);
+        }
         $(this.element).html("<div class='clndr'></div>"), this.calendarContainer = $(".clndr", this.element), 
         this.render();
     }, Clndr.prototype.shiftWeekdayLabels = function(offset) {
