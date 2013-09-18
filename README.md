@@ -10,17 +10,19 @@ Recent Changes
 
 Thanks to everyone for their interest! Things just got shuffled around a bit to accommodate a grunt workflow. The fully-commented source version is `src/clndr.js`, while `clndr.js` and `clndr.min.js` are meant for development & production, respectively. In addition, CLNDR is now registered as a jQuery plugin, so you can now track versions through the tags in this repo.
 
-You Write The Markup
+Dependencies
+------------
+
+[jQuery](http://jquery.com/download/) and [Moment.js](http://momentjs.com/) are depended upon. By default CLNDR tries to use [Underscore.js](http://underscorejs.org/)'s `_.template()` function, however if you specify a custom rendering function (see documentation below) underscore will not be used at all.
+
+Because their APIs are the same, [Lo-Dash](http://lodash.com/)'s `_.template()` function will work ask well! Just include Lo-Dash instead of underscore.
+
+Introduction: You Write The Markup
 --------------------
 
 There are wonderful and feature-rich calendar modules out there and they all suffer the same problem: they give you markup (and often a good heap of JS) that you have to work with and style. This leads to a lot of hacking, pushing, pulling, and annoying why-can't-it-do-what-I-want scenarios.
 
 CLNDR doesn't generate markup (well, it has some reasonable defaults, but that's an aside). Instead, CLNDR asks you to create a template and in return it supplies your template with a great set of objects that will get you up and running in a few lines.
-
-Dependencies
-------------
-
-[jQuery](http://jquery.com/download/) and [Moment.js](http://momentjs.com/) are depended upon. By default CLNDR tries to use [Underscore.js](http://underscorejs.org/)'s `_.template()` function, however if you specify a custom rendering function (see documentation below) underscore will not be used at all.
 
 The 'Days' Array
 ----------------
