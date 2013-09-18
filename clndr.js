@@ -46,27 +46,43 @@
         return days;
     }, Clndr.prototype.createDaysObject = function(currentMonth) {
         daysArray = [];
-        var date = currentMonth.startOf("month"), now = moment(), diff = date.day() - this.options.weekOffset;
-        0 > diff && (diff += 7);
-        for (var i = 0; diff > i; i++) daysArray.push(this.calendarDay());
-        this.eventsThisMonth = [], this.options.events.length && (this.eventsThisMonth = this.options.events.filter(function(event) {
+        var date = currentMonth.startOf("month");
+        this.eventsLastMonth = [], this.eventsThisMonth = [], this.eventsNextMonth = [], 
+        this.options.events.length && (lastMonth = currentMonth.clone().subtract("months", 1), 
+        nextMonth = currentMonth.clone().add("months", 1), this.eventsLastMonth = this.options.events.filter(function(event) {
+            return event._clndrDateObject.format("YYYY-MM") == lastMonth.format("YYYY-MM");
+        }), this.eventsThisMonth = this.options.events.filter(function(event) {
             return event._clndrDateObject.format("YYYY-MM") == currentMonth.format("YYYY-MM");
+        }), this.eventsNextMonth = this.options.events.filter(function(event) {
+            return event._clndrDateObject.format("YYYY-MM") == nextMonth.format("YYYY-MM");
         }));
-        for (var numOfDays = date.daysInMonth(), i = 1; numOfDays >= i; i++) {
-            var eventsToday = [], j = 0, l = this.eventsThisMonth.length;
-            for (j; l > j; j++) this.eventsThisMonth[j]._clndrDateObject.date() == i && eventsToday.push(this.eventsThisMonth[j]);
-            var currentDay = moment([ currentMonth.year(), currentMonth.month(), i ]), extraClasses = "";
-            now.format("YYYY-MM-DD") == currentDay.format("YYYY-MM-DD") && (extraClasses += " today"), 
-            eventsToday.length && (extraClasses += " event"), daysArray.push(this.calendarDay({
-                day: i,
-                classes: this.options.targets.day + extraClasses,
-                id: "calendar-day-" + currentDay.format("YYYY-MM-DD"),
-                events: eventsToday,
-                date: currentDay
-            }));
+        var diff = date.day() - this.options.weekOffset;
+        0 > diff && (diff += 7);
+        for (var i = 0; diff > i; i++) {
+            var day = moment([ currentMonth.year(), currentMonth.month(), i - diff + 1 ]);
+            daysArray.push(this.createDayObject(day, this.eventsLastMonth));
         }
-        for (;0 !== daysArray.length % 7; ) daysArray.push(this.calendarDay());
+        for (var numOfDays = date.daysInMonth(), i = 1; numOfDays >= i; i++) {
+            var day = moment([ currentMonth.year(), currentMonth.month(), i ]);
+            daysArray.push(this.createDayObject(day, this.eventsThisMonth));
+        }
+        for (i = 1; 0 !== daysArray.length % 7; ) {
+            var day = moment([ currentMonth.year(), currentMonth.month(), numOfDays + i ]);
+            daysArray.push(this.createDayObject(day, this.eventsNextMonth)), i++;
+        }
         return daysArray;
+    }, Clndr.prototype.createDayObject = function(day, monthEvents) {
+        var eventsToday = [], now = moment(), j = 0, l = monthEvents.length;
+        for (j; l > j; j++) monthEvents[j]._clndrDateObject.date() == day.date() && eventsToday.push(monthEvents[j]);
+        var extraClasses = "";
+        return now.format("YYYY-MM-DD") == day.format("YYYY-MM-DD") && (extraClasses += " today"), 
+        eventsToday.length && (extraClasses += " event"), this.calendarDay({
+            day: day.date(),
+            classes: this.options.targets.day + extraClasses,
+            id: "calendar-day-" + day.format("YYYY-MM-DD"),
+            events: eventsToday,
+            date: day
+        });
     }, Clndr.prototype.render = function() {
         this.calendarContainer.children().remove();
         var days = this.createDaysObject(this.month);
