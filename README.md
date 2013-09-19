@@ -3,7 +3,7 @@ CLNDR.js
 
 CLNDR is a jQuery calendar plugin. It was created- you've heard this before- out of frustration with the lack of truly dynamic front-end calendar plugins out there.
 
-To see it in action, go to http://kylestetz.github.io/CLNDR.
+This is a fork of Kyle Stetz's <a href="http://kylestetz.github.io/CLNDR">CLNDR</a>; all the credit goes to him!
 
 Recent Changes
 --------------
@@ -95,6 +95,8 @@ $('.parent-element').clndr({
   weekOffset: 0,
   // determines which month to start with using either a date string or a moment object.
   startWithMonth: "YYYY-MM-DD" or moment(),
+  // an array of day abbreviations. Has always to start with Sunday.
+  daysOfTheWeek: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
   // callbacks!
   clickEvents: {
     // fired whenever a calendar box is clicked.
@@ -106,11 +108,14 @@ $('.parent-element').clndr({
     previousMonth: function(month){ },
     // fired when a user goes back OR forward a month. returns a moment.js object set to the correct month.
     onMonthChange: function(month){ }
+    // fired when a user goes to the current month/year. returns a moment.js object set to the correct month.
+    today: function(){ },
   },
   // the target classnames that CLNDR will look for to bind events. these are the defaults.
   targets: {
     nextButton: 'clndr-next-button',
     previousButton: 'clndr-previous-button',
+    todayButton: 'clndr-today-button',
     day: 'day',
     empty: 'empty'
   },
@@ -174,6 +179,9 @@ theCalendarInstance.setYear(1997);
 
 // Change the events. Note that this triggers a re-render of the calendar.
 theCalendarInstance.setEvents(newEventsArray);
+
+// Add events. Note that this triggers a re-render of the calendar.
+theCalendarInstance.addEvents(additionalEventsArray);
 ```
 
 Template Requirements
@@ -258,6 +266,7 @@ Todo
 
 Changelog
 =========
+`v1.0.5` ~ INOFFICIAL !! added new events & functions, which allows you to jump back to the current date.
 `v1.0.4` ~ fixed a bug in `setEvents` and event population where events would show up null.
 `v1.0.3 ~ 2013-09-14`: Underscore.js is now only relied upon for its `_.template()` function, which means if you are using your own rendering engine you do NOT need underscore to use CLNDR.js
 `v1.0.0 ~ 2013-09-14`: Officially v1.0.0! Added `extras` option, which exposes the `extras` variable in your template, allowing you to pass in arbitrary objects & synchronous functions for use inside of your template.

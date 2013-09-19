@@ -131,6 +131,9 @@
     $(this.element).html("<div class='clndr'></div>");
     this.calendarContainer = $('.clndr', this.element);
 
+    // attach event handlers for clicks on buttons/cells
+    this.bindEvents();
+
     // do a normal render of the calendar template
     this.render();
   };
@@ -158,7 +161,9 @@
     var diff = date.day() - this.options.weekOffset;
     if(diff < 0) diff += 7;
     for(var i = 0; i < diff; i++) {
-      daysArray.push( this.calendarDay() );
+      daysArray.push( this.calendarDay({
+        day: i
+      }) );
     }
 
     // filter the events list (if it exists) to events that are happening this month
@@ -208,7 +213,9 @@
     // ...and if there are any trailing blank boxes, fill those in
     // with blank days as well
     while(daysArray.length % 7 !== 0) {
-      daysArray.push( this.calendarDay() );
+      daysArray.push( this.calendarDay({
+        day: 'x'
+      }) );
     }
 
     return daysArray;
@@ -239,22 +246,23 @@
     } else {
       this.calendarContainer.html(this.options.render(data));
     }
-    this.bindEvents();
     if(this.options.doneRendering) {
       this.options.doneRendering();
     }
   };
 
   Clndr.prototype.bindEvents = function() {
+    var $container = $(this.element);
+
     // target the day elements and give them click events
-    $("." + this.options.targets.day, this.element).on("click", { context: this }, function(event) {
+    $container.on('click', '.'+this.options.targets.day, { context: this }, function(event) {
       if(event.data.context.options.clickEvents.click) {
         var target = event.data.context.buildTargetObject(event.currentTarget, true);
         event.data.context.options.clickEvents.click(target);
       }
     });
     // target the empty calendar boxes as well
-    $("." + this.options.targets.empty, this.element).on("click", { context: this }, function(event) {
+    $container.on('click', '.'+this.options.targets.empty, { context: this }, function(event) {
       if(event.data.context.options.clickEvents.click) {
         var target = event.data.context.buildTargetObject(event.currentTarget, false);
         event.data.context.options.clickEvents.click(target);
@@ -262,9 +270,10 @@
     });
 
     // bind the previous, next and today buttons
-    $("." + this.options.targets.previousButton, this.element).on("click", { context: this }, this.backAction);
-    $("." + this.options.targets.nextButton, this.element).on("click", { context: this }, this.forwardAction);
-    $("." + this.options.targets.todayButton, this.element).on("click", { context: this }, this.todayAction);
+    $container
+      .on('click', '.'+this.options.targets.previousButton, { context: this }, this.backAction)
+      .on('click', '.'+this.options.targets.nextButton, { context: this }, this.forwardAction)
+      .on('click', '.'+this.options.targets.todayButton, { context: this }, this.todayAction);
   }
 
   // If the user provided a click callback we'd like to give them something nice to work with.
