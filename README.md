@@ -111,7 +111,7 @@ $('.parent-element').clndr({
     // fired when a user goes back OR forward a month. returns a moment.js object set to the correct month.
     onMonthChange: function(month){ }
     // fired when a user goes to the current month/year. returns a moment.js object set to the correct month.
-    today: function(){ },
+    today: function(month){ },
   },
   // the target classnames that CLNDR will look for to bind events. these are the defaults.
   targets: {
