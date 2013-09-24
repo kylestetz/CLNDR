@@ -111,7 +111,7 @@
 
   Clndr.prototype.init = function () {
     // create the days of the week using moment's current language setting
-    this.daysOfTheWeek = [] || this.options.daysOfTheWeek;
+    this.daysOfTheWeek = this.options.daysOfTheWeek || [];
     if(!this.options.daysOfTheWeek) {
       this.daysOfTheWeek = [];
       for(var i = 0; i < 7; i++) {

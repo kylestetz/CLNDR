@@ -1,4 +1,4 @@
-/*!              ~ CLNDR v1.0.5 ~ 
+/*!              ~ CLNDR v1.0.6 ~ 
  * ============================================== 
  *       https://github.com/kylestetz/CLNDR 
  * ============================================== 
@@ -41,7 +41,7 @@
         adjacentDaysChangeMonth: !1
     };
     Clndr.prototype.init = function() {
-        if (this.daysOfTheWeek = [] || this.options.daysOfTheWeek, !this.options.daysOfTheWeek) {
+        if (this.daysOfTheWeek = this.options.daysOfTheWeek || [], !this.options.daysOfTheWeek) {
             this.daysOfTheWeek = [];
             for (var i = 0; 7 > i; i++) this.daysOfTheWeek.push(moment().weekday(i).format("dd").charAt(0));
         }
