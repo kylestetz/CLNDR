@@ -3,13 +3,6 @@ CLNDR.js
 
 CLNDR is a jQuery calendar plugin. It was created- you've heard this before- out of frustration with the lack of truly dynamic front-end calendar plugins out there.
 
-This is a fork of Kyle Stetz's <a href="http://kylestetz.github.io/CLNDR">CLNDR</a>; all the credit goes to him!
-
-Recent Changes
---------------
-
-Thanks to everyone for their interest! Things just got shuffled around a bit to accommodate a grunt workflow. The fully-commented source version is `src/clndr.js`, while `clndr.js` and `clndr.min.js` are meant for development & production, respectively. In addition, CLNDR is now registered as a jQuery plugin, so you can now track versions through the tags in this repo.
-
 Dependencies
 ------------
 
@@ -17,8 +10,13 @@ Dependencies
 
 Because their APIs are the same, [Lo-Dash](http://lodash.com/)'s `_.template()` function will work ask well! Just include Lo-Dash instead of underscore.
 
+Recent Changes
+--------------
+
+Thanks to everyone for their interest! Things just got shuffled around a bit to accommodate a grunt workflow. The fully-commented source version is `src/clndr.js`, while `clndr.js` and `clndr.min.js` are meant for development & production, respectively. In addition, CLNDR is now registered as a jQuery plugin, so you can now track versions through the tags in this repo.
+
 Introduction: You Write The Markup
---------------------
+==================================
 
 There are wonderful and feature-rich calendar modules out there and they all suffer the same problem: they give you markup (and often a good heap of JS) that you have to work with and style. This leads to a lot of hacking, pushing, pulling, and annoying why-can't-it-do-what-I-want scenarios.
 
@@ -97,7 +95,9 @@ $('.parent-element').clndr({
   weekOffset: 0,
   // determines which month to start with using either a date string or a moment object.
   startWithMonth: "YYYY-MM-DD" or moment(),
-  // an array of day abbreviations. Has always to start with Sunday.
+  // an array of day abbreviations. If you have moment.js set to a different language,
+  // it will guess these for you! If for some reason that doesn't work, use this...
+  // the array MUST start with Sunday (use in conjunction with weekOffset to change the starting day to Monday)
   daysOfTheWeek: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
   // callbacks!
   clickEvents: {
@@ -125,6 +125,11 @@ $('.parent-element').clndr({
   events: [],
   // if you're supplying an events array, dateParameter points to the field in your event object containing a date string. It's set to 'date' by default.
   dateParameter: 'date',
+  // show the numbers of days in months adjacent to the current month (and populate them with their events). defaults to true.
+  showAdjacentMonths: true,
+  // when days from adjacent months are clicked, switch the current month.
+  // fires nextMonth/previousMonth/onMonthChange click callbacks. defaults to false.
+  adjacentDaysChangeMonth: false,
   // a callback when the calendar is done rendering. This is a good place to bind custom event handlers.
   doneRendering: function(){ },
   // anything you want access to in your template
@@ -222,19 +227,14 @@ where the function must return the HTML result of the rendering operation. In th
 
 If you are using your own render method, underscore.js is NOT a dependency of this plugin.
 
-CLNDR has been tested successfully with [doT.js](http://olado.github.io/doT/). Please get in touch if you have success with other languages and they will be documented here.
+CLNDR has been tested successfully with [doT.js](http://olado.github.io/doT/) and [Hogan.js](http://twitter.github.io/hogan.js/). Please get in touch if you have success with other languages and they will be documented here.
 
 Internationalization
 --------------------
 
-Clndr has support for internationalization insofar as Moment.js supports it. By configuring your Moment.js instance to a different language, which you can read more about [here](http://momentjs.com/docs/#/i18n/), you are configuring Clndr as well. One notable exception is the daysOfTheWeek array, which does not currently take language into account. This can be overcome by changing it in your clndr instance:
+Clndr has support for internationalization insofar as Moment.js supports it. By configuring your Moment.js instance to a different language, which you can read more about [here](http://momentjs.com/docs/#/i18n/), you are configuring Clndr as well.
 
-```javascript
-// let's make our day abbreviations in french
-clndrInstance.daysOfTheWeek = ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
-```
-
-And don't forget that there's no requirement to use `daysOfTheWeek`- if instead you call `days[index].date.format('dddd')` from within your template you will be taking advantage of the current language setting in your Moment.js instance.
+The day of the week abbreviations are created automatically using moment.js's current language setting, however if this does not suit your needs you should override them using the `daysOfTheWeek` option. Make sure the array you provide begins on Sunday (use `weekOffset` to change the starting day of the week to another day).
 
 Underscore Template Delimiters
 ------------------------------
@@ -268,8 +268,8 @@ Todo
 
 Changelog
 =========
-`v1.0.5` ~ INOFFICIAL !! added new events & functions, which allows you to jump back to the current date.
-`v1.0.4` ~ fixed a bug in `setEvents` and event population where events would show up null.
+`v1.0.5 ~ 2013-09-24`: added support for showing days in months adjacent to the current month, controlled using the `showAdjacentMonths` option. Added the ability for those adjacent days to move to their month when clicked using the `adjacentDaysChangeMonth` option. Added `daysOfTheWeek` option, which you should avoid by allowing moment.js to make the abbreviations for you. Fixed a bug where providing some `targets: {}` options would remove the rest of them.
+`v1.0.4 ~ 2013-09-14`: fixed a bug in `setEvents` and event population where events would show up null.
 `v1.0.3 ~ 2013-09-14`: Underscore.js is now only relied upon for its `_.template()` function, which means if you are using your own rendering engine you do NOT need underscore to use CLNDR.js
 `v1.0.0 ~ 2013-09-14`: Officially v1.0.0! Added `extras` option, which exposes the `extras` variable in your template, allowing you to pass in arbitrary objects & synchronous functions for use inside of your template.
 

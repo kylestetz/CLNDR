@@ -160,7 +160,7 @@ html[xmlns] .clearfix {
                     }
                 }
 
-                .empty
+                .empty, .adjacent-month
                 {
                     border-left: @clndr-border;
                     border-top: @clndr-border;
@@ -276,12 +276,23 @@ html[xmlns] .clearfix {
                 }
             }
 
-            .empty
+            .empty, .adjacent-month
             {
                 float: left;
                 width: @box-size;
                 height: @box-size;
                 background: #ddd;
+            }
+        }
+
+        .clndr-today-button
+        {
+            width: 100%;
+            text-align: center;
+            cursor: pointer;
+            &:hover
+            {
+                background-color: #ddd;
             }
         }
     }
