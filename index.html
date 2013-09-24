@@ -275,13 +275,17 @@ extras: { }
 
         <pre><code class="language-javascript">
 $('.parent-element').clndr({
-  // the template: this could be stored in markup as a &lt;script type="text/template"&gt;&lt;/script&gt;
+  // the template: this could be stored in markup as a <script type="text/template"></script>
   // or pulled in as a string
   template: clndrTemplate,
   // start the week off on Sunday (0), Monday (1), etc. Sunday is the default.
   weekOffset: 0,
   // determines which month to start with using either a date string or a moment object.
   startWithMonth: "YYYY-MM-DD" or moment(),
+  // an array of day abbreviations. If you have moment.js set to a different language,
+  // it will guess these for you! If for some reason that doesn't work, use this...
+  // the array MUST start with Sunday (use in conjunction with weekOffset to change the starting day to Monday)
+  daysOfTheWeek: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
   // callbacks!
   clickEvents: {
     // fired whenever a calendar box is clicked.
@@ -293,19 +297,26 @@ $('.parent-element').clndr({
     previousMonth: function(month){ },
     // fired when a user goes back OR forward a month. returns a moment.js object set to the correct month.
     onMonthChange: function(month){ }
+    // fired when a user goes to the current month/year. returns a moment.js object set to the correct month.
+    today: function(){ },
   },
   // the target classnames that CLNDR will look for to bind events. these are the defaults.
   targets: {
     nextButton: 'clndr-next-button',
     previousButton: 'clndr-previous-button',
+    todayButton: 'clndr-today-button',
     day: 'day',
     empty: 'empty'
   },
   // an array of event objects
   events: [],
-  // if you're supplying an events array, dateParameter points to the
-  // field in your event object containing a date string. It's set to 'date' by default.
+  // if you're supplying an events array, dateParameter points to the field in your event object containing a date string. It's set to 'date' by default.
   dateParameter: 'date',
+  // show the numbers of days in months adjacent to the current month (and populate them with their events). defaults to true.
+  showAdjacentMonths: true,
+  // when days from adjacent months are clicked, switch the current month.
+  // fires nextMonth/previousMonth/onMonthChange click callbacks. defaults to false.
+  adjacentDaysChangeMonth: false,
   // a callback when the calendar is done rendering. This is a good place to bind custom event handlers.
   doneRendering: function(){ },
   // anything you want access to in your template
@@ -341,6 +352,9 @@ theCalendarInstance.setYear(1997);
 
 // Change the events. Note that this triggers a re-render of the calendar.
 theCalendarInstance.setEvents(newEventsArray);
+
+// Add events. Note that this triggers a re-render of the calendar.
+theCalendarInstance.addEvents(additionalEventsArray);
         </code></pre>
 
         <p>Want to play with an instance of CLNDR right now? Open the developer console and poke at the variable <span class="code">clndr</span>, which controls the first calendar on this page.</p>
