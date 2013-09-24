@@ -153,7 +153,6 @@
     // this array will hold numbers for the entire grid (even the blank spaces)
     daysArray = [];
     var date = currentMonth.startOf('month');
-    var now = moment();
 
     // if diff is greater than 0, we'll have to fill in some blank spaces
     // to account for the empty boxes in the grid.
@@ -166,59 +165,81 @@
       }) );
     }
 
-    // filter the events list (if it exists) to events that are happening this month
+    // filter the events list (if it exists) to events that are happening last month, this month and next month
+    this.eventsLastMonth = [];
     this.eventsThisMonth = [];
+    this.eventsNextMonth = [];
     if(this.options.events.length) {
+      lastMonth = currentMonth.clone().subtract('months', 1);
+      nextMonth = currentMonth.clone().add('months', 1);
+      this.eventsLastMonth = this.options.events.filter( function(event) {
+        return event._clndrDateObject.format("YYYY-MM") == lastMonth.format("YYYY-MM");
+      });
       this.eventsThisMonth = this.options.events.filter( function(event) {
         return event._clndrDateObject.format("YYYY-MM") == currentMonth.format("YYYY-MM");
       });
+      this.eventsNextMonth = this.options.events.filter( function(event) {
+        return event._clndrDateObject.format("YYYY-MM") == nextMonth.format("YYYY-MM");
+      });
+    }
+
+    // if diff is greater than 0, we'll have to fill in last days of the previous month
+    // to account for the empty boxes in the grid.
+    // we also need to take into account the weekOffset parameter
+    var diff = date.day() - this.options.weekOffset;
+    if(diff < 0) diff += 7;
+    for(var i = 0; i < diff; i++) {
+      var day = moment([currentMonth.year(), currentMonth.month(), i - diff + 1]);
+      daysArray.push( this.createDayObject(day, this.eventsLastMonth) );
     }
 
     // now we push all of the days in a month
     var numOfDays = date.daysInMonth();
     for(var i = 1; i <= numOfDays; i++) {
-
-      var eventsToday = [];
-
-      var j = 0, l = this.eventsThisMonth.length;
-      for(j; j < l; j++) {
-        // keep in mind that the events here already passed the month/year test.
-        // now all we have to compare is the moment.date(), which returns the day of the month.
-        if( this.eventsThisMonth[j]._clndrDateObject.date() == i ) {
-          eventsToday.push( this.eventsThisMonth[j] );
-        }
-      }
-
-      var currentDay = moment([currentMonth.year(), currentMonth.month(), i]);
-
-      var extraClasses = "";
-      if(now.format("YYYY-MM-DD") == currentDay.format("YYYY-MM-DD")) {
-        extraClasses += " today";
-      }
-      if(eventsToday.length) {
-        extraClasses += " event";
-      }
-
-      daysArray.push(
-        this.calendarDay({
-          day: i,
-          classes: this.options.targets.day + extraClasses,
-          id: "calendar-day-" + currentDay.format("YYYY-MM-DD"),
-          events: eventsToday,
-          date: currentDay
-        })
-      );
+      var day = moment([currentMonth.year(), currentMonth.month(), i]);
+      daysArray.push(this.createDayObject(day, this.eventsThisMonth) )
     }
 
     // ...and if there are any trailing blank boxes, fill those in
-    // with blank days as well
+    // with the next month first days
+    i = 1;
     while(daysArray.length % 7 !== 0) {
-      daysArray.push( this.calendarDay({
-        day: 'x'
-      }) );
+      var day = moment([currentMonth.year(), currentMonth.month(), numOfDays + i]);
+      daysArray.push( this.createDayObject(day, this.eventsNextMonth) );
+      i++;
     }
 
     return daysArray;
+  };
+
+  Clndr.prototype.createDayObject = function(day, monthEvents) {
+    var eventsToday = [];
+    var now = moment();
+
+    var j = 0, l = monthEvents.length;
+    for(j; j < l; j++) {
+      // keep in mind that the events here already passed the month/year test.
+      // now all we have to compare is the moment.date(), which returns the day of the month.
+      if( monthEvents[j]._clndrDateObject.date() == day.date() ) {
+        eventsToday.push( monthEvents[j] );
+      }
+    }
+
+    var extraClasses = "";
+    if(now.format("YYYY-MM-DD") == day.format("YYYY-MM-DD")) {
+      extraClasses += " today";
+    }
+    if(eventsToday.length) {
+      extraClasses += " event";
+    }
+
+    return this.calendarDay({
+      day: day.date(),
+      classes: this.options.targets.day + extraClasses,
+      id: "calendar-day-" + day.format("YYYY-MM-DD"),
+      events: eventsToday,
+      date: day
+    });
   };
 
   Clndr.prototype.render = function() {
