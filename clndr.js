@@ -1,4 +1,4 @@
-/*!              ~ CLNDR v1.0.4 ~ 
+/*!              ~ CLNDR v1.0.5 ~ 
  * ============================================== 
  *       https://github.com/kylestetz/CLNDR 
  * ============================================== 
@@ -21,11 +21,13 @@
             click: null,
             nextMonth: null,
             previousMonth: null,
+            today: null,
             onMonthChange: null
         },
         targets: {
             nextButton: "clndr-next-button",
             previousButton: "clndr-previous-button",
+            todayButton: "clndr-today-button",
             day: "day",
             empty: "empty"
         },
@@ -33,22 +35,27 @@
         extras: null,
         dateParameter: "date",
         doneRendering: null,
-        render: null
+        render: null,
+        daysOfTheWeek: [ "S", "M", "T", "W", "T", "F", "S" ]
     };
     Clndr.prototype.init = function() {
-        if (this.daysOfTheWeek = this.options.weekOffset ? this.shiftWeekdayLabels(this.options.weekOffset) : [ "S", "M", "T", "W", "T", "F", "S" ], 
-        !this.options.render && "undefined" == typeof _) throw new Error("Underscore was not found. Please include underscore.js OR provide a custom render function.");
-        this.options.render || (this.compiledClndrTemplate = _.template(this.options.template)), 
+        if (this.daysOfTheWeek = this.options.weekOffset ? this.shiftWeekdayLabels(this.options.weekOffset) : this.options.daysOfTheWeek, 
+        !$.isFunction(this.options.render)) {
+            if (this.options.render = null, "undefined" == typeof _) throw new Error("Underscore was not found. Please include underscore.js OR provide a custom render function.");
+            this.compiledClndrTemplate = _.template(this.options.template);
+        }
         $(this.element).html("<div class='clndr'></div>"), this.calendarContainer = $(".clndr", this.element), 
-        this.render();
+        this.bindEvents(), this.render();
     }, Clndr.prototype.shiftWeekdayLabels = function(offset) {
-        for (var days = [ "S", "M", "T", "W", "T", "F", "S" ], i = 0; offset > i; i++) days.push(days.shift());
+        for (var days = this.options.daysOfTheWeek, i = 0; offset > i; i++) days.push(days.shift());
         return days;
     }, Clndr.prototype.createDaysObject = function(currentMonth) {
         daysArray = [];
         var date = currentMonth.startOf("month"), now = moment(), diff = date.day() - this.options.weekOffset;
         0 > diff && (diff += 7);
-        for (var i = 0; diff > i; i++) daysArray.push(this.calendarDay());
+        for (var i = 0; diff > i; i++) daysArray.push(this.calendarDay({
+            day: i
+        }));
         this.eventsThisMonth = [], this.options.events.length && (this.eventsThisMonth = this.options.events.filter(function(event) {
             return event._clndrDateObject.format("YYYY-MM") == currentMonth.format("YYYY-MM");
         }));
@@ -65,7 +72,9 @@
                 date: currentDay
             }));
         }
-        for (;0 !== daysArray.length % 7; ) daysArray.push(this.calendarDay());
+        for (;0 !== daysArray.length % 7; ) daysArray.push(this.calendarDay({
+            day: "x"
+        }));
         return daysArray;
     }, Clndr.prototype.render = function() {
         this.calendarContainer.children().remove();
@@ -81,27 +90,30 @@
             extras: this.options.extras
         };
         this.options.render ? this.calendarContainer.html(this.options.render(data)) : this.calendarContainer.html(this.compiledClndrTemplate(data)), 
-        this.bindEvents(), this.options.doneRendering && this.options.doneRendering();
+        this.options.doneRendering && this.options.doneRendering();
     }, Clndr.prototype.bindEvents = function() {
-        $("." + this.options.targets.day, this.element).on("click", {
+        var $container = $(this.element);
+        $container.on("click", "." + this.options.targets.day, {
             context: this
         }, function(event) {
             if (event.data.context.options.clickEvents.click) {
                 var target = event.data.context.buildTargetObject(event.currentTarget, !0);
                 event.data.context.options.clickEvents.click(target);
             }
-        }), $("." + this.options.targets.empty, this.element).on("click", {
+        }), $container.on("click", "." + this.options.targets.empty, {
             context: this
         }, function(event) {
             if (event.data.context.options.clickEvents.click) {
                 var target = event.data.context.buildTargetObject(event.currentTarget, !1);
                 event.data.context.options.clickEvents.click(target);
             }
-        }), $("." + this.options.targets.previousButton, this.element).on("click", {
+        }), $container.on("click", "." + this.options.targets.previousButton, {
             context: this
-        }, this.backAction), $("." + this.options.targets.nextButton, this.element).on("click", {
+        }, this.backAction).on("click", "." + this.options.targets.nextButton, {
             context: this
-        }, this.forwardAction);
+        }, this.forwardAction).on("click", "." + this.options.targets.todayButton, {
+            context: this
+        }, this.todayAction);
     }, Clndr.prototype.buildTargetObject = function(currentTarget, targetWasDay) {
         var target = {
             element: currentTarget,
@@ -123,26 +135,33 @@
         event.data.context.month.subtract("months", 1), event.data.context.options.clickEvents.previousMonth && event.data.context.options.clickEvents.previousMonth(event.data.context.month), 
         event.data.context.options.clickEvents.onMonthChange && event.data.context.options.clickEvents.onMonthChange(event.data.context.month), 
         event.data.context.render();
+    }, Clndr.prototype.todayAction = function(event) {
+        event.data.context.month = moment(), event.data.context.options.clickEvents.today && event.data.context.options.clickEvents.today(event.data.context.month), 
+        event.data.context.render();
     }, Clndr.prototype.forward = function() {
-        this.month.add("months", 1), this.render();
+        return this.month.add("months", 1), this.render(), this;
     }, Clndr.prototype.back = function() {
-        this.month.subtract("months", 1), this.render();
+        return this.month.subtract("months", 1), this.render(), this;
     }, Clndr.prototype.next = function() {
-        this.forward();
+        return this.forward(), this;
     }, Clndr.prototype.previous = function() {
-        this.back();
+        return this.back(), this;
     }, Clndr.prototype.setMonth = function(newMonth) {
-        this.month.month(newMonth), this.render();
+        return this.month.month(newMonth), this.render(), this;
     }, Clndr.prototype.setYear = function(newYear) {
-        this.month.year(newYear), this.render();
+        return this.month.year(newYear), this.render(), this;
     }, Clndr.prototype.nextYear = function() {
-        this.month.add("year", 1), this.render();
+        return this.month.add("year", 1), this.render(), this;
     }, Clndr.prototype.previousYear = function() {
-        this.month.subtract("year", 1), this.render();
+        return this.month.subtract("year", 1), this.render(), this;
     }, Clndr.prototype.setYear = function(newYear) {
-        this.month.year(newYear), this.render();
+        return this.month.year(newYear), this.render(), this;
     }, Clndr.prototype.setEvents = function(events) {
-        this.options.events = this.addMomentObjectToEvents(events), this.render();
+        return this.options.events = this.addMomentObjectToEvents(events), this.render(), 
+        this;
+    }, Clndr.prototype.addEvents = function(events) {
+        return this.options.events = $.merge(this.options.events, this.addMomentObjectToEvents(events)), 
+        this.render(), this;
     }, Clndr.prototype.addMomentObjectToEvents = function(events) {
         var self = this, i = 0, l = events.length;
         for (i; l > i; i++) events[i]._clndrDateObject = moment(events[i][self.options.dateParameter]);
