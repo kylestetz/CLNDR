@@ -31,11 +31,13 @@ $( function() {
           });
         }
       }
-    }
+    },
+    adjacentDaysChangeMonth: true
   });
 
   $('#clndr-3').clndr({
     template: $('#clndr-3-template').html(),
-    events: events
+    events: events,
+    showAdjacentMonths: false
   });
 });
