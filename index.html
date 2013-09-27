@@ -321,6 +321,13 @@ $('.parent-element').clndr({
   doneRendering: function(){ },
   // anything you want access to in your template
   extras: { }
+  // if you want to use a different templating language, here's your ticket.
+  // Precompile your template (before you call clndr), pass the data from the render function
+  // into your template, and return the result. The result must be a string containing valid markup.
+  // More under 'Template Rendering Engine' below.
+  render: function(data){
+    return '&lt;div class="html data as a string"&gt;&lt;/div&gt;';
+  }
 });
         </code></pre>
 
