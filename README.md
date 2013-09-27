@@ -136,6 +136,13 @@ $('.parent-element').clndr({
   doneRendering: function(){ },
   // anything you want access to in your template
   extras: { }
+  // if you want to use a different templating language, here's your ticket.
+  // Precompile your template (before you call clndr), pass the data from the render function
+  // into your template, and return the result. The result must be a string containing valid markup.
+  // More under 'Template Rendering Engine' below.
+  render: function(data){
+    return '<div class="html data as a string"></div>';
+  }
 });
 ```
 
@@ -230,6 +237,42 @@ where the function must return the HTML result of the rendering operation. In th
 If you are using your own render method, underscore.js is NOT a dependency of this plugin.
 
 CLNDR has been tested successfully with [doT.js](http://olado.github.io/doT/) and [Hogan.js](http://twitter.github.io/hogan.js/). Please get in touch if you have success with other languages and they will be documented here.
+
+Here's an example using [doT.js](http://olado.github.io/doT/)...
+
+The markup:
+```html
+<script id="dot-template" type="text/template">
+  <div class="clndr-controls">
+    <div class="clndr-previous-button">&lsaquo;</div>
+    <div class="month">{{= it.month }}</div>
+    <div class="clndr-next-button">&rsaquo;</div>
+  </div>
+  <div class="clndr-grid">
+    <div class="days-of-the-week">
+      {{~it.daysOfTheWeek :day:index}}
+        <div class="header-day">{{= day }}</div>
+      {{~}}
+      <div class="days">
+        {{~it.days :day:index}}
+          <div class="{{= day.classes }}" id="{{= day.id }}">{{= day.day }}</div>
+        {{~}}
+      </div>
+    </div>
+  </div>
+</script>
+```
+
+The Javascript:
+```javascript
+var clndrTemplate = doT.template( $('#dot-template').html() );
+
+$('.cal2').clndr({
+  render: function(data) {
+    return clndrTemplate(data);
+  }
+});
+```
 
 Internationalization
 --------------------
