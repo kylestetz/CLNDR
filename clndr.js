@@ -59,14 +59,14 @@
         daysArray = [];
         var date = currentMonth.startOf("month");
         if (this.eventsLastMonth = [], this.eventsThisMonth = [], this.eventsNextMonth = [], 
-        this.options.events.length && (this.eventsThisMonth = this.options.events.filter(function(event) {
-            return event._clndrDateObject.format("YYYY-MM") == currentMonth.format("YYYY-MM");
+        this.options.events.length && (this.eventsThisMonth = $(this.options.events).filter(function() {
+            return this._clndrDateObject.format("YYYY-MM") == currentMonth.format("YYYY-MM");
         }), this.options.showAdjacentMonths)) {
             var lastMonth = currentMonth.clone().subtract("months", 1), nextMonth = currentMonth.clone().add("months", 1);
-            this.eventsLastMonth = this.options.events.filter(function(event) {
-                return event._clndrDateObject.format("YYYY-MM") == lastMonth.format("YYYY-MM");
-            }), this.eventsNextMonth = this.options.events.filter(function(event) {
-                return event._clndrDateObject.format("YYYY-MM") == nextMonth.format("YYYY-MM");
+            this.eventsLastMonth = $(this.options.events).filter(function() {
+                return this._clndrDateObject.format("YYYY-MM") == lastMonth.format("YYYY-MM");
+            }), this.eventsNextMonth = $(this.options.events).filter(function() {
+                return this._clndrDateObject.format("YYYY-MM") == nextMonth.format("YYYY-MM");
             });
         }
         var diff = date.day() - this.options.weekOffset;
@@ -144,8 +144,8 @@
         };
         if (targetWasDay) {
             var dateString = currentTarget.id.replace("calendar-day-", "");
-            target.date = moment(dateString), this.options.events && (target.events = this.options.events.filter(function(event) {
-                return event._clndrDateObject.format("YYYY-MM-DD") == dateString;
+            target.date = moment(dateString), this.options.events && (target.events = $(this.options.events).filter(function() {
+                return this._clndrDateObject.format("YYYY-MM-DD") == dateString;
             }));
         }
         return target;

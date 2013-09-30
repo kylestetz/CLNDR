@@ -172,8 +172,8 @@
     if(this.options.events.length) {
 
       this.eventsThisMonth = $(this.options.events).filter( function() {
-         return this._clndrDateObject.format("YYYY-MM") == currentMonth.format("YYYY-MM");
-       });
+        return this._clndrDateObject.format("YYYY-MM") == currentMonth.format("YYYY-MM");
+      });
 
       // filter the adjacent months as well, if the option is true
       if(this.options.showAdjacentMonths) {
