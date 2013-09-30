@@ -171,20 +171,20 @@
 
     if(this.options.events.length) {
 
-      this.eventsThisMonth = this.options.events.filter( function(event) {
-        return event._clndrDateObject.format("YYYY-MM") == currentMonth.format("YYYY-MM");
+      this.eventsThisMonth = $(this.options.events).filter( function() {
+        return this._clndrDateObject.format("YYYY-MM") == currentMonth.format("YYYY-MM");
       });
 
       // filter the adjacent months as well, if the option is true
       if(this.options.showAdjacentMonths) {
         var lastMonth = currentMonth.clone().subtract('months', 1);
         var nextMonth = currentMonth.clone().add('months', 1);
-        this.eventsLastMonth = this.options.events.filter( function(event) {
-          return event._clndrDateObject.format("YYYY-MM") == lastMonth.format("YYYY-MM");
+        this.eventsLastMonth = $(this.options.events).filter( function() {
+          return this._clndrDateObject.format("YYYY-MM") == lastMonth.format("YYYY-MM");
         });
 
-        this.eventsNextMonth = this.options.events.filter( function(event) {
-          return event._clndrDateObject.format("YYYY-MM") == nextMonth.format("YYYY-MM");
+        this.eventsNextMonth = $(this.options.events).filter( function() {
+          return this._clndrDateObject.format("YYYY-MM") == nextMonth.format("YYYY-MM");
         });
       }
     }
