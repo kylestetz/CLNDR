@@ -246,17 +246,30 @@
       }
     }
 
-    var extraClasses = "";
+    var extraClasses = "",
+            december = 11,
+            january = 0;
+
     if(now.format("YYYY-MM-DD") == day.format("YYYY-MM-DD")) {
-      extraClasses += " today";
+       extraClasses += " today";
     }
     if(eventsToday.length) {
-      extraClasses += " event";
+       extraClasses += " event";
     }
     if(this.month.month() > day.month()) {
-      extraClasses += " adjacent-month last-month";
+       extraClasses += " adjacent-month";
+
+       this.month.month() === december && day.month() === january
+           ? extraClasses += " next-month"
+           : extraClasses += " last-month";
+
     } else if(this.month.month() < day.month()) {
-      extraClasses += " adjacent-month next-month";
+       extraClasses += " adjacent-month";
+
+       this.month.month() === january && day.month() === december
+           ? extraClasses += " last-month"
+           : extraClasses += " next-month";
+
     }
 
     return this.calendarDay({
