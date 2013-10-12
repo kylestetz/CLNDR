@@ -258,6 +258,11 @@
     } else if(this.month.month() < day.month()) {
       extraClasses += " adjacent-month next-month";
     }
+    
+    // validate moment date
+    if (!day.isValid() && day.hasOwnProperty('_d') && day._d != undefined) {
+        day = moment(day._d);
+    }
 
     return this.calendarDay({
       day: day.date(),
