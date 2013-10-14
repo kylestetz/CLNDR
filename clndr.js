@@ -1,4 +1,4 @@
-/*!              ~ CLNDR v1.0.7 ~ 
+/*!              ~ CLNDR v1.0.8 ~ 
  * ============================================== 
  *       https://github.com/kylestetz/CLNDR 
  * ============================================== 
@@ -7,13 +7,13 @@
  * http://opensource.org/licenses/mit-license.php 
  * ============================================== 
  */
-!function($) {
+!function($, window, document, undefined) {
     function Clndr(element, options) {
         this.element = element, this.options = $.extend(!0, {}, defaults, options), this.options.events.length && (this.options.events = this.addMomentObjectToEvents(this.options.events)), 
         this.month = this.options.startWithMonth ? moment(this.options.startWithMonth) : moment(), 
         this._defaults = defaults, this._name = pluginName, this.init();
     }
-    var clndrTemplate = "<div class='clndr-controls'><div class='clndr-control-button'><span class='clndr-previous-button'>previous</span></div><div class='month'><%= month %></div><div class='clndr-control-button rightalign'><span class='clndr-next-button'>next</span></div></div><table class='clndr-table' border='0' cellspacing='0' cellpadding='0'><thead><tr class='header-days'><% for(var i = 0; i < daysOfTheWeek.length; i++) { %><td class='header-day'><%= daysOfTheWeek[i] %></td><% } %></tr></thead><tbody><% for(var i = 0; i < numberOfRows; i++){ %><tr><% for(var j = 0; j < 7; j++){ %><% var d = j + i * 7; %><td class='<%= days[d].classes %>' id='<%= days[d].id %>'><div class='day-contents'><%= days[d].day %></div></td><% } %></tr><% } %></tbody></table>", pluginName = "clndr", defaults = {
+    var clndrTemplate = "<div class='clndr-controls'><div class='clndr-control-button'><span class='clndr-previous-button'>previous</span></div><div class='month'><%= month %></div><div class='clndr-control-button rightalign'><span class='clndr-next-button'>next</span></div></div><table class='clndr-table' border='0' cellspacing='0' cellpadding='0'><thead><tr class='header-days'><% for(var i = 0; i < daysOfTheWeek.length; i++) { %><td class='header-day'><%= daysOfTheWeek[i] %></td><% } %></tr></thead><tbody><% for(var i = 0; i < numberOfRows; i++){ %><tr><% for(var j = 0; j < 7; j++){ %><% var d = j + i * 7; %><td class='<%= days[d].classes %>'><div class='day-contents'><%= days[d].day %></div></td><% } %></tr><% } %></tbody></table>", pluginName = "clndr", defaults = {
         template: clndrTemplate,
         weekOffset: 0,
         startWithMonth: null,
@@ -92,8 +92,11 @@
         for (j; l > j; j++) monthEvents[j]._clndrDateObject.date() == day.date() && eventsToday.push(monthEvents[j]);
         var extraClasses = "";
         return now.format("YYYY-MM-DD") == day.format("YYYY-MM-DD") && (extraClasses += " today"), 
-        eventsToday.length && (extraClasses += " event"), this.month.month() > day.month() ? extraClasses += " adjacent-month last-month" : this.month.month() < day.month() && (extraClasses += " adjacent-month next-month"), 
-        this.calendarDay({
+        eventsToday.length && (extraClasses += " event"), this.month.month() > day.month() ? (extraClasses += " adjacent-month", 
+        extraClasses += this.month.year() === day.year() ? " last-month" : " next-month") : this.month.month() < day.month() && (extraClasses += " adjacent-month", 
+        extraClasses += this.month.year() === day.year() ? " next-month" : " last-month"), 
+        !day.isValid() && day.hasOwnProperty("_d") && day._d != undefined && (day = moment(day._d)), 
+        extraClasses += " calendar-day-" + day.format("YYYY-MM-DD"), this.calendarDay({
             day: day.date(),
             classes: this.options.targets.day + extraClasses,
             id: "calendar-day-" + day.format("YYYY-MM-DD"),
@@ -143,7 +146,8 @@
             date: null
         };
         if (targetWasDay) {
-            var dateString = currentTarget.id.replace("calendar-day-", "");
+            var dateString, classNameIndex = currentTarget.className.indexOf("calendar-day-");
+            dateString = 0 !== classNameIndex ? currentTarget.className.substring(classNameIndex, classNameIndex + 23) : currentTarget.id.replace("calendar-day-", ""), 
             target.date = moment(dateString), this.options.events && (target.events = $(this.options.events).filter(function() {
                 return this._clndrDateObject.format("YYYY-MM-DD") == dateString;
             }));

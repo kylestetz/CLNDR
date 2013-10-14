@@ -38,7 +38,7 @@
       "<tr>" +
       "<% for(var j = 0; j < 7; j++){ %>" +
       "<% var d = j + i * 7; %>" +
-      "<td class='<%= days[d].classes %>' id='<%= days[d].id %>'><div class='day-contents'><%= days[d].day %>" +
+      "<td class='<%= days[d].classes %>'><div class='day-contents'><%= days[d].day %>" +
       "</div></td>" +
       "<% } %>" +
       "</tr>" +
@@ -246,9 +246,7 @@
       }
     }
 
-    var extraClasses = "",
-            december = 11,
-            january = 0;
+    var extraClasses = "";
 
     if(now.format("YYYY-MM-DD") == day.format("YYYY-MM-DD")) {
        extraClasses += " today";
@@ -259,23 +257,28 @@
     if(this.month.month() > day.month()) {
        extraClasses += " adjacent-month";
 
-       this.month.month() === december && day.month() === january
-           ? extraClasses += " next-month"
-           : extraClasses += " last-month";
+       this.month.year() === day.year()
+           ? extraClasses += " last-month"
+           : extraClasses += " next-month";
 
     } else if(this.month.month() < day.month()) {
        extraClasses += " adjacent-month";
 
-       this.month.month() === january && day.month() === december
-           ? extraClasses += " last-month"
-           : extraClasses += " next-month";
+       this.month.year() === day.year()
+           ? extraClasses += " next-month"
+           : extraClasses += " last-month";
 
     }
-    
+
     // validate moment date
     if (!day.isValid() && day.hasOwnProperty('_d') && day._d != undefined) {
         day = moment(day._d);
     }
+
+    // we're moving away from using IDs in favor of classes, since when
+    // using multiple calendars on a page we are technically violating the
+    // uniqueness of IDs.
+    extraClasses += " calendar-day-" + day.format("YYYY-MM-DD");
 
     return this.calendarDay({
       day: day.date(),
@@ -370,8 +373,19 @@
     };
     // did we click on a day or just an empty box?
     if(targetWasDay) {
-      // extract the date from the id of the DOM element
-      var dateString = currentTarget.id.replace('calendar-day-', '');
+      var dateString;
+
+      // We're shifting away from using IDs, so our identifier is in the list of classNames now.
+      var classNameIndex = currentTarget.className.indexOf('calendar-day-');
+      if(classNameIndex !== 0) {
+        // our unique identifier is always 23 characters long.
+        // If this feels a little wonky, that's probably because it is.
+        // Open to suggestions on how to improve this guy.
+        dateString = currentTarget.className.substring(classNameIndex, classNameIndex + 23);
+      } else {
+        // we shouldn't ever get here, but it's going to stay for now.
+        dateString = currentTarget.id.replace('calendar-day-', '');
+      }
       target.date = moment(dateString);
       // do we have events?
       if(this.options.events) {
