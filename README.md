@@ -313,6 +313,8 @@ Todo
 
 Changelog
 =========
+`v1.0.8 ~ 2013-10-14`: Deprecated the use of `days[].id`, adding it instead to the list of classes. You no longer have to set an `id` for each day element, and if you do it will be completely ignored. Just keep using `days[].classes`! Fixed a bug where an adjacent month's day would show up as `last-month` or `next-month` incorrectly if the year was different. Added some validation to address a bug where ids would show up as `calendar-day-Invalid Date`.
+
 `v1.0.7 ~ 2013-09-30`: settled on jQuery's $.filter method, opening the door to IE 7 + 8 support. If you plan on supporting IE 8 or below, don't forget to use jQuery's 1.x branch, as 2.x has dropped IE 6 - 8 support.
 
 `v1.0.6 ~ 2013-09-24`: fixed a bug where `daysOfTheWeek` option wouldn't work.
