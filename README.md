@@ -316,6 +316,8 @@ Todo
 
 Changelog
 =========
+`v1.0.10 ~ 2013-10-16`: fixed a nasty bug where events weren't getting passed into click handlers. this bug was introduced with `v1.0.8`! Please update.
+
 `v1.0.9 ~ 2013-10-16`: Fixed an i18n bug where the days of the week would start on a Monday correctly, but the calendar grid would still start as if the first day of the week was Sunday. This fix correctly uses moment.js's current settings to determine the first day of the week. If you are planning to use CLNDR in multiple languages, update to this version!
 
 `v1.0.8 ~ 2013-10-14`: Deprecated the use of `days[].id`, adding it instead to the list of classes. You no longer have to set an `id` for each day element, and if you do it will be completely ignored. Just keep using `days[].classes`! Fixed a bug where an adjacent month's day would show up as `last-month` or `next-month` incorrectly if the year was different. Added some validation to address a bug where ids would show up as `calendar-day-Invalid Date`.
