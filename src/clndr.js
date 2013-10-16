@@ -379,7 +379,7 @@
         // our unique identifier is always 23 characters long.
         // If this feels a little wonky, that's probably because it is.
         // Open to suggestions on how to improve this guy.
-        dateString = currentTarget.className.substring(classNameIndex, classNameIndex + 23);
+        dateString = currentTarget.className.substring(classNameIndex + 13, classNameIndex + 23);
       } else {
         // we shouldn't ever get here, but it's going to stay for now.
         dateString = currentTarget.id.replace('calendar-day-', '');
@@ -388,10 +388,10 @@
       // do we have events?
       if(this.options.events) {
         // are any of the events happening today?
-        target.events = $(this.options.events).filter( function() {
+        target.events = $.makeArray( $(this.options.events).filter( function() {
           // filter the dates down to the ones that match.
           return this._clndrDateObject.format('YYYY-MM-DD') == dateString;
-        });
+        }) );
       }
     }
 

@@ -1,4 +1,4 @@
-/*!              ~ CLNDR v1.0.9 ~ 
+/*!              ~ CLNDR v1.0.10 ~ 
  * ============================================== 
  *       https://github.com/kylestetz/CLNDR 
  * ============================================== 
@@ -147,10 +147,10 @@
         };
         if (targetWasDay) {
             var dateString, classNameIndex = currentTarget.className.indexOf("calendar-day-");
-            dateString = 0 !== classNameIndex ? currentTarget.className.substring(classNameIndex, classNameIndex + 23) : currentTarget.id.replace("calendar-day-", ""), 
-            target.date = moment(dateString), this.options.events && (target.events = $(this.options.events).filter(function() {
+            dateString = 0 !== classNameIndex ? currentTarget.className.substring(classNameIndex + 13, classNameIndex + 23) : currentTarget.id.replace("calendar-day-", ""), 
+            target.date = moment(dateString), this.options.events && (target.events = $.makeArray($(this.options.events).filter(function() {
                 return this._clndrDateObject.format("YYYY-MM-DD") == dateString;
-            }));
+            })));
         }
         return target;
     }, Clndr.prototype.forwardAction = function(event) {
