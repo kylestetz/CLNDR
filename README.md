@@ -279,7 +279,10 @@ Internationalization
 
 Clndr has support for internationalization insofar as Moment.js supports it. By configuring your Moment.js instance to a different language, which you can read more about [here](http://momentjs.com/docs/#/i18n/), you are configuring Clndr as well.
 
-The day of the week abbreviations are created automatically using moment.js's current language setting, however if this does not suit your needs you should override them using the `daysOfTheWeek` option. Make sure the array you provide begins on Sunday (use `weekOffset` to change the starting day of the week to another day).
+If you are using a moment.js language configuration in which weeks begin on a Monday (e.g. French), Clndr will detect this automatically and there is no need to provide a `weekOffset` or a `daysOfTheWeek` array.
+
+The day of the week abbreviations are created automatically using moment.js's current language setting, however if this does not suit your needs you should override them using the `daysOfTheWeek` option. Make sure the array you provide begins on the same day of the week as your current language setting.
+
 
 Underscore Template Delimiters
 ------------------------------
@@ -313,6 +316,8 @@ Todo
 
 Changelog
 =========
+`v1.0.9 ~ 2013-10-16`: Fixed an i18n bug where the days of the week would start on a Monday correctly, but the calendar grid would still start as if the first day of the week was Sunday. This fix correctly uses moment.js's current settings to determine the first day of the week. If you are planning to use CLNDR in multiple languages, update to this version!
+
 `v1.0.8 ~ 2013-10-14`: Deprecated the use of `days[].id`, adding it instead to the list of classes. You no longer have to set an `id` for each day element, and if you do it will be completely ignored. Just keep using `days[].classes`! Fixed a bug where an adjacent month's day would show up as `last-month` or `next-month` incorrectly if the year was different. Added some validation to address a bug where ids would show up as `calendar-day-Invalid Date`.
 
 `v1.0.7 ~ 2013-09-30`: settled on jQuery's $.filter method, opening the door to IE 7 + 8 support. If you plan on supporting IE 8 or below, don't forget to use jQuery's 1.x branch, as 2.x has dropped IE 6 - 8 support.

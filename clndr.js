@@ -1,4 +1,4 @@
-/*!              ~ CLNDR v1.0.8 ~ 
+/*!              ~ CLNDR v1.0.9 ~ 
  * ============================================== 
  *       https://github.com/kylestetz/CLNDR 
  * ============================================== 
@@ -69,7 +69,7 @@
                 return this._clndrDateObject.format("YYYY-MM") == nextMonth.format("YYYY-MM");
             });
         }
-        var diff = date.day() - this.options.weekOffset;
+        var diff = date.weekday() - this.options.weekOffset;
         if (0 > diff && (diff += 7), this.options.showAdjacentMonths) for (var i = 0; diff > i; i++) {
             var day = moment([ currentMonth.year(), currentMonth.month(), i - diff + 1 ]);
             daysArray.push(this.createDayObject(day, this.eventsLastMonth));

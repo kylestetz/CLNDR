@@ -121,8 +121,6 @@
     // shuffle the week if there's an offset
     if(this.options.weekOffset) {
       this.daysOfTheWeek = this.shiftWeekdayLabels(this.options.weekOffset);
-    } else {
-      // this.daysOfTheWeek = [ "S", "M", "T", "W", "T", "F", "S" ];
     }
 
     // quick & dirty test to make sure rendering is possible.
@@ -192,7 +190,7 @@
     // if diff is greater than 0, we'll have to fill in last days of the previous month
     // to account for the empty boxes in the grid.
     // we also need to take into account the weekOffset parameter
-    var diff = date.day() - this.options.weekOffset;
+    var diff = date.weekday() - this.options.weekOffset;
     if(diff < 0) diff += 7;
 
     if(this.options.showAdjacentMonths) {
