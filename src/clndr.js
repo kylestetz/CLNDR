@@ -249,6 +249,9 @@
     if(now.format("YYYY-MM-DD") == day.format("YYYY-MM-DD")) {
        extraClasses += " today";
     }
+    if(day.isBefore(now, 'day')) {
+      extraClasses += " past";
+    }
     if(eventsToday.length) {
        extraClasses += " event";
     }
@@ -310,7 +313,7 @@
     if(!this.options.render) {
       this.calendarContainer.html(this.compiledClndrTemplate(data));
     } else {
-      this.calendarContainer.html(this.options.render(data));
+      this.calendarContainer.html(this.options.render.apply(this, [data]));
     }
     if(this.options.doneRendering) {
       this.options.doneRendering();
@@ -325,7 +328,7 @@
     $container.on('click', '.'+this.options.targets.day, function(event) {
       if(self.options.clickEvents.click) {
         var target = self.buildTargetObject(event.currentTarget, true);
-        self.options.clickEvents.click(target);
+        self.options.clickEvents.click.apply(self, [target]);
       }
       // if adjacentDaysChangeMonth is on, we need to change the month here.
       if(self.options.adjacentDaysChangeMonth) {
@@ -340,7 +343,7 @@
     $container.on('click', '.'+this.options.targets.empty, function(event) {
       if(self.options.clickEvents.click) {
         var target = self.buildTargetObject(event.currentTarget, false);
-        self.options.clickEvents.click(target);
+        self.options.clickEvents.click.apply(self, [target]);
       }
       if(self.options.adjacentDaysChangeMonth) {
         if($(event.currentTarget).is(".last-month")) {
@@ -398,37 +401,27 @@
     return target;
   }
 
+  // the click handlers in bindEvents need a context, so these are wrappers
+  // to the actual functions. Todo: better way to handle this?
   Clndr.prototype.forwardAction = function(event) {
-    event.data.context.month.add('months', 1);
-    if(event.data.context.options.clickEvents.nextMonth) {
-      event.data.context.options.clickEvents.nextMonth( moment(event.data.context.month) );
-    }
-    if(event.data.context.options.clickEvents.onMonthChange) {
-      event.data.context.options.clickEvents.onMonthChange( moment(event.data.context.month) );
-    }
-    event.data.context.render();
+    var self = event.data.context;
+    self.forwardActionWithContext(self);
   };
 
   Clndr.prototype.backAction = function(event) {
-    event.data.context.month.subtract('months', 1);
-    if(event.data.context.options.clickEvents.previousMonth) {
-      event.data.context.options.clickEvents.previousMonth( moment(event.data.context.month) );
-    }
-    if(event.data.context.options.clickEvents.onMonthChange) {
-      event.data.context.options.clickEvents.onMonthChange( moment(event.data.context.month) );
-    }
-    event.data.context.render();
+    var self = event.data.context;
+    self.backActionWithContext(self);
   };
 
-  // these methods are identical to forward and back but accept a context
-  // so they can be called in some tricky what-the-hell-is-'this' situations.
+  // These are called directly, except for in the bindEvent click handlers,
+  // where forwardAction and backAction proxy to these guys.
   Clndr.prototype.backActionWithContext = function(self) {
     self.month.subtract('months', 1);
     if(self.options.clickEvents.previousMonth) {
-      self.options.clickEvents.previousMonth( moment(self.month) );
+      self.options.clickEvents.previousMonth.apply( self, [moment(self.month)] );
     }
     if(self.options.clickEvents.onMonthChange) {
-      self.options.clickEvents.onMonthChange( moment(self.month) );
+      self.options.clickEvents.onMonthChange.apply( self, [moment(self.month)] );
     }
     self.render();
   };
@@ -436,23 +429,24 @@
   Clndr.prototype.forwardActionWithContext = function(self) {
     self.month.add('months', 1);
     if(self.options.clickEvents.nextMonth) {
-      self.options.clickEvents.nextMonth(self.month);
+      self.options.clickEvents.nextMonth.apply(self, [self.month]);
     }
     if(self.options.clickEvents.onMonthChange) {
-      self.options.clickEvents.onMonthChange(self.month);
+      self.options.clickEvents.onMonthChange.apply(self, [self.month]);
     }
     self.render();
   };
 
   Clndr.prototype.todayAction = function(event) {
-    event.data.context.month = moment();
-    if(event.data.context.options.clickEvents.today) {
-      event.data.context.options.clickEvents.today( moment(event.data.context.month) );
+    var self = event.data.context;
+    self.month = moment();
+    if(self.options.clickEvents.today) {
+      self.options.clickEvents.today.apply( self, [moment(self.month)] );
     }
-    if(event.data.context.options.clickEvents.onMonthChange) {
-      event.data.context.options.clickEvents.onMonthChange( moment(event.data.context.month) );
+    if(self.options.clickEvents.onMonthChange) {
+      self.options.clickEvents.onMonthChange.apply( self, [moment(self.month)] );
     }
-    event.data.context.render();
+    self.render();
   };
 
   Clndr.prototype.forward = function() {

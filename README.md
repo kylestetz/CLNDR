@@ -101,7 +101,7 @@ $('.parent-element').clndr({
   // it will guess these for you! If for some reason that doesn't work, use this...
   // the array MUST start with Sunday (use in conjunction with weekOffset to change the starting day to Monday)
   daysOfTheWeek: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
-  // callbacks!
+  // click callbacks! the keyword 'this' is set to the clndr instance in all callbacks.
   clickEvents: {
     // fired whenever a calendar box is clicked.
     // returns a 'target' object containing the DOM element, any events, and the date as a moment.js object.
@@ -139,6 +139,7 @@ $('.parent-element').clndr({
   // if you want to use a different templating language, here's your ticket.
   // Precompile your template (before you call clndr), pass the data from the render function
   // into your template, and return the result. The result must be a string containing valid markup.
+  // The keyword 'this' is set to the clndr instance in case you need access to any other properties.
   // More under 'Template Rendering Engine' below.
   render: function(data){
     return '<div class="html data as a string"></div>';
@@ -316,6 +317,8 @@ Todo
 
 Changelog
 =========
+`v1.0.11 ~ 2013-10-19`: set the context in all click events so that `this` now refers to your clndr instance! `this` is also bound to the clndr instance in the `render` function. Added the class `past` to all days before today.
+
 `v1.0.10 ~ 2013-10-16`: fixed a nasty bug where events weren't getting passed into click handlers. this bug was introduced with `v1.0.8`! Please update.
 
 `v1.0.9 ~ 2013-10-16`: Fixed an i18n bug where the days of the week would start on a Monday correctly, but the calendar grid would still start as if the first day of the week was Sunday. This fix correctly uses moment.js's current settings to determine the first day of the week. If you are planning to use CLNDR in multiple languages, update to this version!

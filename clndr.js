@@ -1,4 +1,4 @@
-/*!              ~ CLNDR v1.0.10 ~ 
+/*!              ~ CLNDR v1.0.11 ~ 
  * ============================================== 
  *       https://github.com/kylestetz/CLNDR 
  * ============================================== 
@@ -92,8 +92,8 @@
         for (j; l > j; j++) monthEvents[j]._clndrDateObject.date() == day.date() && eventsToday.push(monthEvents[j]);
         var extraClasses = "";
         return now.format("YYYY-MM-DD") == day.format("YYYY-MM-DD") && (extraClasses += " today"), 
-        eventsToday.length && (extraClasses += " event"), this.month.month() > day.month() ? (extraClasses += " adjacent-month", 
-        extraClasses += this.month.year() === day.year() ? " last-month" : " next-month") : this.month.month() < day.month() && (extraClasses += " adjacent-month", 
+        day.isBefore(now, "day") && (extraClasses += " past"), eventsToday.length && (extraClasses += " event"), 
+        this.month.month() > day.month() ? (extraClasses += " adjacent-month", extraClasses += this.month.year() === day.year() ? " last-month" : " next-month") : this.month.month() < day.month() && (extraClasses += " adjacent-month", 
         extraClasses += this.month.year() === day.year() ? " next-month" : " last-month"), 
         !day.isValid() && day.hasOwnProperty("_d") && day._d != undefined && (day = moment(day._d)), 
         extraClasses += " calendar-day-" + day.format("YYYY-MM-DD"), this.calendarDay({
@@ -116,20 +116,20 @@
             eventsThisMonth: this.eventsThisMonth,
             extras: this.options.extras
         };
-        this.options.render ? this.calendarContainer.html(this.options.render(data)) : this.calendarContainer.html(this.compiledClndrTemplate(data)), 
+        this.options.render ? this.calendarContainer.html(this.options.render.apply(this, [ data ])) : this.calendarContainer.html(this.compiledClndrTemplate(data)), 
         this.options.doneRendering && this.options.doneRendering();
     }, Clndr.prototype.bindEvents = function() {
         var $container = $(this.element), self = this;
         $container.on("click", "." + this.options.targets.day, function(event) {
             if (self.options.clickEvents.click) {
                 var target = self.buildTargetObject(event.currentTarget, !0);
-                self.options.clickEvents.click(target);
+                self.options.clickEvents.click.apply(self, [ target ]);
             }
             self.options.adjacentDaysChangeMonth && ($(event.currentTarget).is(".last-month") ? self.backActionWithContext(self) : $(event.currentTarget).is(".next-month") && self.forwardActionWithContext(self));
         }), $container.on("click", "." + this.options.targets.empty, function(event) {
             if (self.options.clickEvents.click) {
                 var target = self.buildTargetObject(event.currentTarget, !1);
-                self.options.clickEvents.click(target);
+                self.options.clickEvents.click.apply(self, [ target ]);
             }
             self.options.adjacentDaysChangeMonth && ($(event.currentTarget).is(".last-month") ? self.backActionWithContext(self) : $(event.currentTarget).is(".next-month") && self.forwardActionWithContext(self));
         }), $container.on("click", "." + this.options.targets.previousButton, {
@@ -154,25 +154,24 @@
         }
         return target;
     }, Clndr.prototype.forwardAction = function(event) {
-        event.data.context.month.add("months", 1), event.data.context.options.clickEvents.nextMonth && event.data.context.options.clickEvents.nextMonth(moment(event.data.context.month)), 
-        event.data.context.options.clickEvents.onMonthChange && event.data.context.options.clickEvents.onMonthChange(moment(event.data.context.month)), 
-        event.data.context.render();
+        var self = event.data.context;
+        self.forwardActionWithContext(self);
     }, Clndr.prototype.backAction = function(event) {
-        event.data.context.month.subtract("months", 1), event.data.context.options.clickEvents.previousMonth && event.data.context.options.clickEvents.previousMonth(moment(event.data.context.month)), 
-        event.data.context.options.clickEvents.onMonthChange && event.data.context.options.clickEvents.onMonthChange(moment(event.data.context.month)), 
-        event.data.context.render();
+        var self = event.data.context;
+        self.backActionWithContext(self);
     }, Clndr.prototype.backActionWithContext = function(self) {
-        self.month.subtract("months", 1), self.options.clickEvents.previousMonth && self.options.clickEvents.previousMonth(moment(self.month)), 
-        self.options.clickEvents.onMonthChange && self.options.clickEvents.onMonthChange(moment(self.month)), 
+        self.month.subtract("months", 1), self.options.clickEvents.previousMonth && self.options.clickEvents.previousMonth.apply(self, [ moment(self.month) ]), 
+        self.options.clickEvents.onMonthChange && self.options.clickEvents.onMonthChange.apply(self, [ moment(self.month) ]), 
         self.render();
     }, Clndr.prototype.forwardActionWithContext = function(self) {
-        self.month.add("months", 1), self.options.clickEvents.nextMonth && self.options.clickEvents.nextMonth(self.month), 
-        self.options.clickEvents.onMonthChange && self.options.clickEvents.onMonthChange(self.month), 
+        self.month.add("months", 1), self.options.clickEvents.nextMonth && self.options.clickEvents.nextMonth.apply(self, [ self.month ]), 
+        self.options.clickEvents.onMonthChange && self.options.clickEvents.onMonthChange.apply(self, [ self.month ]), 
         self.render();
     }, Clndr.prototype.todayAction = function(event) {
-        event.data.context.month = moment(), event.data.context.options.clickEvents.today && event.data.context.options.clickEvents.today(moment(event.data.context.month)), 
-        event.data.context.options.clickEvents.onMonthChange && event.data.context.options.clickEvents.onMonthChange(moment(event.data.context.month)), 
-        event.data.context.render();
+        var self = event.data.context;
+        self.month = moment(), self.options.clickEvents.today && self.options.clickEvents.today.apply(self, [ moment(self.month) ]), 
+        self.options.clickEvents.onMonthChange && self.options.clickEvents.onMonthChange.apply(self, [ moment(self.month) ]), 
+        self.render();
     }, Clndr.prototype.forward = function() {
         return this.month.add("months", 1), this.render(), this;
     }, Clndr.prototype.back = function() {
