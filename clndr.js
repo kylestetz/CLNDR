@@ -9,7 +9,7 @@
  */
 !function($, window, document, undefined) {
     function Clndr(element, options) {
-        this.element = element, this.options = $.extend(!0, {}, defaults, options), this.options.events.length && (this.options.events = this.addMomentObjectToEvents(this.options.events)), 
+        this.element = element, this.options = $.extend(!0, {}, defaults, options), this.options.events.length && (this.options.events = this.options.multiDayEvents ? this.addMultiDayMomentObjectsToEvents(this.options.events) : this.addMomentObjectToEvents(this.options.events)), 
         this.month = this.options.startWithMonth ? moment(this.options.startWithMonth) : moment(), 
         this._defaults = defaults, this._name = pluginName, this.init();
     }
@@ -34,6 +34,7 @@
         events: [],
         extras: null,
         dateParameter: "date",
+        multiDayEvents: null,
         doneRendering: null,
         render: null,
         daysOfTheWeek: null,
@@ -59,9 +60,20 @@
         daysArray = [];
         var date = currentMonth.startOf("month");
         if (this.eventsLastMonth = [], this.eventsThisMonth = [], this.eventsNextMonth = [], 
-        this.options.events.length && (this.eventsThisMonth = $(this.options.events).filter(function() {
+        this.options.events.length) if (this.options.multiDayEvents) {
+            if (this.eventsThisMonth = $(this.options.events).filter(function() {
+                return this._clndrStartDateObject.format("YYYY-MM") == currentMonth.format("YYYY-MM") || this._clndrEndDateObject.format("YYYY-MM") == currentMonth.format("YYYY-MM");
+            }), this.options.showAdjacentMonths) {
+                var lastMonth = currentMonth.clone().subtract("months", 1), nextMonth = currentMonth.clone().add("months", 1);
+                this.eventsLastMonth = $(this.options.events).filter(function() {
+                    return this._clndrStartDateObject.format("YYYY-MM") == lastMonth.format("YYYY-MM") || this._clndrEndDateObject.format("YYYY-MM") == lastMonth.format("YYYY-MM");
+                }), this.eventsNextMonth = $(this.options.events).filter(function() {
+                    return this._clndrStartDateObject.format("YYYY-MM") == nextMonth.format("YYYY-MM") || this._clndrEndDateObject.format("YYYY-MM") == nextMonth.format("YYYY-MM");
+                });
+            }
+        } else if (this.eventsThisMonth = $(this.options.events).filter(function() {
             return this._clndrDateObject.format("YYYY-MM") == currentMonth.format("YYYY-MM");
-        }), this.options.showAdjacentMonths)) {
+        }), this.options.showAdjacentMonths) {
             var lastMonth = currentMonth.clone().subtract("months", 1), nextMonth = currentMonth.clone().add("months", 1);
             this.eventsLastMonth = $(this.options.events).filter(function() {
                 return this._clndrDateObject.format("YYYY-MM") == lastMonth.format("YYYY-MM");
@@ -88,8 +100,11 @@
         })), i++;
         return daysArray;
     }, Clndr.prototype.createDayObject = function(day, monthEvents) {
-        var eventsToday = [], now = moment(), j = 0, l = monthEvents.length;
-        for (j; l > j; j++) monthEvents[j]._clndrDateObject.date() == day.date() && eventsToday.push(monthEvents[j]);
+        var eventsToday = [], now = moment(), self = this, j = 0, l = monthEvents.length;
+        for (j; l > j; j++) if (self.options.multiDayEvents) {
+            var start = monthEvents[j]._clndrStartDateObject, end = monthEvents[j]._clndrEndDateObject;
+            (day.isSame(start, "day") || day.isAfter(start, "day")) && (day.isSame(end, "day") || day.isBefore(end, "day")) && eventsToday.push(monthEvents[j]);
+        } else monthEvents[j]._clndrDateObject.date() == day.date() && eventsToday.push(monthEvents[j]);
         var extraClasses = "";
         return now.format("YYYY-MM-DD") == day.format("YYYY-MM-DD") && (extraClasses += " today"), 
         day.isBefore(now, "day") && (extraClasses += " past"), eventsToday.length && (extraClasses += " event"), 
@@ -148,7 +163,9 @@
         if (targetWasDay) {
             var dateString, classNameIndex = currentTarget.className.indexOf("calendar-day-");
             dateString = 0 !== classNameIndex ? currentTarget.className.substring(classNameIndex + 13, classNameIndex + 23) : currentTarget.id.replace("calendar-day-", ""), 
-            target.date = moment(dateString), this.options.events && (target.events = $.makeArray($(this.options.events).filter(function() {
+            target.date = moment(dateString), this.options.events && (target.events = this.options.multiDayEvents ? $.makeArray($(this.options.events).filter(function() {
+                return (target.date.isSame(this._clndrStartDateObject, "day") || target.date.isAfter(this._clndrStartDateObject, "day")) && (target.date.isSame(this._clndrEndDateObject, "day") || target.date.isBefore(this._clndrEndDateObject, "day"));
+            })) : $.makeArray($(this.options.events).filter(function() {
                 return this._clndrDateObject.format("YYYY-MM-DD") == dateString;
             })));
         }
@@ -191,14 +208,19 @@
     }, Clndr.prototype.setYear = function(newYear) {
         return this.month.year(newYear), this.render(), this;
     }, Clndr.prototype.setEvents = function(events) {
-        return this.options.events = this.addMomentObjectToEvents(events), this.render(), 
-        this;
+        return this.options.events = this.options.multiDayEvents ? this.addMultiDayMomentObjectsToEvents(events) : this.addMomentObjectToEvents(events), 
+        this.render(), this;
     }, Clndr.prototype.addEvents = function(events) {
-        return this.options.events = $.merge(this.options.events, this.addMomentObjectToEvents(events)), 
+        return this.options.events = this.options.multiDayEvents ? $.merge(this.options.events, this.addMultiDayMomentObjectsToEvents(events)) : $.merge(this.options.events, this.addMomentObjectToEvents(events)), 
         this.render(), this;
     }, Clndr.prototype.addMomentObjectToEvents = function(events) {
         var self = this, i = 0, l = events.length;
         for (i; l > i; i++) events[i]._clndrDateObject = moment(events[i][self.options.dateParameter]);
+        return events;
+    }, Clndr.prototype.addMultiDayMomentObjectsToEvents = function(events) {
+        var self = this, i = 0, l = events.length;
+        for (i; l > i; i++) events[i]._clndrStartDateObject = moment(events[i][self.options.multiDayEvents.startDate]), 
+        events[i]._clndrEndDateObject = moment(events[i][self.options.multiDayEvents.endDate]);
         return events;
     }, Clndr.prototype.calendarDay = function(options) {
         var defaults = {

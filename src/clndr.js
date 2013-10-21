@@ -69,6 +69,7 @@
     events: [],
     extras: null,
     dateParameter: 'date',
+    multiDayEvents: null,
     doneRendering: null,
     render: null,
     daysOfTheWeek: null,
@@ -87,7 +88,11 @@
     // which will add a date object that we can use to make life easier. This is only necessary
     // when events are provided on instantiation, since our setEvents function uses addMomentObjectToEvents.
     if(this.options.events.length) {
-      this.options.events = this.addMomentObjectToEvents(this.options.events);
+      if(this.options.multiDayEvents) {
+        this.options.events = this.addMultiDayMomentObjectsToEvents(this.options.events);
+      } else {
+        this.options.events = this.addMomentObjectToEvents(this.options.events);
+      }
     }
 
     // this object will store a reference to the current month.
@@ -167,23 +172,51 @@
     this.eventsThisMonth = [];
     this.eventsNextMonth = [];
 
+    // TODO: optimize.
     if(this.options.events.length) {
 
-      this.eventsThisMonth = $(this.options.events).filter( function() {
-        return this._clndrDateObject.format("YYYY-MM") == currentMonth.format("YYYY-MM");
-      });
-
-      // filter the adjacent months as well, if the option is true
-      if(this.options.showAdjacentMonths) {
-        var lastMonth = currentMonth.clone().subtract('months', 1);
-        var nextMonth = currentMonth.clone().add('months', 1);
-        this.eventsLastMonth = $(this.options.events).filter( function() {
-          return this._clndrDateObject.format("YYYY-MM") == lastMonth.format("YYYY-MM");
+      // MULTI-DAY EVENT PARSING
+      // if we're using multi-day events, the start or end must be in the current month
+      if(this.options.multiDayEvents) {
+        this.eventsThisMonth = $(this.options.events).filter( function() {
+          return this._clndrStartDateObject.format("YYYY-MM") == currentMonth.format("YYYY-MM")
+          || this._clndrEndDateObject.format("YYYY-MM") == currentMonth.format("YYYY-MM");
         });
 
-        this.eventsNextMonth = $(this.options.events).filter( function() {
-          return this._clndrDateObject.format("YYYY-MM") == nextMonth.format("YYYY-MM");
+        if(this.options.showAdjacentMonths) {
+          var lastMonth = currentMonth.clone().subtract('months', 1);
+          var nextMonth = currentMonth.clone().add('months', 1);
+          this.eventsLastMonth = $(this.options.events).filter( function() {
+            return this._clndrStartDateObject.format("YYYY-MM") == lastMonth.format("YYYY-MM")
+          || this._clndrEndDateObject.format("YYYY-MM") == lastMonth.format("YYYY-MM");
+          });
+
+          this.eventsNextMonth = $(this.options.events).filter( function() {
+            return this._clndrStartDateObject.format("YYYY-MM") == nextMonth.format("YYYY-MM")
+          || this._clndrEndDateObject.format("YYYY-MM") == nextMonth.format("YYYY-MM");
+          });
+        }
+      }
+
+      // SINGLE-DAY EVENT PARSING
+      // if we're using single-day events, use _clndrDateObject
+      else {
+        this.eventsThisMonth = $(this.options.events).filter( function() {
+          return this._clndrDateObject.format("YYYY-MM") == currentMonth.format("YYYY-MM");
         });
+
+        // filter the adjacent months as well, if the option is true
+        if(this.options.showAdjacentMonths) {
+          var lastMonth = currentMonth.clone().subtract('months', 1);
+          var nextMonth = currentMonth.clone().add('months', 1);
+          this.eventsLastMonth = $(this.options.events).filter( function() {
+            return this._clndrDateObject.format("YYYY-MM") == lastMonth.format("YYYY-MM");
+          });
+
+          this.eventsNextMonth = $(this.options.events).filter( function() {
+            return this._clndrDateObject.format("YYYY-MM") == nextMonth.format("YYYY-MM");
+          });
+        }
       }
     }
 
@@ -234,13 +267,26 @@
   Clndr.prototype.createDayObject = function(day, monthEvents) {
     var eventsToday = [];
     var now = moment();
+    var self = this;
 
     var j = 0, l = monthEvents.length;
     for(j; j < l; j++) {
       // keep in mind that the events here already passed the month/year test.
       // now all we have to compare is the moment.date(), which returns the day of the month.
-      if( monthEvents[j]._clndrDateObject.date() == day.date() ) {
-        eventsToday.push( monthEvents[j] );
+      if(self.options.multiDayEvents) {
+        var start = monthEvents[j]._clndrStartDateObject;
+        var end = monthEvents[j]._clndrEndDateObject;
+        // if today is the same day as start or is after the start, and
+        // if today is the same day as the end or before the end ...
+        // woohoo semantics!
+        if( ( day.isSame(start, 'day') || day.isAfter(start, 'day') ) &&
+          ( day.isSame(end, 'day') || day.isBefore(end, 'day') ) ) {
+          eventsToday.push( monthEvents[j] );
+        }
+      } else {
+        if( monthEvents[j]._clndrDateObject.date() == day.date() ) {
+          eventsToday.push( monthEvents[j] );
+        }
       }
     }
 
@@ -391,10 +437,18 @@
       // do we have events?
       if(this.options.events) {
         // are any of the events happening today?
-        target.events = $.makeArray( $(this.options.events).filter( function() {
-          // filter the dates down to the ones that match.
-          return this._clndrDateObject.format('YYYY-MM-DD') == dateString;
-        }) );
+        if(this.options.multiDayEvents) {
+          target.events = $.makeArray( $(this.options.events).filter( function() {
+            // filter the dates down to the ones that match.
+            return ( ( target.date.isSame(this._clndrStartDateObject, 'day') || target.date.isAfter(this._clndrStartDateObject, 'day') ) &&
+              ( target.date.isSame(this._clndrEndDateObject, 'day') || target.date.isBefore(this._clndrEndDateObject, 'day') ) );
+          }) );
+        } else {
+          target.events = $.makeArray( $(this.options.events).filter( function() {
+            // filter the dates down to the ones that match.
+            return this._clndrDateObject.format('YYYY-MM-DD') == dateString;
+          }) );
+        }
       }
     }
 
@@ -505,7 +559,11 @@
 
   Clndr.prototype.setEvents = function(events) {
     // go through each event and add a moment object
-    this.options.events = this.addMomentObjectToEvents(events);
+    if(this.options.multiDayEvents) {
+      this.options.events = this.addMultiDayMomentObjectsToEvents(events);
+    } else {
+      this.options.events = this.addMomentObjectToEvents(events);
+    }
 
     this.render();
     return this;
@@ -513,7 +571,11 @@
 
   Clndr.prototype.addEvents = function(events) {
     // go through each event and add a moment object
-    this.options.events = $.merge(this.options.events, this.addMomentObjectToEvents(events));
+    if(this.options.multiDayEvents) {
+      this.options.events = $.merge(this.options.events, this.addMultiDayMomentObjectsToEvents(events));
+    } else {
+      this.options.events = $.merge(this.options.events, this.addMomentObjectToEvents(events));
+    }
 
     this.render();
     return this;
@@ -526,6 +588,16 @@
       // stuff a _clndrDateObject in each event, which really, REALLY should not be
       // overriding any existing object... Man that would be weird.
       events[i]._clndrDateObject = moment( events[i][self.options.dateParameter] );
+    }
+    return events;
+  }
+
+  Clndr.prototype.addMultiDayMomentObjectsToEvents = function(events) {
+    var self = this;
+    var i = 0, l = events.length;
+    for(i; i < l; i++) {
+      events[i]._clndrStartDateObject = moment( events[i][self.options.multiDayEvents.startDate] );
+      events[i]._clndrEndDateObject = moment( events[i][self.options.multiDayEvents.endDate] );
     }
     return events;
   }
