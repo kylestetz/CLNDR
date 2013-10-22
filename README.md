@@ -99,64 +99,101 @@ $('.parent-element').clndr({
   startWithMonth: "YYYY-MM-DD" or moment(),
   // an array of day abbreviations. If you have moment.js set to a different language,
   // it will guess these for you! If for some reason that doesn't work, use this...
-  // the array MUST start with Sunday (use in conjunction with weekOffset to change the starting day to Monday)
+  // the array MUST start with Sunday
+  // (use in conjunction with weekOffset to change the starting day to Monday)
   daysOfTheWeek: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
   // click callbacks! the keyword 'this' is set to the clndr instance in all callbacks.
   clickEvents: {
     // fired whenever a calendar box is clicked.
-    // returns a 'target' object containing the DOM element, any events, and the date as a moment.js object.
+    // returns a 'target' object containing the DOM element, any events,
+    // and the date as a moment.js object.
     click: function(target){ },
-    // fired when a user goes forward a month. returns a moment.js object set to the correct month.
+    // fired when a user goes forward a month.
+    // returns a moment.js object set to the correct month.
     nextMonth: function(month){ },
-    // fired when a user goes back a month. returns a moment.js object set to the correct month.
+    // fired when a user goes back a month.
+    // returns a moment.js object set to the correct month.
     previousMonth: function(month){ },
-    // fired when a user goes back OR forward a month. returns a moment.js object set to the correct month.
-    onMonthChange: function(month){ }
-    // fired when a user goes to the current month/year. returns a moment.js object set to the correct month.
+    // fired when the next year button is clicked.
+    // returns a moment.js object set to the correct month and year.
+    nextYear: function(month) { },
+    // fired when the previous year button is clicked.
+    // returns a moment.js object set to the correct month and year.
+    previousYear: function(month) { },
+    // fires any time the month changes as a result of a click action.
+    // returns a moment.js object set to the correct month.
+    onMonthChange: function(month) { },
+    // fires any time the year changes as a result of a click action.
+    // if onMonthChange is also set, it is fired BEFORE onYearChange.
+    // returns a moment.js object set to the correct month and year.
+    onYearChange: function(month) { },
+    // fired when a user goes to the current month & year.
+    // returns a moment.js object set to the correct month.
     today: function(month){ },
+
   },
-  // the target classnames that CLNDR will look for to bind events. these are the defaults.
+  // the target classnames that CLNDR will look for to bind events.
+  // these are the defaults.
   targets: {
     nextButton: 'clndr-next-button',
     previousButton: 'clndr-previous-button',
+    nextYearButton: 'clndr-next-year-button',
+    previousYearButton: 'clndr-previous-year-button',
     todayButton: 'clndr-today-button',
     day: 'day',
     empty: 'empty'
   },
   // an array of event objects
   events: [],
-  // if you're supplying an events array, dateParameter points to the field in your event object containing a date string. It's set to 'date' by default.
+  // if you're supplying an events array, dateParameter points to the
+  // field in your event object containing a date string.
+  // It's set to 'date' by default.
   dateParameter: 'date',
-  // show the numbers of days in months adjacent to the current month (and populate them with their events). defaults to true.
+  // show the numbers of days in months adjacent to the current month
+  // (and populate them with their events). defaults to true.
   showAdjacentMonths: true,
   // when days from adjacent months are clicked, switch the current month.
   // fires nextMonth/previousMonth/onMonthChange click callbacks. defaults to false.
   adjacentDaysChangeMonth: false,
-  // a callback when the calendar is done rendering. This is a good place to bind custom event handlers.
+  // a callback when the calendar is done rendering.
+  // This is a good place to bind custom event handlers
+  // (also see the 'ready' option below).
   doneRendering: function(){ },
   // anything you want access to in your template
   extras: { }
   // if you want to use a different templating language, here's your ticket.
-  // Precompile your template (before you call clndr), pass the data from the render function
-  // into your template, and return the result. The result must be a string containing valid markup.
-  // The keyword 'this' is set to the clndr instance in case you need access to any other properties.
+  // Precompile your template (before you call clndr),
+  // pass the data from the render function into your template,
+  // and return the result. The result must be a string containing valid markup.
+  // The keyword 'this' is set to the clndr instance
+  // in case you need access to any other properties.
   // More under 'Template Rendering Engine' below.
   render: function(data){
     return '<div class="html data as a string"></div>';
-  }
+  },
+  // this is called only once after clndr has been initialized and rendered.
+  // use this to bind custom event handlers that don't need to be re-attached
+  // every time the month changes (most event handlers fall in this category).
+  // hint: this.element refers to the parent element that holds the clndr,
+  // and is a great place to attach handlers that don't get tossed out every
+  // time the clndr is re-rendered.
+  ready: function() { }
 });
 ```
 
 All of the things you have access to in your template:
 
 ```javascript
-// an array of day-of-the-week abbreviations, shifted as requested using the weekOffset parameter.
+// an array of day-of-the-week abbreviations,
+// shifted as requested using the weekOffset parameter.
 daysOfTheWeek: ['S', 'M', 'T', etc...]
-// the number of 7-block calendar rows, in the event that you want to do some looping with it
+// the number of 7-block calendar rows,
+// in the event that you want to do some looping with it
 numberOfRows: 5
 // the days object, documented in more detail above
 days: [ { day, classes, id, events, date } ]
-// the month name- don't forget that you can do things like month.substring(0, 1) and month.toLowerCase() in your template
+// the month name- don't forget that you can do things like
+// month.substring(0, 1) and month.toLowerCase() in your template
 month: "May"
 // the year that the calendar is currently focused on
 year: "2013"
@@ -317,6 +354,8 @@ Todo
 
 Changelog
 =========
+`v1.0.12 ~ 2013-10-22`: you can now make next and previous year buttons using the classes `clndr-next-year-button` and `clndr-previous-year-button`, or by specifying the options `targets.nextYearButton` and `targets.previousYearButton`. `doneRendering`'s `this` keyword is now set to the clndr instance. Added the `ready` callback, which is a good place to attach event handlers. Added `clickEvents.onYearChange`, which is fired whenever the year changed as a result of a click action (even if you just went to the next month and it happened to be December to January!).
+
 `v1.0.11 ~ 2013-10-19`: set the context in all click events so that `this` now refers to your clndr instance! `this` is also bound to the clndr instance in the `render` function. Added the class `past` to all days before today.
 
 `v1.0.10 ~ 2013-10-16`: fixed a nasty bug where events weren't getting passed into click handlers. this bug was introduced with `v1.0.8`! Please update.

@@ -1,4 +1,4 @@
-/*!              ~ CLNDR v1.0.11 ~ 
+/*!              ~ CLNDR v1.0.12 ~ 
  * ============================================== 
  *       https://github.com/kylestetz/CLNDR 
  * ============================================== 
@@ -13,7 +13,7 @@
         this.month = this.options.startWithMonth ? moment(this.options.startWithMonth) : moment(), 
         this._defaults = defaults, this._name = pluginName, this.init();
     }
-    var clndrTemplate = "<div class='clndr-controls'><div class='clndr-control-button'><span class='clndr-previous-button'>previous</span></div><div class='month'><%= month %></div><div class='clndr-control-button rightalign'><span class='clndr-next-button'>next</span></div></div><table class='clndr-table' border='0' cellspacing='0' cellpadding='0'><thead><tr class='header-days'><% for(var i = 0; i < daysOfTheWeek.length; i++) { %><td class='header-day'><%= daysOfTheWeek[i] %></td><% } %></tr></thead><tbody><% for(var i = 0; i < numberOfRows; i++){ %><tr><% for(var j = 0; j < 7; j++){ %><% var d = j + i * 7; %><td class='<%= days[d].classes %>'><div class='day-contents'><%= days[d].day %></div></td><% } %></tr><% } %></tbody></table>", pluginName = "clndr", defaults = {
+    var clndrTemplate = "<div class='clndr-controls'><div class='clndr-control-button'><span class='clndr-previous-button'>previous</span></div><div class='month'><%= month %> <%= year %></div><div class='clndr-control-button rightalign'><span class='clndr-next-button'>next</span></div></div><table class='clndr-table' border='0' cellspacing='0' cellpadding='0'><thead><tr class='header-days'><% for(var i = 0; i < daysOfTheWeek.length; i++) { %><td class='header-day'><%= daysOfTheWeek[i] %></td><% } %></tr></thead><tbody><% for(var i = 0; i < numberOfRows; i++){ %><tr><% for(var j = 0; j < 7; j++){ %><% var d = j + i * 7; %><td class='<%= days[d].classes %>'><div class='day-contents'><%= days[d].day %></div></td><% } %></tr><% } %></tbody></table>", pluginName = "clndr", defaults = {
         template: clndrTemplate,
         weekOffset: 0,
         startWithMonth: null,
@@ -21,12 +21,17 @@
             click: null,
             nextMonth: null,
             previousMonth: null,
+            nextYear: null,
+            previousYear: null,
             today: null,
-            onMonthChange: null
+            onMonthChange: null,
+            onYearChange: null
         },
         targets: {
             nextButton: "clndr-next-button",
             previousButton: "clndr-previous-button",
+            nextYearButton: "clndr-next-year-button",
+            previousYearButton: "clndr-previous-year-button",
             todayButton: "clndr-today-button",
             day: "day",
             empty: "empty"
@@ -38,7 +43,8 @@
         render: null,
         daysOfTheWeek: null,
         showAdjacentMonths: !0,
-        adjacentDaysChangeMonth: !1
+        adjacentDaysChangeMonth: !1,
+        ready: null
     };
     Clndr.prototype.init = function() {
         if (this.daysOfTheWeek = this.options.daysOfTheWeek || [], !this.options.daysOfTheWeek) {
@@ -51,7 +57,7 @@
             this.compiledClndrTemplate = _.template(this.options.template);
         }
         $(this.element).html("<div class='clndr'></div>"), this.calendarContainer = $(".clndr", this.element), 
-        this.bindEvents(), this.render();
+        this.bindEvents(), this.render(), this.options.ready && this.options.ready.apply(this, []);
     }, Clndr.prototype.shiftWeekdayLabels = function(offset) {
         for (var days = this.daysOfTheWeek, i = 0; offset > i; i++) days.push(days.shift());
         return days;
@@ -117,7 +123,7 @@
             extras: this.options.extras
         };
         this.options.render ? this.calendarContainer.html(this.options.render.apply(this, [ data ])) : this.calendarContainer.html(this.compiledClndrTemplate(data)), 
-        this.options.doneRendering && this.options.doneRendering();
+        this.options.doneRendering && this.options.doneRendering.apply(this, []);
     }, Clndr.prototype.bindEvents = function() {
         var $container = $(this.element), self = this;
         $container.on("click", "." + this.options.targets.day, function(event) {
@@ -138,7 +144,11 @@
             context: this
         }, this.forwardAction).on("click", "." + this.options.targets.todayButton, {
             context: this
-        }, this.todayAction);
+        }, this.todayAction).on("click", "." + this.options.targets.nextYearButton, {
+            context: this
+        }, this.nextYearAction).on("click", "." + this.options.targets.previousYearButton, {
+            context: this
+        }, this.previousYearAction);
     }, Clndr.prototype.buildTargetObject = function(currentTarget, targetWasDay) {
         var target = {
             element: currentTarget,
@@ -160,17 +170,34 @@
         var self = event.data.context;
         self.backActionWithContext(self);
     }, Clndr.prototype.backActionWithContext = function(self) {
+        var yearChanged = !self.month.isSame(moment(), "year");
         self.month.subtract("months", 1), self.options.clickEvents.previousMonth && self.options.clickEvents.previousMonth.apply(self, [ moment(self.month) ]), 
         self.options.clickEvents.onMonthChange && self.options.clickEvents.onMonthChange.apply(self, [ moment(self.month) ]), 
+        yearChanged && self.options.clickEvents.onYearChange && self.options.clickEvents.onYearChange.apply(self, [ moment(self.month) ]), 
         self.render();
     }, Clndr.prototype.forwardActionWithContext = function(self) {
+        var yearChanged = !self.month.isSame(moment(), "year");
         self.month.add("months", 1), self.options.clickEvents.nextMonth && self.options.clickEvents.nextMonth.apply(self, [ self.month ]), 
         self.options.clickEvents.onMonthChange && self.options.clickEvents.onMonthChange.apply(self, [ self.month ]), 
+        yearChanged && self.options.clickEvents.onYearChange && self.options.clickEvents.onYearChange.apply(self, [ moment(self.month) ]), 
         self.render();
     }, Clndr.prototype.todayAction = function(event) {
+        var self = event.data.context, monthChanged = !self.month.isSame(moment(), "month"), yearChanged = !self.month.isSame(moment(), "year");
+        self.options.clickEvents.today && self.options.clickEvents.today.apply(self, [ moment(self.month) ]), 
+        monthChanged && (self.month = moment(), self.options.clickEvents.onMonthChange && self.options.clickEvents.onMonthChange.apply(self, [ moment(self.month) ]), 
+        yearChanged && self.options.clickEvents.onYearChange && self.options.clickEvents.onYearChange.apply(self, [ moment(self.month) ]), 
+        self.render());
+    }, Clndr.prototype.nextYearAction = function(event) {
         var self = event.data.context;
-        self.month = moment(), self.options.clickEvents.today && self.options.clickEvents.today.apply(self, [ moment(self.month) ]), 
+        self.month.add("years", 1), self.options.clickEvents.nextYear && self.options.clickEvents.nextYear.apply(self, [ moment(self.month) ]), 
         self.options.clickEvents.onMonthChange && self.options.clickEvents.onMonthChange.apply(self, [ moment(self.month) ]), 
+        self.options.clickEvents.onYearChange && self.options.clickEvents.onYearChange.apply(self, [ moment(self.month) ]), 
+        self.render();
+    }, Clndr.prototype.previousYearAction = function(event) {
+        var self = event.data.context;
+        self.month.subtract("years", 1), self.options.clickEvents.previousYear && self.options.clickEvents.previousYear.apply(self, [ moment(self.month) ]), 
+        self.options.clickEvents.onMonthChange && self.options.clickEvents.onMonthChange.apply(self, [ moment(self.month) ]), 
+        self.options.clickEvents.onYearChange && self.options.clickEvents.onYearChange.apply(self, [ moment(self.month) ]), 
         self.render();
     }, Clndr.prototype.forward = function() {
         return this.month.add("months", 1), this.render(), this;

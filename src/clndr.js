@@ -23,7 +23,7 @@
 
   // This is the default calendar template. This can be overridden.
   var clndrTemplate = "<div class='clndr-controls'>" +
-    "<div class='clndr-control-button'><span class='clndr-previous-button'>previous</span></div><div class='month'><%= month %></div><div class='clndr-control-button rightalign'><span class='clndr-next-button'>next</span></div>" +
+    "<div class='clndr-control-button'><span class='clndr-previous-button'>previous</span></div><div class='month'><%= month %> <%= year %></div><div class='clndr-control-button rightalign'><span class='clndr-next-button'>next</span></div>" +
     "</div>" +
   "<table class='clndr-table' border='0' cellspacing='0' cellpadding='0'>" +
     "<thead>" +
@@ -56,12 +56,17 @@
       click: null,
       nextMonth: null,
       previousMonth: null,
+      nextYear: null,
+      previousYear: null,
       today: null,
-      onMonthChange: null
+      onMonthChange: null,
+      onYearChange: null
     },
     targets: {
       nextButton: 'clndr-next-button',
       previousButton: 'clndr-previous-button',
+      nextYearButton: 'clndr-next-year-button',
+      previousYearButton: 'clndr-previous-year-button',
       todayButton: 'clndr-today-button',
       day: 'day',
       empty: 'empty'
@@ -73,7 +78,8 @@
     render: null,
     daysOfTheWeek: null,
     showAdjacentMonths: true,
-    adjacentDaysChangeMonth: false
+    adjacentDaysChangeMonth: false,
+    ready: null
   };
 
   // The actual plugin constructor
@@ -144,6 +150,11 @@
 
     // do a normal render of the calendar template
     this.render();
+
+    // if a ready callback has been provided, call it.
+    if(this.options.ready) {
+      this.options.ready.apply(this, []);
+    }
   };
 
   Clndr.prototype.shiftWeekdayLabels = function(offset) {
@@ -162,7 +173,7 @@
     daysArray = [];
     var date = currentMonth.startOf('month');
 
-    // filter the events list (if it exists) to events that are happening last month, this month and next month
+    // filter the events list (if it exists) to events that are happening last month, this month and next month (within the current grid view)
     this.eventsLastMonth = [];
     this.eventsThisMonth = [];
     this.eventsNextMonth = [];
@@ -316,7 +327,7 @@
       this.calendarContainer.html(this.options.render.apply(this, [data]));
     }
     if(this.options.doneRendering) {
-      this.options.doneRendering();
+      this.options.doneRendering.apply(this, []);
     }
   };
 
@@ -358,7 +369,9 @@
     $container
       .on('click', '.'+this.options.targets.previousButton, { context: this }, this.backAction)
       .on('click', '.'+this.options.targets.nextButton, { context: this }, this.forwardAction)
-      .on('click', '.'+this.options.targets.todayButton, { context: this }, this.todayAction);
+      .on('click', '.'+this.options.targets.todayButton, { context: this }, this.todayAction)
+      .on('click', '.'+this.options.targets.nextYearButton, { context: this }, this.nextYearAction)
+      .on('click', '.'+this.options.targets.previousYearButton, { context: this }, this.previousYearAction);
   }
 
   // If the user provided a click callback we'd like to give them something nice to work with.
@@ -416,6 +429,7 @@
   // These are called directly, except for in the bindEvent click handlers,
   // where forwardAction and backAction proxy to these guys.
   Clndr.prototype.backActionWithContext = function(self) {
+    var yearChanged = !self.month.isSame(moment(), 'year');
     self.month.subtract('months', 1);
     if(self.options.clickEvents.previousMonth) {
       self.options.clickEvents.previousMonth.apply( self, [moment(self.month)] );
@@ -423,10 +437,16 @@
     if(self.options.clickEvents.onMonthChange) {
       self.options.clickEvents.onMonthChange.apply( self, [moment(self.month)] );
     }
+    if(yearChanged) {
+      if(self.options.clickEvents.onYearChange) {
+        self.options.clickEvents.onYearChange.apply( self, [moment(self.month)] );
+      }
+    }
     self.render();
   };
 
   Clndr.prototype.forwardActionWithContext = function(self) {
+    var yearChanged = !self.month.isSame(moment(), 'year');
     self.month.add('months', 1);
     if(self.options.clickEvents.nextMonth) {
       self.options.clickEvents.nextMonth.apply(self, [self.month]);
@@ -434,17 +454,69 @@
     if(self.options.clickEvents.onMonthChange) {
       self.options.clickEvents.onMonthChange.apply(self, [self.month]);
     }
+    if(yearChanged) {
+      if(self.options.clickEvents.onYearChange) {
+        self.options.clickEvents.onYearChange.apply( self, [moment(self.month)] );
+      }
+    }
     self.render();
   };
 
   Clndr.prototype.todayAction = function(event) {
     var self = event.data.context;
-    self.month = moment();
+
+    // did we switch months when the today button was hit?
+    var monthChanged = !self.month.isSame(moment(), 'month');
+    var yearChanged = !self.month.isSame(moment(), 'year');
+
+    // fire the today event handler regardless of whether the month changed.
     if(self.options.clickEvents.today) {
       self.options.clickEvents.today.apply( self, [moment(self.month)] );
     }
+
+    if(monthChanged) {
+      self.month = moment();
+      // fire the onMonthChange callback
+      if(self.options.clickEvents.onMonthChange) {
+        self.options.clickEvents.onMonthChange.apply( self, [moment(self.month)] );
+      }
+      // maybe fire the onYearChange callback?
+      if(yearChanged) {
+        if(self.options.clickEvents.onYearChange) {
+          self.options.clickEvents.onYearChange.apply( self, [moment(self.month)] );
+        }
+      }
+      // no need to re-render if we didn't change months.
+      self.render();
+    }
+  };
+
+  Clndr.prototype.nextYearAction = function(event) {
+    var self = event.data.context;
+    self.month.add('years', 1);
+    if(self.options.clickEvents.nextYear) {
+      self.options.clickEvents.nextYear.apply( self, [moment(self.month)] );
+    }
     if(self.options.clickEvents.onMonthChange) {
       self.options.clickEvents.onMonthChange.apply( self, [moment(self.month)] );
+    }
+    if(self.options.clickEvents.onYearChange) {
+      self.options.clickEvents.onYearChange.apply( self, [moment(self.month)] );
+    }
+    self.render();
+  };
+
+  Clndr.prototype.previousYearAction = function(event) {
+    var self = event.data.context;
+    self.month.subtract('years', 1);
+    if(self.options.clickEvents.previousYear) {
+      self.options.clickEvents.previousYear.apply( self, [moment(self.month)] );
+    }
+    if(self.options.clickEvents.onMonthChange) {
+      self.options.clickEvents.onMonthChange.apply( self, [moment(self.month)] );
+    }
+    if(self.options.clickEvents.onYearChange) {
+      self.options.clickEvents.onYearChange.apply( self, [moment(self.month)] );
     }
     self.render();
   };

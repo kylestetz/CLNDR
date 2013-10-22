@@ -19,11 +19,34 @@ $(document).ready( function() {
     { date: moment().add('months', 1).format('YYYY-MM') + "-02", title: "Next Month Party", anotherObject: "This is always happening next month." }
   ];
 
+  // the order of the click handlers is predictable.
+  // direct click action callbacks come first: click, nextMonth, previousMonth, nextYear, previousYear, or today.
+  // then onMonthChange (if the month changed).
+  // finally onYearChange (if the year changed).
+
   calendars.clndr1 = $('.cal1').clndr({
     events: eventArray,
     clickEvents: {
       click: function(target) {
         console.log(target);
+      },
+      nextMonth: function() {
+        console.log('next month.');
+      },
+      previousMonth: function() {
+        console.log('previous month.');
+      },
+      onMonthChange: function() {
+        console.log('month changed.');
+      },
+      nextYear: function() {
+        console.log('next year.');
+      },
+      previousYear: function() {
+        console.log('previous year.');
+      },
+      onYearChange: function() {
+        console.log('year changed.');
       }
     },
     showAdjacentMonths: false,
