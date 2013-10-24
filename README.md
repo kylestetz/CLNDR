@@ -9,7 +9,7 @@ Download
 --------
 
 - development ~ [clndr.js](https://raw.github.com/kylestetz/CLNDR/master/src/clndr.js)
-- production ~ [clndr-1.0.13.min.js](https://raw.github.com/kylestetz/CLNDR/master/clndr-1.0.12.min.js)
+- production ~ [clndr-1.0.13.min.js](https://raw.github.com/kylestetz/CLNDR/master/clndr-1.0.13.min.js)
 
 Dependencies
 ------------
