@@ -5,6 +5,12 @@ CLNDR is a jQuery calendar plugin. It was created- you've heard this before- out
 
 See a demo: [kylestetz.github.io/CLNDR/](http://kylestetz.github.io/CLNDR/)
 
+Download
+--------
+
+- development ~ [clndr.js](https://raw.github.com/kylestetz/CLNDR/master/src/clndr.js)
+- production ~ [clndr-1.0.13.min.js](https://raw.github.com/kylestetz/CLNDR/master/clndr-1.0.13.min.js)
+
 Dependencies
 ------------
 
@@ -199,6 +205,10 @@ month: "May"
 year: "2013"
 // all of the events happening this month
 eventsThisMonth: [ ],
+// all of the events happening last month
+eventsLastMonth: [ ],
+// all of the events happening next month
+eventsNextMonth: [ ],
 // anything you passed into the 'extras' property when creating the clndr
 extras: { }
 ```
@@ -354,6 +364,8 @@ Todo
 
 Changelog
 =========
+`v1.0.13 ~ 2013-10-24`: changed the way `clndr.eventsLastMonth` and `clndr.eventsNextMonth` propagate... previously they were only available if "showAdjacentMonths" was turned on, whereas now they are always available. They are also available in the template now as `eventsLastMonth` and `eventsNextMonth`. Fixed a bug where `eventsLastMonth` and `eventsNextMonth` were jQuery arrays instead of regular ol' Arrays. This bug was introduced in `v1.0.7`. cleaned up example folder.
+
 `v1.0.12 ~ 2013-10-22`: you can now make next and previous year buttons using the classes `clndr-next-year-button` and `clndr-previous-year-button`, or by specifying the options `targets.nextYearButton` and `targets.previousYearButton`. `doneRendering`'s `this` keyword is now set to the clndr instance. Added the `ready` callback, which is a good place to attach event handlers. Added `clickEvents.onYearChange`, which is fired whenever the year changed as a result of a click action (even if you just went to the next month and it happened to be December to January!).
 
 `v1.0.11 ~ 2013-10-19`: set the context in all click events so that `this` now refers to your clndr instance! `this` is also bound to the clndr instance in the `render` function. Added the class `past` to all days before today.

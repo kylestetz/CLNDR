@@ -182,20 +182,17 @@
 
       this.eventsThisMonth = $(this.options.events).filter( function() {
         return this._clndrDateObject.format("YYYY-MM") == currentMonth.format("YYYY-MM");
-      });
+      }).toArray();
 
-      // filter the adjacent months as well, if the option is true
-      if(this.options.showAdjacentMonths) {
-        var lastMonth = currentMonth.clone().subtract('months', 1);
-        var nextMonth = currentMonth.clone().add('months', 1);
-        this.eventsLastMonth = $(this.options.events).filter( function() {
-          return this._clndrDateObject.format("YYYY-MM") == lastMonth.format("YYYY-MM");
-        });
+      var lastMonth = currentMonth.clone().subtract('months', 1);
+      var nextMonth = currentMonth.clone().add('months', 1);
+      this.eventsLastMonth = $(this.options.events).filter( function() {
+        return this._clndrDateObject.format("YYYY-MM") == lastMonth.format("YYYY-MM");
+      }).toArray();
 
-        this.eventsNextMonth = $(this.options.events).filter( function() {
-          return this._clndrDateObject.format("YYYY-MM") == nextMonth.format("YYYY-MM");
-        });
-      }
+      this.eventsNextMonth = $(this.options.events).filter( function() {
+        return this._clndrDateObject.format("YYYY-MM") == nextMonth.format("YYYY-MM");
+      }).toArray();
     }
 
     // if diff is greater than 0, we'll have to fill in last days of the previous month
@@ -317,6 +314,8 @@
       month: this.month.format('MMMM'),
       year: this.month.year(),
       eventsThisMonth: this.eventsThisMonth,
+      eventsLastMonth: this.eventsLastMonth,
+      eventsNextMonth: this.eventsNextMonth,
       extras: this.options.extras
     };
 
