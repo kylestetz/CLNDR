@@ -486,6 +486,9 @@
   Clndr.prototype.backActionWithContext = function(self) {
     var yearChanged = !self.month.isSame(moment(), 'year');
     self.month.subtract('months', 1);
+
+    self.render();
+
     if(self.options.clickEvents.previousMonth) {
       self.options.clickEvents.previousMonth.apply( self, [moment(self.month)] );
     }
@@ -497,12 +500,14 @@
         self.options.clickEvents.onYearChange.apply( self, [moment(self.month)] );
       }
     }
-    self.render();
   };
 
   Clndr.prototype.forwardActionWithContext = function(self) {
     var yearChanged = !self.month.isSame(moment(), 'year');
     self.month.add('months', 1);
+
+    self.render();
+
     if(self.options.clickEvents.nextMonth) {
       self.options.clickEvents.nextMonth.apply(self, [self.month]);
     }
@@ -514,7 +519,6 @@
         self.options.clickEvents.onYearChange.apply( self, [moment(self.month)] );
       }
     }
-    self.render();
   };
 
   Clndr.prototype.todayAction = function(event) {
@@ -530,6 +534,9 @@
     }
 
     if(monthChanged) {
+      // no need to re-render if we didn't change months.
+      self.render();
+
       self.month = moment();
       // fire the onMonthChange callback
       if(self.options.clickEvents.onMonthChange) {
@@ -541,14 +548,15 @@
           self.options.clickEvents.onYearChange.apply( self, [moment(self.month)] );
         }
       }
-      // no need to re-render if we didn't change months.
-      self.render();
     }
   };
 
   Clndr.prototype.nextYearAction = function(event) {
     var self = event.data.context;
     self.month.add('years', 1);
+
+    self.render();
+
     if(self.options.clickEvents.nextYear) {
       self.options.clickEvents.nextYear.apply( self, [moment(self.month)] );
     }
@@ -558,12 +566,14 @@
     if(self.options.clickEvents.onYearChange) {
       self.options.clickEvents.onYearChange.apply( self, [moment(self.month)] );
     }
-    self.render();
   };
 
   Clndr.prototype.previousYearAction = function(event) {
     var self = event.data.context;
     self.month.subtract('years', 1);
+
+    self.render();
+
     if(self.options.clickEvents.previousYear) {
       self.options.clickEvents.previousYear.apply( self, [moment(self.month)] );
     }
@@ -573,18 +583,35 @@
     if(self.options.clickEvents.onYearChange) {
       self.options.clickEvents.onYearChange.apply( self, [moment(self.month)] );
     }
-    self.render();
   };
 
   Clndr.prototype.forward = function() {
     this.month.add('months', 1);
     this.render();
+    if(this.options.clickEvents.onMonthChange) {
+      this.options.clickEvents.onMonthChange.apply( this, [moment(this.month)] );
+    }
+
+    // We entered a new year
+    if (this.month.month() === 0 && this.options.clickEvents.onYearChange) {
+      this.options.clickEvents.onYearChange.apply( this, [moment(this.month)] );
+    }
+
     return this;
   }
 
   Clndr.prototype.back = function() {
     this.month.subtract('months', 1);
     this.render();
+    if(this.options.clickEvents.onMonthChange) {
+      this.options.clickEvents.onMonthChange.apply( this, [moment(this.month)] );
+    }
+
+    // We went all the way back to previous year
+    if (this.month.month() === 11 && this.options.clickEvents.onYearChange) {
+      this.options.clickEvents.onYearChange.apply( this, [moment(this.month)] );
+    }
+
     return this;
   }
 
@@ -603,30 +630,45 @@
     // accepts 0 - 11 or a full/partial month name e.g. "Jan", "February", "Mar"
     this.month.month(newMonth);
     this.render();
+    if(this.options.clickEvents.onMonthChange) {
+      this.options.clickEvents.onMonthChange.apply( this, [moment(this.month)] );
+    }
     return this;
   }
 
   Clndr.prototype.setYear = function(newYear) {
     this.month.year(newYear);
     this.render();
+    if(this.options.clickEvents.onYearChange) {
+      this.options.clickEvents.onYearChange.apply( this, [moment(this.month)] );
+    }
     return this;
   }
 
   Clndr.prototype.nextYear = function() {
     this.month.add('year', 1);
     this.render();
+    if(this.options.clickEvents.onYearChange) {
+      this.options.clickEvents.onYearChange.apply( this, [moment(this.month)] );
+    }
     return this;
   }
 
   Clndr.prototype.previousYear = function() {
     this.month.subtract('year', 1);
     this.render();
+    if(this.options.clickEvents.onYearChange) {
+      this.options.clickEvents.onYearChange.apply( this, [moment(this.month)] );
+    }
     return this;
   }
 
   Clndr.prototype.setYear = function(newYear) {
     this.month.year(newYear);
     this.render();
+    if(this.options.clickEvents.onYearChange) {
+      this.options.clickEvents.onYearChange.apply( this, [moment(this.month)] );
+    }
     return this;
   }
 
