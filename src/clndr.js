@@ -1,5 +1,5 @@
 /*
- *                   ~ CLNDR ~
+ *               ~ CLNDR v1.0.13 ~
  * ==============================================
  *       https://github.com/kylestetz/CLNDR
  * ==============================================
@@ -9,7 +9,7 @@
  * ==============================================
  *
  * This is the fully-commented development version of CLNDR.
- * For dev and production versions, check out clndr.js and clndr.min.js
+ * For the production version, check out clndr.min.js
  * at https://github.com/kylestetz/CLNDR
  *
  * This work is based on the
