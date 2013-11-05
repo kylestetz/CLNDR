@@ -45,7 +45,7 @@ Here's a typical CLNDR template. It's got a controller section and a grid sectio
     <% }); %>
     <div class="days">
       <% _.each(days, function(day) { %>
-        <div class="<%= day.classes %>" id="<%= day.id %>"><%= day.day %></div>
+        <div class="<%= day.classes %>"><%= day.day %></div>
       <% }); %>
     </div>
   </div>
@@ -57,7 +57,6 @@ The `days` array contains most of the stuff we need to make a calendar. Its stru
 {
   day: 5,
   classes: "day",
-  id: "calendar-day-2013-05-29",
   events: [],
   date: moment("2013-05-29")
 }
@@ -407,7 +406,7 @@ The markup:
       {{~}}
       <div class="days">
         {{~it.days :day:index}}
-          <div class="{{= day.classes }}" id="{{= day.id }}">{{= day.day }}</div>
+          <div class="{{= day.classes }}">{{= day.day }}</div>
         {{~}}
       </div>
     </div>
