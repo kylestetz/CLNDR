@@ -80,7 +80,8 @@
     daysOfTheWeek: null,
     showAdjacentMonths: true,
     adjacentDaysChangeMonth: false,
-    ready: null
+    ready: null,
+    constraints: null
   };
 
   // The actual plugin constructor
@@ -106,9 +107,28 @@
     // this will serve as the basis for switching between months & is the go-to
     // internally if we want to know which month we're currently at.
     if(this.options.startWithMonth) {
-      this.month = moment(this.options.startWithMonth);
+      this.month = moment(this.options.startWithMonth).startOf('month');
     } else {
-      this.month = moment();
+      this.month = moment().startOf('month');
+    }
+
+    // if we've got constraints set, make sure the month is within them.
+    if(this.options.constraints) {
+      // first check if the start date exists & is later than now.
+      if(this.options.constraints.startDate) {
+        var startMoment = moment(this.options.constraints.startDate);
+        if(this.month.isBefore(startMoment, 'month')) {
+          this.month.set('month', startMoment.month());
+          this.month.set('year', startMoment.year());
+        }
+      }
+      // make sure the month (whether modified or not) is before the endDate
+      if(this.options.constraints.endDate) {
+        var endMoment = moment(this.options.constraints.endDate);
+        if(this.month.isAfter(endMoment, 'month')) {
+          this.month.set('month', endMoment.month()).set('year', endMoment.year());
+        }
+      }
     }
 
     this._defaults = defaults;
@@ -324,7 +344,16 @@
        this.month.year() === day.year()
            ? extraClasses += " next-month"
            : extraClasses += " last-month";
+    }
 
+    // if there are constraints, we need to add the inactive class to the days outside of them
+    if(this.options.constraints) {
+      if(this.options.constraints.startDate && day.isBefore(moment( this.options.constraints.startDate ))) {
+        extraClasses += " inactive";
+      }
+      if(this.options.constraints.endDate && day.isAfter(moment( this.options.constraints.endDate ))) {
+        extraClasses += " inactive";
+      }
     }
 
     // validate moment date
@@ -373,6 +402,49 @@
     } else {
       this.calendarContainer.html(this.options.render.apply(this, [data]));
     }
+
+    // if there are constraints, we need to add the 'inactive' class to the controls
+    if(this.options.constraints) {
+      // in the interest of clarity we're just going to remove all inactive classes and re-apply them each render.
+      for(target in this.options.targets) {
+        if(target != this.options.targets.day) {
+          this.element.find('.' + this.options.targets[target]).toggleClass('inactive', false);
+        }
+      }
+
+      var start = null;
+      var end = null;
+
+      if(this.options.constraints.startDate) {
+        start = moment(this.options.constraints.startDate);
+      }
+      if(this.options.constraints.endDate) {
+        end = moment(this.options.constraints.endDate);
+      }
+      // deal with the month controls first.
+      // are we at the start month?
+      if(start && this.month.isSame( start, 'month' )) {
+        this.element.find('.' + this.options.targets.previousButton).toggleClass('inactive', true);
+      }
+      // are we at the end month?
+      if(end && this.month.isSame( end, 'month' )) {
+        this.element.find('.' + this.options.targets.nextButton).toggleClass('inactive', true);
+      }
+      // what's last year looking like?
+      if(start && moment(start).subtract('years', 1).isBefore(moment(this.month).subtract('years', 1)) ) {
+        this.element.find('.' + this.options.targets.previousYearButton).toggleClass('inactive', true);
+      }
+      // how about next year?
+      if(end && moment(end).add('years', 1).isAfter(moment(this.month).add('years', 1)) ) {
+        this.element.find('.' + this.options.targets.nextYearButton).toggleClass('inactive', true);
+      }
+      // today? we could put this in init(), but we want to support the user changing the constraints on a living instance.
+      if(( start && start.isAfter( moment(), 'month' ) ) || ( end && end.isBefore( moment(), 'month' ) )) {
+        this.element.find('.' + this.options.targets.today).toggleClass('inactive', true);
+      }
+    }
+
+
     if(this.options.doneRendering) {
       this.options.doneRendering.apply(this, []);
     }
@@ -484,7 +556,14 @@
   // These are called directly, except for in the bindEvent click handlers,
   // where forwardAction and backAction proxy to these guys.
   Clndr.prototype.backActionWithContext = function(self) {
-    var yearChanged = !self.month.isSame(moment(), 'year');
+    // before we do anything, check if there is an inactive class on the month control.
+    // if it does, we want to return and take no action.
+    if(self.element.find('.' + self.options.targets.previousButton).hasClass('inactive')) {
+      return;
+    }
+
+    // is subtracting one month going to switch the year?
+    var yearChanged = !self.month.isSame( moment(self.month).subtract('months', 1), 'year');
     self.month.subtract('months', 1);
 
     self.render();
@@ -503,16 +582,23 @@
   };
 
   Clndr.prototype.forwardActionWithContext = function(self) {
-    var yearChanged = !self.month.isSame(moment(), 'year');
+    // before we do anything, check if there is an inactive class on the month control.
+    // if it does, we want to return and take no action.
+    if(self.element.find('.' + self.options.targets.nextButton).hasClass('inactive')) {
+      return;
+    }
+
+    // is adding one month going to switch the year?
+    var yearChanged = !self.month.isSame( moment(self.month).add('months', 1), 'year');
     self.month.add('months', 1);
 
     self.render();
 
     if(self.options.clickEvents.nextMonth) {
-      self.options.clickEvents.nextMonth.apply(self, [self.month]);
+      self.options.clickEvents.nextMonth.apply(self, [moment(self.month)]);
     }
     if(self.options.clickEvents.onMonthChange) {
-      self.options.clickEvents.onMonthChange.apply(self, [self.month]);
+      self.options.clickEvents.onMonthChange.apply(self, [moment(self.month)]);
     }
     if(yearChanged) {
       if(self.options.clickEvents.onYearChange) {
@@ -527,6 +613,8 @@
     // did we switch months when the today button was hit?
     var monthChanged = !self.month.isSame(moment(), 'month');
     var yearChanged = !self.month.isSame(moment(), 'year');
+
+    self.month = moment().startOf('month');
 
     // fire the today event handler regardless of whether the month changed.
     if(self.options.clickEvents.today) {
@@ -553,8 +641,13 @@
 
   Clndr.prototype.nextYearAction = function(event) {
     var self = event.data.context;
-    self.month.add('years', 1);
+    // before we do anything, check if there is an inactive class on the month control.
+    // if it does, we want to return and take no action.
+    if(self.element.find('.' + self.options.targets.nextYearButton).hasClass('inactive')) {
+      return;
+    }
 
+    self.month.add('years', 1);
     self.render();
 
     if(self.options.clickEvents.nextYear) {
@@ -570,8 +663,13 @@
 
   Clndr.prototype.previousYearAction = function(event) {
     var self = event.data.context;
-    self.month.subtract('years', 1);
+    // before we do anything, check if there is an inactive class on the month control.
+    // if it does, we want to return and take no action.
+    if(self.element.find('.' + self.options.targets.previousYear).hasClass('inactive')) {
+      return;
+    }
 
+    self.month.subtract('years', 1);
     self.render();
 
     if(self.options.clickEvents.previousYear) {
@@ -585,89 +683,92 @@
     }
   };
 
-  Clndr.prototype.forward = function() {
+  Clndr.prototype.forward = function(options) {
     this.month.add('months', 1);
     this.render();
-    if(this.options.clickEvents.onMonthChange) {
-      this.options.clickEvents.onMonthChange.apply( this, [moment(this.month)] );
-    }
+    if(options && options.withCallbacks) {
+      if(this.options.clickEvents.onMonthChange) {
+        this.options.clickEvents.onMonthChange.apply( this, [moment(this.month)] );
+      }
 
-    // We entered a new year
-    if (this.month.month() === 0 && this.options.clickEvents.onYearChange) {
-      this.options.clickEvents.onYearChange.apply( this, [moment(this.month)] );
+      // We entered a new year
+      if (this.month.month() === 0 && this.options.clickEvents.onYearChange) {
+        this.options.clickEvents.onYearChange.apply( this, [moment(this.month)] );
+      }
     }
 
     return this;
   }
 
-  Clndr.prototype.back = function() {
+  Clndr.prototype.back = function(options) {
     this.month.subtract('months', 1);
     this.render();
-    if(this.options.clickEvents.onMonthChange) {
-      this.options.clickEvents.onMonthChange.apply( this, [moment(this.month)] );
-    }
+    if(options && options.withCallbacks) {
+      if(this.options.clickEvents.onMonthChange) {
+        this.options.clickEvents.onMonthChange.apply( this, [moment(this.month)] );
+      }
 
-    // We went all the way back to previous year
-    if (this.month.month() === 11 && this.options.clickEvents.onYearChange) {
-      this.options.clickEvents.onYearChange.apply( this, [moment(this.month)] );
+      // We went all the way back to previous year
+      if (this.month.month() === 11 && this.options.clickEvents.onYearChange) {
+        this.options.clickEvents.onYearChange.apply( this, [moment(this.month)] );
+      }
     }
 
     return this;
   }
 
   // alternate names for convenience
-  Clndr.prototype.next = function() {
-    this.forward();
+  Clndr.prototype.next = function(options) {
+    this.forward(options);
     return this;
   }
 
-  Clndr.prototype.previous = function() {
-    this.back();
+  Clndr.prototype.previous = function(options) {
+    this.back(options);
     return this;
   }
 
-  Clndr.prototype.setMonth = function(newMonth) {
+  Clndr.prototype.setMonth = function(newMonth, options) {
     // accepts 0 - 11 or a full/partial month name e.g. "Jan", "February", "Mar"
     this.month.month(newMonth);
     this.render();
-    if(this.options.clickEvents.onMonthChange) {
-      this.options.clickEvents.onMonthChange.apply( this, [moment(this.month)] );
+    if(options && options.withCallbacks) {
+      if(this.options.clickEvents.onMonthChange) {
+        this.options.clickEvents.onMonthChange.apply( this, [moment(this.month)] );
+      }
     }
     return this;
   }
 
-  Clndr.prototype.setYear = function(newYear) {
-    this.month.year(newYear);
-    this.render();
-    if(this.options.clickEvents.onYearChange) {
-      this.options.clickEvents.onYearChange.apply( this, [moment(this.month)] );
-    }
-    return this;
-  }
-
-  Clndr.prototype.nextYear = function() {
+  Clndr.prototype.nextYear = function(options) {
     this.month.add('year', 1);
     this.render();
-    if(this.options.clickEvents.onYearChange) {
-      this.options.clickEvents.onYearChange.apply( this, [moment(this.month)] );
+    if(options && options.withCallbacks) {
+      if(this.options.clickEvents.onYearChange) {
+        this.options.clickEvents.onYearChange.apply( this, [moment(this.month)] );
+      }
     }
     return this;
   }
 
-  Clndr.prototype.previousYear = function() {
+  Clndr.prototype.previousYear = function(options) {
     this.month.subtract('year', 1);
     this.render();
-    if(this.options.clickEvents.onYearChange) {
-      this.options.clickEvents.onYearChange.apply( this, [moment(this.month)] );
+    if(options && options.withCallbacks) {
+      if(this.options.clickEvents.onYearChange) {
+        this.options.clickEvents.onYearChange.apply( this, [moment(this.month)] );
+      }
     }
     return this;
   }
 
-  Clndr.prototype.setYear = function(newYear) {
+  Clndr.prototype.setYear = function(newYear, options) {
     this.month.year(newYear);
     this.render();
-    if(this.options.clickEvents.onYearChange) {
-      this.options.clickEvents.onYearChange.apply( this, [moment(this.month)] );
+    if(options && options.withCallbacks) {
+      if(this.options.clickEvents.onYearChange) {
+        this.options.clickEvents.onYearChange.apply( this, [moment(this.month)] );
+      }
     }
     return this;
   }
