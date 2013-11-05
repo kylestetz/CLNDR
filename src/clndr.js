@@ -1,5 +1,5 @@
 /*
- *               ~ CLNDR v1.0.13 ~
+ *               ~ CLNDR v1.1.0 ~
  * ==============================================
  *       https://github.com/kylestetz/CLNDR
  * ==============================================
@@ -369,7 +369,6 @@
     return this.calendarDay({
       day: day.date(),
       classes: this.options.targets.day + extraClasses,
-      id: "calendar-day-" + day.format("YYYY-MM-DD"),
       events: eventsToday,
       date: day
     });
@@ -508,18 +507,18 @@
     if(targetWasDay) {
       var dateString;
 
-      // We're shifting away from using IDs, so our identifier is in the list of classNames now.
+      // Our identifier is in the list of classNames. Find it!
       var classNameIndex = currentTarget.className.indexOf('calendar-day-');
       if(classNameIndex !== 0) {
         // our unique identifier is always 23 characters long.
         // If this feels a little wonky, that's probably because it is.
         // Open to suggestions on how to improve this guy.
         dateString = currentTarget.className.substring(classNameIndex + 13, classNameIndex + 23);
+        target.date = moment(dateString);
       } else {
-        // we shouldn't ever get here, but it's going to stay for now.
-        dateString = currentTarget.id.replace('calendar-day-', '');
+        target.date = null;
       }
-      target.date = moment(dateString);
+
       // do we have events?
       if(this.options.events) {
         // are any of the events happening today?
@@ -819,7 +818,7 @@
   }
 
   Clndr.prototype.calendarDay = function(options) {
-    var defaults = { day: "", classes: this.options.targets.empty, events: [], id: "", date: null };
+    var defaults = { day: "", classes: this.options.targets.empty, events: [], date: null };
     return $.extend({}, defaults, options);
   }
 

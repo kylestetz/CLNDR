@@ -22,9 +22,18 @@ $(document).ready( function() {
 
   calendars.clndr1 = $('.cal1').clndr({
     events: eventArray,
+    // constraints: {
+    //   startDate: '2013-11-01',
+    //   endDate: '2013-11-15'
+    // },
     clickEvents: {
       click: function(target) {
         console.log(target);
+        if($(target.element).hasClass('inactive')) {
+          console.log('not a valid datepicker date.');
+        } else {
+          console.log('VALID datepicker date.');
+        }
       },
       nextMonth: function() {
         console.log('next month.');
@@ -49,8 +58,8 @@ $(document).ready( function() {
       startDate: 'startDate',
       endDate: 'endDate'
     },
-    showAdjacentMonths: false,
-    adjacentDaysChangeMonth: true
+    showAdjacentMonths: true,
+    adjacentDaysChangeMonth: false
   });
 
   // calendars.clndr2 = $('.cal2').clndr({

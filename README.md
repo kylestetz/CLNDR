@@ -9,7 +9,9 @@ Download
 --------
 
 - development ~ [clndr.js](https://raw.github.com/kylestetz/CLNDR/master/src/clndr.js)
-- production ~ [clndr-1.0.13.min.js](https://raw.github.com/kylestetz/CLNDR/master/clndr-1.0.13.min.js)
+- production ~ [clndr-1.1.0.min.js](https://raw.github.com/kylestetz/CLNDR/master/clndr-1.1.0.min.js)
+
+If you'd like to run some tests in a particular browser or environment, `example/test.html` contains a list of basic functionality tests. When contributing, please run these (and add to them when appropriate) before submitting a pull request!
 
 Dependencies
 ------------
@@ -17,11 +19,6 @@ Dependencies
 [jQuery](http://jquery.com/download/) and [Moment.js](http://momentjs.com/) are depended upon. By default CLNDR tries to use [Underscore.js](http://underscorejs.org/)'s `_.template()` function, however if you specify a custom rendering function (see documentation below) underscore will not be used at all.
 
 Because their APIs are the same, [Lo-Dash](http://lodash.com/)'s `_.template()` function will work ask well! Just include Lo-Dash instead of underscore.
-
-Recent Changes
---------------
-
-Thanks to everyone for their interest! Things just got shuffled around a bit to accommodate a grunt workflow. The fully-commented source version is `src/clndr.js`, while `clndr.js` and `clndr.min.js` are meant for development & production, respectively. In addition, CLNDR is now registered as a jQuery plugin, so you can now track versions through the tags in this repo.
 
 Introduction: You Write The Markup
 ==================================
@@ -96,18 +93,34 @@ With all of the available options:
 
 ```javascript
 $('.parent-element').clndr({
+
   // the template: this could be stored in markup as a <script type="text/template"></script>
   // or pulled in as a string
   template: clndrTemplate,
+
   // start the week off on Sunday (0), Monday (1), etc. Sunday is the default.
   weekOffset: 0,
+
   // determines which month to start with using either a date string or a moment object.
   startWithMonth: "YYYY-MM-DD" or moment(),
+
   // an array of day abbreviations. If you have moment.js set to a different language,
   // it will guess these for you! If for some reason that doesn't work, use this...
   // the array MUST start with Sunday
   // (use in conjunction with weekOffset to change the starting day to Monday)
   daysOfTheWeek: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
+
+  // the target classnames that CLNDR will look for to bind events.
+  // these are the defaults.
+  targets: {
+    nextButton: 'clndr-next-button',
+    previousButton: 'clndr-previous-button',
+    nextYearButton: 'clndr-next-year-button',
+    previousYearButton: 'clndr-previous-year-button',
+    todayButton: 'clndr-today-button',
+    day: 'day',
+    empty: 'empty'
+  },
   // click callbacks! the keyword 'this' is set to the clndr instance in all callbacks.
   clickEvents: {
     // fired whenever a calendar box is clicked.
@@ -135,20 +148,21 @@ $('.parent-element').clndr({
     onYearChange: function(month) { },
     // fired when a user goes to the current month & year.
     // returns a moment.js object set to the correct month.
-    today: function(month){ },
+    today: function(month){ }
+  },
 
-  },
-  // the target classnames that CLNDR will look for to bind events.
-  // these are the defaults.
-  targets: {
-    nextButton: 'clndr-next-button',
-    previousButton: 'clndr-previous-button',
-    nextYearButton: 'clndr-next-year-button',
-    previousYearButton: 'clndr-previous-year-button',
-    todayButton: 'clndr-today-button',
-    day: 'day',
-    empty: 'empty'
-  },
+  // this is called only once after clndr has been initialized and rendered.
+  // use this to bind custom event handlers that don't need to be re-attached
+  // every time the month changes (most event handlers fall in this category).
+  // hint: this.element refers to the parent element that holds the clndr,
+  // and is a great place to attach handlers that don't get tossed out every
+  // time the clndr is re-rendered.
+  ready: function() { },
+  // a callback when the calendar is done rendering.
+  // This is a good place to bind custom event handlers
+  // (also see the 'ready' option above).
+  doneRendering: function(){ },
+
   // an array of event objects
   events: [],
   // if you're supplying an events array, dateParameter points to the
@@ -157,16 +171,25 @@ $('.parent-element').clndr({
   dateParameter: 'date',
   // show the numbers of days in months adjacent to the current month
   // (and populate them with their events). defaults to true.
+  // CLNDR can accept events lasting more than one day!
+  // just pass in the multiDayEvents option and specify what the start and
+  // end fields are called within your event objects. See the example file
+  // for a working instance of this.
+  multiDayEvents: {
+    startDate: 'startDate',
+    endDate: 'endDate'
+  },
+
+  // show the dates of days in months adjacent to the current month.
+  // defaults to true.
   showAdjacentMonths: true,
   // when days from adjacent months are clicked, switch the current month.
   // fires nextMonth/previousMonth/onMonthChange click callbacks. defaults to false.
   adjacentDaysChangeMonth: false,
-  // a callback when the calendar is done rendering.
-  // This is a good place to bind custom event handlers
-  // (also see the 'ready' option below).
-  doneRendering: function(){ },
+
   // anything you want access to in your template
   extras: { }
+
   // if you want to use a different templating language, here's your ticket.
   // Precompile your template (before you call clndr),
   // pass the data from the render function into your template,
@@ -177,13 +200,16 @@ $('.parent-element').clndr({
   render: function(data){
     return '<div class="html data as a string"></div>';
   },
-  // this is called only once after clndr has been initialized and rendered.
-  // use this to bind custom event handlers that don't need to be re-attached
-  // every time the month changes (most event handlers fall in this category).
-  // hint: this.element refers to the parent element that holds the clndr,
-  // and is a great place to attach handlers that don't get tossed out every
-  // time the clndr is re-rendered.
-  ready: function() { }
+
+  // if you want to prevent the user from navigating the calendar outside
+  // of a certain date range (e.g. if you are making a datepicker), specify
+  // either the startDate, endDate, or both in the constraints option. You
+  // can change these while the calendar is on the page... See documentation
+  // below for more on this!
+  constraints: {
+    startDate: '2017-12-22',
+    endDate: '2018-01-09'
+  }
 });
 ```
 
@@ -213,53 +239,131 @@ eventsNextMonth: [ ],
 extras: { }
 ```
 
-Returning the Instance
-----------------------
+Multi-day Events
+----------------
+
+Clndr now accepts events lasting more than one day. You just need to tell it how to access the start and end dates of your events:
+
+```javascript
+var lotsOfEvents = [
+  { start: '2013-11-04', end: '2013-11-08', title: 'Monday to Friday Event' },
+  { start: '2013-11-15', end: '2013-11-20', title: 'Another Long Event' }
+];
+
+$('#calendar').clndr({
+  events: lotsOfEvents,
+  multiDayEvents: {
+    startDate: 'start',
+    endDate: 'end'
+  }
+});
+```
+
+When looping through days in my template, 'Monday to Friday Event' will be passed to *every single day* between the start and end date. See index.html in the example folder for a demo of this feature.
+
+Constraints & Datepickers
+-------------------------
+
+If you are making a datepicker or you'd just like to prevent users from `next`ing all the way to 2034 in your calendar, you can pass a `constraints` option with `startDate`, `endDate`, or both specified:
+
+```javascript
+$('#calendar').clndr({
+  constraints: {
+    startDate: '2015-05-06',
+    endDate: '2015-07-16'
+  }
+})
+```
+
+Now your calendar's next and previous buttons will only work within this date range. When they become disabled they will have the class 'inactive', which you can use to gray them out or add gif flames or whatever.
+
+The days in your grid that are outside of the range will also have the `inactive` class. This means that you will want to add a click callback and check for whether or not a day has the class `inactive`. It will look like this:
+
+```javascript
+$('#calendar').clndr({
+  constraints: {
+    startDate: '2015-05-06',
+    endDate: '2015-07-16'
+  },
+  clickEvents: {
+    click: function(target) {
+      if( !$(target.element).hasClass('inactive') ) {
+        console.log('You picked a valid date!');
+      } else {
+        console.log('That date is outside of the range.');
+      }
+    }
+  }
+})
+```
+
+The constraints can be updated at any time via `clndr.options.constraints`. If you make a change, call `render()` afterwards so that clndr can update your interface with the appropriate classes.
+
+```javascript
+myCalendar.options.constraints.startDate = '1999-12-31';
+myCalendar.render();
+```
+
+Make sure the `startDate` comes before the `endDate`!
+
+
+Returning the Instance / Public API
+-----------------------------------
 
 It's possible to save the clndr object in order to call it from JS later. There are functions to increment or set the month or year. You can also provide a new events array.
 
 ```javascript
-// Create a Clndr and save the instance as theCalendarInstance
-var theCalendarInstance = $('#myCalendar').clndr();
+// Create a Clndr and save the instance as myCalendar
+var myCalendar = $('#myCalendar').clndr();
 
 // Go to the next month
-theCalendarInstance.forward();
+myCalendar.forward();
 
 // Go to the previous month
-theCalendarInstance.back();
+myCalendar.back();
 
 // Set the month using a number from 0-11 or a month name
-theCalendarInstance.setMonth(0);
-theCalendarInstance.setMonth('February');
+myCalendar.setMonth(0);
+myCalendar.setMonth('February');
 
 // Go to the next year
-theCalendarInstance.nextYear();
+myCalendar.nextYear();
 
 // Go to the previous year
-theCalendarInstance.previousYear();
+myCalendar.previousYear();
 
 // Set the year
-theCalendarInstance.setYear(1997);
+myCalendar.setYear(1997);
 
 // Change the events. Note that this triggers a re-render of the calendar.
-theCalendarInstance.setEvents(newEventsArray);
+myCalendar.setEvents(newEventsArray);
 
 // Add events. Note that this triggers a re-render of the calendar.
-theCalendarInstance.addEvents(additionalEventsArray);
+myCalendar.addEvents(additionalEventsArray);
+```
+
+If you are taking advantage of the `onMonthChange` and `onYearChange` callbacks, you might want them to fire whenver you call `setMonth`, `setYear`, `forward`, `back`, etc. Just pass in an object as an argument with `withCallbacks: true` like this:
+
+```javascript
+// month will be set to February and then onMonthChange will be fired.
+myCalendar.setMonth("February", { withCallbacks: true });
+
+// month will increment and onMonthChange, and possibly onYearChange, will be fired.
+myCalendar.next({ withCallbacks: true });
 ```
 
 Template Requirements
 ---------------------
 
-CLNDR is structured so that you don't really _need_ anything in your template... If you don't include any markup it just won't do anything cool. If you want to take advantage of click callbacks you'll need to give your grid boxes the `targets.day` class (it's `'day'` by default) and you'll need to set the id to the `days[index].id` provided in the template. To illustrate:
+CLNDR is structured so that you don't really _need_ anything in your template.
 
 ```javascript
 <% _.each(days, function(day){ %>
-  <div class='<%= day.classes %>' id='<%= day.id %>'><%= day.day %></div>
+  <div class='<%= day.classes %>'><%= day.day %></div>
 <% }); %>
 ```
 
-Currently CLNDR sets the id to `'calendar-day-2013-05-30'` and uses it to determine the date when a user clicks on it.
+Currently CLNDR sets the class on a day to `'calendar-day-2013-05-30'` and uses it to determine the date when a user clicks on it. Thus, click events will only work if `days.classes` is included in your day element's `class` attribute as seen above.
 
 
 Some Configuration
@@ -315,7 +419,7 @@ The Javascript:
 ```javascript
 var clndrTemplate = doT.template( $('#dot-template').html() );
 
-$('.cal2').clndr({
+$('#calendar').clndr({
   render: function(data) {
     return clndrTemplate(data);
   }
@@ -325,9 +429,9 @@ $('.cal2').clndr({
 Internationalization
 --------------------
 
-Clndr has support for internationalization insofar as Moment.js supports it. By configuring your Moment.js instance to a different language, which you can read more about [here](http://momentjs.com/docs/#/i18n/), you are configuring Clndr as well.
+Clndr has support for internationalization insofar as Moment.js supports it. By configuring your Moment.js instance to a different language, which you can read more about here: [i18n in Moment.js](http://momentjs.com/docs/#/i18n/), you are configuring Clndr as well.
 
-If you are using a moment.js language configuration in which weeks begin on a Monday (e.g. French), Clndr will detect this automatically and there is no need to provide a `weekOffset` or a `daysOfTheWeek` array.
+If you are using a moment.js language configuration in which weeks begin on a Monday (e.g. French), Clndr will detect this automatically and there is no need to provide a `weekOffset` or a `daysOfTheWeek` array. If you want to reverse this behavior, there is a field in each moment.js language config file called `dow` which you can set to your liking.
 
 The day of the week abbreviations are created automatically using moment.js's current language setting, however if this does not suit your needs you should override them using the `daysOfTheWeek` option. Make sure the array you provide begins on the same day of the week as your current language setting.
 
@@ -358,12 +462,22 @@ _.templateSettings = {
 Todo
 ====
 
-- Tests!
 - Improve mobile experience
 - Node.js module for server-side rendering of the initial calendar.
 
 Changelog
 =========
+`v1.1.0 ~ 2013-11-04`: New features! In list form:
+
+- Multiday Events: using the `multiDayEvents` option, you can now pass in events that last more than one day. They will show up in all the days that they span across.
+- Constraints: you want to make a datepicker? Ok. Pass in a `constraints` option with either a `startDate`, `endDate`, or both, and clndr will add the `inactive` class to all days that aren't within your range. When you are at the edge of the range, next and previous controls will not respond to click events & will also get the class `inactive`.
+- The use of `days.id` in templates has been deprecated all the way. It will cause errors, so stop using it now please!
+- Public API functions (forward, back, setMonth, setYear) now accept an object with options. The only option at the moment is `withCallbacks`, which if set to `true` will fire the `onMonthChange` and `onYearChange` callbacks.
+- There are tests! example/test.html contains a list of human-powered tests that cover all of the basic functionality.
+
+The only backward-compatibility break is the removal of the `days.id` field used within templates. Upgrading clndr should have no negative repercussions for you- please open an issue if it does and it will get fixed!
+
+
 `v1.0.13 ~ 2013-10-24`: changed the way `clndr.eventsLastMonth` and `clndr.eventsNextMonth` propagate... previously they were only available if "showAdjacentMonths" was turned on, whereas now they are always available. They are also available in the template now as `eventsLastMonth` and `eventsNextMonth`. Fixed a bug where `eventsLastMonth` and `eventsNextMonth` were jQuery arrays instead of regular ol' Arrays. This bug was introduced in `v1.0.7`. cleaned up example folder.
 
 `v1.0.12 ~ 2013-10-22`: you can now make next and previous year buttons using the classes `clndr-next-year-button` and `clndr-previous-year-button`, or by specifying the options `targets.nextYearButton` and `targets.previousYearButton`. `doneRendering`'s `this` keyword is now set to the clndr instance. Added the `ready` callback, which is a good place to attach event handlers. Added `clickEvents.onYearChange`, which is fired whenever the year changed as a result of a click action (even if you just went to the next month and it happened to be December to January!).

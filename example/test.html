@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="styles/clndr.css">
+</head>
+<body>
+  <div class="container">
+    <h4>These are the tests. If you are contributing to clndr.js, please take the time to click through each test and ensure that it's working correctly. The clndr.&lt;name&gt; variables refer to variables you can use in the developer console to access each one of the instances on this page.</h4>
+
+    <p>clndr.default ~ Default settings.</p>
+    <div id="default" class="cal1"></div>
+
+    <p>clndr.adjacent ~ test showAdjacentMonths and adjacentDaysChangeMonth.<br />
+    edges of other months should be visible &amp; clicking them should switch the month.</p>
+    <div id="adjacent" class="cal1"></div>
+
+    <p>clndr.passInATemplate ~ Pass in a template.</p>
+    <div id="pass-in-a-template" class="cal2"></div>
+
+    <p>clndr.passInEvents ~ Pass in events.</p>
+    <div id="pass-in-events" class="cal1"></div>
+
+    <p>clndr.callbacks ~ Test the clickEvent callbacks. Logs in the console.</p>
+    <div id="callbacks" class="cal1"></div>
+
+    <p>clndr.multiday ~ Show multi-day events (12th - 17th, 24th - 27th). Logs in the console.</p>
+    <div id="multiday" class="cal1"></div>
+
+    <p>clndr.constraints ~ Test start &amp; end constraints. (4th of this month to the 12th of next month). Logs in the console.</p>
+    <div id="constraints" class="cal1"></div>
+
+    <p>clndr.startConstraint ~ Test start constraint. (4th of this month). Logs in the console.</p>
+    <div id="start-constraint" class="cal1"></div>
+
+    <p>clndr.endConstraint ~ Test end constraint. (12th of next month). Logs in the console.</p>
+    <div id="end-constraint" class="cal1"></div>
+
+    <p>clndr.api ~ Test calling the API (next, previous, setMonth, setYear) with/without { withCallbacks: true } as an argument. onMonthChange and onYearChange will log only if withCallbacks is true.</p>
+    <div id="api" class="cal1"></div>
+  </div>
+
+  <script type="text/template" id="clndr-template">
+    <div class="clndr-controls">
+      <div class="clndr-previous-button">&lsaquo;</div>
+      <div class="month"><%= month %></div>
+      <div class="clndr-next-button">&rsaquo;</div>
+    </div>
+    <div class="clndr-grid">
+      <div class="days-of-the-week">
+        <% _.each(daysOfTheWeek, function(day) { %>
+          <div class="header-day"><%= day %></div>
+        <% }); %>
+        <div class="days">
+          <% _.each(days, function(day) { %>
+            <div class="<%= day.classes %>"><%= day.day %></div>
+          <% }); %>
+        </div>
+      </div>
+    </div>
+    <div class="clndr-today-button">Today</div>
+  </script>
+
+
+  <script src="json2.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+  <script src= "moment-2.2.1.js"></script>
+
+  <script src="../src/clndr.js"></script>
+  <script src="test.js"></script>
+
+  <!-- Enable live-reloading in the browser without an extension -->
+  <script src="http://localhost:35729/livereload.js"></script>
+</body>
+</html>

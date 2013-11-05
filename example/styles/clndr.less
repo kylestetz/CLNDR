@@ -28,6 +28,30 @@ html[xmlns] .clearfix {
     -ms-user-select: none; /* IE10+ */
 }
 
+h4
+{
+    width: 75%;
+    text-align: center;
+    font-family: 'Droid Sans Mono';
+    font-weight: normal;
+    color: white;
+    font-size: 14px;
+    margin: 0 auto 1em auto;
+    padding: 1em;
+    background: #b63642;
+}
+
+p
+{
+    text-align: center;
+    font-family: 'Droid Sans Mono';
+    margin: 3em auto 1em auto;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    border-bottom: 2px solid #414141;
+    background: #f4f4f4;
+}
+
 //////////////////////////////////
 
 @clndr-border: 1px solid #000;
@@ -70,12 +94,30 @@ html[xmlns] .clearfix {
                     cursor: pointer;
                     .noselect;
                     &:hover { background: #ddd; }
+                    &.inactive
+                    {
+                        opacity: 0.5;
+                        &:hover
+                        {
+                            background: none;
+                            cursor: default;
+                        }
+                    }
                 }
                 .clndr-previous-button
                 {
                     cursor: pointer;
                     .noselect;
                     &:hover { background: #ddd; }
+                    &.inactive
+                    {
+                        opacity: 0.5;
+                        &:hover
+                        {
+                            background: none;
+                            cursor: default;
+                        }
+                    }
                 }
             }
         }
@@ -142,6 +184,11 @@ html[xmlns] .clearfix {
                         {
                             background: darken(#B4E09F, 10%);
                         }
+                    }
+
+                    &.inactive
+                    {
+                        background: #ddd;
                     }
 
                     &:last-child
