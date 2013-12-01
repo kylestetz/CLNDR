@@ -823,10 +823,14 @@
   }
 
   $.fn.clndr = function(options) {
-    if( !$.data( this, 'plugin_clndr') ) {
-      var clndr_instance = new Clndr(this, options);
-      $.data(this, 'plugin_clndr', clndr_instance);
-      return clndr_instance;
+    if(this.length === 1) {
+      if(!$.data( this, 'plugin_clndr')) {
+        var clndr_instance = new Clndr(this, options);
+        $.data(this, 'plugin_clndr', clndr_instance);
+        return clndr_instance;
+      }
+    } else if(this.length > 1) {
+      throw new Error("CLNDR does not support multiple elements yet.");
     }
   }
 
