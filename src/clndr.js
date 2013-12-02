@@ -1,5 +1,5 @@
 /*
- *               ~ CLNDR v1.1.0 ~
+ *               ~ CLNDR v1.1.1 ~
  * ==============================================
  *       https://github.com/kylestetz/CLNDR
  * ==============================================
@@ -830,7 +830,7 @@
         return clndr_instance;
       }
     } else if(this.length > 1) {
-      throw new Error("CLNDR does not support multiple elements yet.");
+      throw new Error("CLNDR does not support multiple elements yet. Make sure your clndr selector returns only one element.");
     }
   }
 

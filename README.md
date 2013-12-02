@@ -9,7 +9,9 @@ Download
 --------
 
 - development ~ [clndr.js](https://raw.github.com/kylestetz/CLNDR/master/src/clndr.js)
-- production ~ [clndr-1.1.0.min.js](https://raw.github.com/kylestetz/CLNDR/master/clndr-1.1.0.min.js)
+- production ~ [clndr.min.js](https://raw.github.com/kylestetz/CLNDR/master/clndr.min.js)
+
+Returning to grab a new version? Have a look at the [changelog](https://github.com/kylestetz/CLNDR#changelog) to see what's new.
 
 If you'd like to run some tests in a particular browser or environment, `example/test.html` contains a list of basic functionality tests. When contributing, please run these (and add to them when appropriate) before submitting a pull request!
 
@@ -466,6 +468,8 @@ Todo
 
 Changelog
 =========
+`v1.1.1 ~ 2013-12-02`: You can now only call clndr on one element at a time. If you attempt to call it on more than one element, an error is thrown. This should have no effect on previous code as long as your selectors were only returning one element. There is now a bower.json file.
+
 `v1.1.0 ~ 2013-11-04`: New features! In list form:
 
 - Multiday Events: using the `multiDayEvents` option, you can now pass in events that last more than one day. They will show up in all the days that they span across.
