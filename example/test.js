@@ -1,5 +1,13 @@
 var clndr = {};
 
+if(!window.console) {
+  window.console = {
+    log: function(whatever) {
+      // sad face.
+    }
+  }
+}
+
 $( function() {
 
   var eventsArray = [
@@ -9,7 +17,7 @@ $( function() {
 
   // default
   // ================================================================================
-  clndr.default = $('#default').clndr();
+  clndr.defaultSetup = $('#default').clndr();
 
 
   // test showAdjacentMonths and adjacentDaysChangeMonth.
@@ -84,7 +92,7 @@ $( function() {
   clndr.constraints = $('#constraints').clndr({
     constraints: {
       startDate: moment().format('YYYY-MM-') + '04',
-      endDate: moment().format('YYYY-') + moment().add('months', 1).format('MM') + '-12'
+      endDate: moment().add('months', 1).format('YYYY-MM-12')
     },
     clickEvents: {
       click: function(target) {
