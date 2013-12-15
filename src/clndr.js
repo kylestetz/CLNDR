@@ -824,9 +824,9 @@
 
   $.fn.clndr = function(options) {
     if(this.length === 1) {
-      if(!$.data( this, 'plugin_clndr')) {
+      if(!this.data('plugin_clndr')) {
         var clndr_instance = new Clndr(this, options);
-        $.data(this, 'plugin_clndr', clndr_instance);
+        this.data('plugin_clndr', clndr_instance);
         return clndr_instance;
       }
     } else if(this.length > 1) {
