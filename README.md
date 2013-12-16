@@ -187,6 +187,9 @@ $('.parent-element').clndr({
   // when days from adjacent months are clicked, switch the current month.
   // fires nextMonth/previousMonth/onMonthChange click callbacks. defaults to false.
   adjacentDaysChangeMonth: false,
+  // always make the calendar six rows tall (42 days) so that every month has a
+  // consistent height. defaults to 'false'.
+  forceSixRows: false,
 
   // anything you want access to in your template
   extras: { }
@@ -468,6 +471,8 @@ Todo
 
 Changelog
 =========
+`v1.1.2 ~ 2013-12-15`: using the `forceSixRows` option, you can now force your calendar to render six rows at all times, giving each month the same height. All classes and events come through this extra set of days just as you would expect. The usage jQuery's `$.data` has been corrected such that calling `$(#calendar-parent-element).data('plugin_clndr')` returns the clndr instance.
+
 `v1.1.1 ~ 2013-12-02`: You can now only call clndr on one element at a time. If you attempt to call it on more than one element, an error is thrown. This should have no effect on previous code as long as your selectors were only returning one element. There is now a bower.json file.
 
 `v1.1.0 ~ 2013-11-04`: New features! In list form:

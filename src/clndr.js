@@ -1,5 +1,5 @@
 /*
- *               ~ CLNDR v1.1.1 ~
+ *               ~ CLNDR v1.1.2 ~
  * ==============================================
  *       https://github.com/kylestetz/CLNDR
  * ==============================================
@@ -81,7 +81,8 @@
     showAdjacentMonths: true,
     adjacentDaysChangeMonth: false,
     ready: null,
-    constraints: null
+    constraints: null,
+    forceSixRows: null,
   };
 
   // The actual plugin constructor
@@ -276,18 +277,28 @@
 
     // ...and if there are any trailing blank boxes, fill those in
     // with the next month first days
-    if(this.options.showAdjacentMonths) {
-      i = 1;
-      while(daysArray.length % 7 !== 0) {
+    var i = 1;
+    while(daysArray.length % 7 !== 0) {
+      if(this.options.showAdjacentMonths) {
         var day = moment([currentMonth.year(), currentMonth.month(), numOfDays + i]);
         daysArray.push( this.createDayObject(day, this.eventsNextMonth) );
-        i++;
-      }
-    } else {
-      i = 1;
-      while(daysArray.length % 7 !== 0) {
+      } else {
         daysArray.push( this.calendarDay({ classes: this.options.targets.empty + " next-month" }) );
-        i++;
+      }
+      i++;
+    }
+
+    // if we want to force six rows of calendar, now's our last chance to add another row.
+    // if the 42 seems explicit it's because we're creating a 7-row grid and 6 rows of 7 is always 42!
+    if(this.options.forceSixRows && daysArray.length !== 42 ) {
+      var start = moment(daysArray[daysArray.length - 1].date).add('days', 1);
+      while(daysArray.length < 42) {
+        if(this.options.showAdjacentMonths) {
+          daysArray.push( this.createDayObject(moment(start), this.eventsNextMonth) );
+          start.add('days', 1);
+        } else {
+          daysArray.push( this.calendarDay({ classes: this.options.targets.empty + " next-month" }) );
+        }
       }
     }
 

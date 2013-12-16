@@ -29,11 +29,12 @@ $(document).ready( function() {
     clickEvents: {
       click: function(target) {
         console.log(target);
-        if($(target.element).hasClass('inactive')) {
-          console.log('not a valid datepicker date.');
-        } else {
-          console.log('VALID datepicker date.');
-        }
+        // if you turn the `constraints` option on, try this out:
+        // if($(target.element).hasClass('inactive')) {
+        //   console.log('not a valid datepicker date.');
+        // } else {
+        //   console.log('VALID datepicker date.');
+        // }
       },
       nextMonth: function() {
         console.log('next month.');
@@ -62,16 +63,17 @@ $(document).ready( function() {
     adjacentDaysChangeMonth: false
   });
 
-  // calendars.clndr2 = $('.cal2').clndr({
-  //   template: $('#template-calendar').html(),
-  //   events: eventArray,
-  //   startWithMonth: moment().add('month', 1),
-  //   clickEvents: {
-  //     click: function(target) {
-  //       console.log(target);
-  //     }
-  //   }
-  // });
+  calendars.clndr2 = $('.cal2').clndr({
+    template: $('#template-calendar').html(),
+    events: eventArray,
+    startWithMonth: moment().add('month', 1),
+    clickEvents: {
+      click: function(target) {
+        console.log(target);
+      }
+    },
+    forceSixRows: true
+  });
 
   // bind both clndrs to the left and right arrow keys
   $(document).keydown( function(e) {

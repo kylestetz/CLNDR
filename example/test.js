@@ -139,4 +139,11 @@ $( function() {
   });
 
 
+  // test forceSixRows option
+  // ================================================================================
+  clndr.api = $('#six-rows').clndr({
+    forceSixRows: true
+  });
+
+
 });
