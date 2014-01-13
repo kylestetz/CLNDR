@@ -105,7 +105,7 @@ $('.parent-element').clndr({
   // determines which month to start with using either a date string or a moment object.
   startWithMonth: "YYYY-MM-DD" or moment(),
 
-  // an array of day abbreviations. If you have moment.js set to a different language,
+  // an array of day abbreviation labels. If you have moment.js set to a different language,
   // it will guess these for you! If for some reason that doesn't work, use this...
   // the array MUST start with Sunday
   // (use in conjunction with weekOffset to change the starting day to Monday)
@@ -462,6 +462,11 @@ _.templateSettings = {
   evaluate: /\{\%(.+?)\%\}/g
 };
 ```
+
+Internet Explorer Issues
+========================
+
+If you're planning on supporting IE8 and below, you'll have to be careful about version dependencies. You'll need the jQuery 1.10.x branch for IE support, and if you're taking advantage of the `constraints` feature you'll need to use a version of moment.js less than or equal to `2.1.0`.
 
 Todo
 ====
