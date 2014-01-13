@@ -82,7 +82,7 @@
     adjacentDaysChangeMonth: false,
     ready: null,
     constraints: null,
-    forceSixRows: null,
+    forceSixRows: null
   };
 
   // The actual plugin constructor
