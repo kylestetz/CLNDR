@@ -3,7 +3,7 @@
   "title": "CLNDR",
   "description": "CLNDR is a calendar plugin that uses HTML templates, allowing you to write custom markup and styles that have access to useful calendar data.",
   "keywords": ["calendar", "ui", "date", "punkave"],
-  "version": "1.1.2",
+  "version": "1.1.3",
   "author": {
     "name": "Kyle Stetz",
     "url": "https://github.com/kylestetz"

@@ -476,6 +476,8 @@ Todo
 
 Changelog
 =========
+`v1.1.3 ~ 2014-01-17`: fixed a bug where multiday events longer than two months would not show up. Fixed a bug that prevented clndr from loading in IE8.
+
 `v1.1.2 ~ 2013-12-15`: using the `forceSixRows` option, you can now force your calendar to render six rows at all times, giving each month the same height. All classes and events come through this extra set of days just as you would expect. The usage jQuery's `$.data` has been corrected such that calling `$(#calendar-parent-element).data('plugin_clndr')` returns the clndr instance.
 
 `v1.1.1 ~ 2013-12-02`: You can now only call clndr on one element at a time. If you attempt to call it on more than one element, an error is thrown. This should have no effect on previous code as long as your selectors were only returning one element. There is now a bower.json file.
