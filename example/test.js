@@ -85,6 +85,26 @@ $( function() {
     }
   });
 
+  // test really long multi-day events
+  // ================================================================================
+  var multidayLongArray = [
+    { startDate: moment().subtract('months', 3).format('YYYY-MM-') + '12', endDate: moment().format('YYYY-MM-') + '17', title: 'Multi1' },
+    { startDate: moment().format('YYYY-MM-') + '24', endDate: moment().add('months', 4).format('YYYY-MM-') + '27', title: 'Multi2' }
+  ];
+
+  clndr.multidayLong = $('#multiday-long').clndr({
+    events: multidayLongArray,
+    multiDayEvents: {
+      startDate: 'startDate',
+      endDate: 'endDate'
+    },
+    clickEvents: {
+      click: function(target) {
+        console.log(target);
+      }
+    }
+  });
+
 
   // test constraints
   // (the 4th of this month to the 12th of next month)
