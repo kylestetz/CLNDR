@@ -377,6 +377,9 @@
     // uniqueness of IDs.
     extraClasses += " calendar-day-" + day.format("YYYY-MM-DD");
 
+    // day of week
+    extraClasses += " calendar-dow-" + day.weekday();
+
     return this.calendarDay({
       day: day.date(),
       classes: this.options.targets.day + extraClasses,
