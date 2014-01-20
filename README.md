@@ -20,7 +20,7 @@ Dependencies
 
 [jQuery](http://jquery.com/download/) and [Moment.js](http://momentjs.com/) are depended upon. By default CLNDR tries to use [Underscore.js](http://underscorejs.org/)'s `_.template()` function, however if you specify a custom rendering function (see documentation below) underscore will not be used at all.
 
-Because their APIs are the same, [Lo-Dash](http://lodash.com/)'s `_.template()` function will work ask well! Just include Lo-Dash instead of underscore.
+Because their APIs are the same, [Lo-Dash](http://lodash.com/)'s `_.template()` function will work as well! Just include Lo-Dash instead of underscore.
 
 ### Using Bower
 
