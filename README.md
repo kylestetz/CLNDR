@@ -5,6 +5,24 @@ CLNDR is a jQuery calendar plugin. It was created- you've heard this before- out
 
 See a demo: [kylestetz.github.io/CLNDR/](http://kylestetz.github.io/CLNDR/)
 
+- [Download](https://github.com/kylestetz/CLNDR#download)
+- [Dependencies](https://github.com/kylestetz/CLNDR#dependencies)
+  - [Using Bower](https://github.com/kylestetz/CLNDR#using-bower)
+- [Introduction: You Write The Markup](https://github.com/kylestetz/CLNDR#introduction-you-write-the-markup)
+  - [The 'days' Array](https://github.com/kylestetz/CLNDR#the-days-array)
+  - [Pass in your Events](https://github.com/kylestetz/CLNDR#pass-in-your-events)
+- [Usage](https://github.com/kylestetz/CLNDR#usage)
+  - [Multi-day Events](https://github.com/kylestetz/CLNDR#multi-day-events)
+  - [Constraints & Datepickers](https://github.com/kylestetz/CLNDR#constraints--datepickers)
+  - [Returning the Instance / API](https://github.com/kylestetz/CLNDR#returning-the-instance--public-api)
+  - [Template Requirements](https://github.com/kylestetz/CLNDR#template-requirements)
+- [Configuration](https://github.com/kylestetz/CLNDR#some-configuration)
+  - [Template Rendering Engine](https://github.com/kylestetz/CLNDR#template-rendering-engine)
+  - [Internationalization](https://github.com/kylestetz/CLNDR#internationalization)
+  - [Underscore Template Delimiters](https://github.com/kylestetz/CLNDR#underscore-template-delimiters)
+  - [Internet Explorer Issues](https://github.com/kylestetz/CLNDR#internet-explorer-issues)
+- [Changelog](https://github.com/kylestetz/CLNDR#changelog)
+
 Download
 --------
 
@@ -385,7 +403,7 @@ Currently CLNDR sets the class on a day to `'calendar-day-2013-05-30'` and uses 
 Some Configuration
 ==================
 
-Template Rendering Engine (experimental)
+Template Rendering Engine
 ----------------------------------------
 
 You can pass in a `render` function as an option, for example:
@@ -404,7 +422,7 @@ where the function must return the HTML result of the rendering operation. In th
 
 If you are using your own render method, underscore.js is NOT a dependency of this plugin.
 
-CLNDR has been tested successfully with [doT.js](http://olado.github.io/doT/) and [Hogan.js](http://twitter.github.io/hogan.js/). Please get in touch if you have success with other languages and they will be documented here.
+CLNDR has been tested successfully with [doT.js](http://olado.github.io/doT/), [Hogan.js](http://twitter.github.io/hogan.js/), and [Handlebars.js](http://handlebarsjs.com/). Please get in touch if you have success with other languages and they will be documented here.
 
 Here's an example using [doT.js](http://olado.github.io/doT/)...
 
@@ -478,7 +496,7 @@ _.templateSettings = {
 Internet Explorer Issues
 ========================
 
-If you're planning on supporting IE8 and below, you'll have to be careful about version dependencies. You'll need the jQuery 1.10.x branch for IE support, and if you're taking advantage of the `constraints` feature you'll need to use a version of moment.js less than or equal to `2.1.0`.
+If you're planning on supporting IE8 and below, you'll have to be careful about version dependencies. You'll need the jQuery 1.10.x branch for IE support, and if you're taking advantage of the `constraints` feature you'll need to use a version of moment.js `<=2.1.0` or `>=2.5.1`.
 
 Todo
 ====
@@ -488,6 +506,8 @@ Todo
 
 Changelog
 =========
+`v1.2.0 ~ 2014-01-22`: BC break for Bower users! Underscore is no longer listed as a dependency in the Bower plugin, allowing you the flexibility of choosing the templating language you prefer. Also added a day of the week class to all clndr days in the format `calendar-dow-<0 - 6>`, allowing you to style weekends/specific days of the week differently.
+
 `v1.1.3 ~ 2014-01-17`: fixed a bug where multiday events longer than two months would not show up. Fixed a bug that prevented clndr from loading in IE8.
 
 `v1.1.2 ~ 2013-12-15`: using the `forceSixRows` option, you can now force your calendar to render six rows at all times, giving each month the same height. All classes and events come through this extra set of days just as you would expect. The usage jQuery's `$.data` has been corrected such that calling `$(#calendar-parent-element).data('plugin_clndr')` returns the clndr instance.
