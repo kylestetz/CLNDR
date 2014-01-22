@@ -20,7 +20,19 @@ Dependencies
 
 [jQuery](http://jquery.com/download/) and [Moment.js](http://momentjs.com/) are depended upon. By default CLNDR tries to use [Underscore.js](http://underscorejs.org/)'s `_.template()` function, however if you specify a custom rendering function (see documentation below) underscore will not be used at all.
 
-Because their APIs are the same, [Lo-Dash](http://lodash.com/)'s `_.template()` function will work ask well! Just include Lo-Dash instead of underscore.
+Because their APIs are the same, [Lo-Dash](http://lodash.com/)'s `_.template()` function will work as well! Just include Lo-Dash instead of underscore.
+
+### Using Bower
+
+You can install CLNDR via [Bower](http://bower.io/):
+
+```shell
+bower install clndr
+```
+
+Underscore is not installed by default. This allows you to use whichever templating engine you want to. If you want to use the default `template` option with Underscore, just install it as a dependency of your project: `bower install underscore`.
+
+
 
 Introduction: You Write The Markup
 ==================================
