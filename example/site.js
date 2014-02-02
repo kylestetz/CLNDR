@@ -66,6 +66,10 @@ $(document).ready( function() {
   calendars.clndr2 = $('.cal2').clndr({
     template: $('#template-calendar').html(),
     events: eventArray,
+    multiDayEvents: {
+      startDate: 'startDate',
+      endDate: 'endDate'
+    },
     startWithMonth: moment().add('month', 1),
     clickEvents: {
       click: function(target) {
