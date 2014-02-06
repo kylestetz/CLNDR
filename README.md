@@ -8,6 +8,7 @@ See a demo: [kylestetz.github.io/CLNDR/](http://kylestetz.github.io/CLNDR/)
 - [Download](https://github.com/kylestetz/CLNDR#download)
 - [Dependencies](https://github.com/kylestetz/CLNDR#dependencies)
   - [Using Bower](https://github.com/kylestetz/CLNDR#using-bower)
+  - [Clndr using Angular.js](https://github.com/kylestetz/CLNDR#clndr-using-angular)
 - [Introduction: You Write The Markup](https://github.com/kylestetz/CLNDR#introduction-you-write-the-markup)
   - [The 'days' Array](https://github.com/kylestetz/CLNDR#the-days-array)
   - [Pass in your Events](https://github.com/kylestetz/CLNDR#pass-in-your-events)
@@ -50,6 +51,9 @@ bower install clndr
 
 Underscore is not installed by default. This allows you to use whichever templating engine you want to. If you want to use the default `template` option with Underscore, just install it as a dependency of your project: `bower install underscore`.
 
+### Clndr Using Angular
+
+If you want to integrate clndr into an [angular.js](http://angularjs.org/) site, get started with this directive: [angular-clndr](https://github.com/10KB/angular-clndr).
 
 
 Introduction: You Write The Markup
