@@ -166,4 +166,24 @@ $( function() {
   });
 
 
+  // test lengthOfTime.months option (three month views in one)
+  // ================================================================================
+  clndr.threeMonths = $('#three-months').clndr({
+    template: $('#clndr-multimonth-template').html(),
+    lengthOfTime: {
+      months: 3,
+      interval: 1
+    }
+  });
+
+  // test lengthOfTime.days option (three month views in one)
+  // ================================================================================
+  clndr.oneWeek = $('#three-months').clndr({
+    template: $('#clndr-oneweek-template').html(),
+    lengthOfTime: {
+      days: 7
+    }
+  });
+
+
 });
