@@ -115,11 +115,13 @@
       // we want to establish intervalStart and intervalEnd, which will keep track
       // of our boundaries. Let's look at the possibilities...
       if(this.options.lengthOfTime.months) {
+        // gonna go right ahead and annihilate any chance for bugs here.
+        this.options.lengthOfTime.days = null;
         // the length is specified in months. Is there a start date?
         if(this.options.lengthOfTime.startDate) {
-          this.intervalStart = moment(this.options.lengthOfTime.startDate);
+          this.intervalStart = moment(this.options.lengthOfTime.startDate).startOf('month');
         } else if(this.options.startWithMonth) {
-          this.intervalStart = moment(this.options.startWithMonth);
+          this.intervalStart = moment(this.options.startWithMonth).startOf('month');
         } else {
           this.intervalStart = moment().startOf('month');
         }
@@ -130,11 +132,11 @@
       } else if(this.options.lengthOfTime.days) {
         // the length is specified in days. Start date?
         if(this.options.lengthOfTime.startDate) {
-          this.intervalStart = moment(this.options.lengthOfTime.startDate);
+          this.intervalStart = moment(this.options.lengthOfTime.startDate).startOf('day');
         } else {
-          this.intervalStart = moment().weekday(0);
+          this.intervalStart = moment().weekday(0).startOf('day');
         }
-        this.intervalEnd = moment(this.intervalStart).add('days', this.options.lengthOfTime.days - 1);
+        this.intervalEnd = moment(this.intervalStart).add('days', this.options.lengthOfTime.days - 1).endOf('day');
         this.month = this.intervalStart.clone();
       }
     } else {
@@ -516,20 +518,20 @@
         end = moment(this.options.constraints.endDate);
       }
       // deal with the month controls first.
-      // are we at the start month?
-      if(start && this.month.isSame( start, 'month' )) {
+      // do we have room to go back?
+      if(start && (start.isAfter(this.intervalStart) || start.isSame(this.intervalStart, 'day'))) {
         this.element.find('.' + this.options.targets.previousButton).toggleClass('inactive', true);
       }
-      // are we at the end month?
-      if(end && this.month.isSame( end, 'month' )) {
+      // do we have room to go forward?
+      if(end && (end.isBefore(this.intervalEnd) || end.isSame(this.intervalEnd, 'day'))) {
         this.element.find('.' + this.options.targets.nextButton).toggleClass('inactive', true);
       }
       // what's last year looking like?
-      if(start && moment(start).subtract('years', 1).isBefore(moment(this.month).subtract('years', 1)) ) {
+      if(start && start.isAfter(this.intervalStart.clone().subtract('years', 1)) ) {
         this.element.find('.' + this.options.targets.previousYearButton).toggleClass('inactive', true);
       }
       // how about next year?
-      if(end && moment(end).add('years', 1).isAfter(moment(this.month).add('years', 1)) ) {
+      if(end && end.isBefore(this.intervalEnd.clone().add('years', 1)) ) {
         this.element.find('.' + this.options.targets.nextYearButton).toggleClass('inactive', true);
       }
       // today? we could put this in init(), but we want to support the user changing the constraints on a living instance.
@@ -842,7 +844,8 @@
     var self = event.data.context;
     // before we do anything, check if there is an inactive class on the month control.
     // if it does, we want to return and take no action.
-    if(self.element.find('.' + self.options.targets.previousYear).hasClass('inactive')) {
+    console.log(self.element.find('.' + self.options.targets.previousYear));
+    if(self.element.find('.' + self.options.targets.previousYearButton).hasClass('inactive')) {
       return;
     }
 
