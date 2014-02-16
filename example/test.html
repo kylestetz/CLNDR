@@ -50,7 +50,7 @@
     <p>clndr.multipleMonths ~ Test length.months option, which should display three months.</p>
     <div id="three-months" class="cal2"></div>
 
-    <p>clndr.oneWeek ~ Test length.days option. Should display one week, and next &amp; previous buttons should advance in one week intervals.</p>
+    <p>clndr.oneWeek ~ Test length.days option. Should display two weeks, and next &amp; previous buttons should advance in one week intervals.</p>
     <div id="one-week" class="cal2"></div>
   </div>
 
@@ -77,9 +77,15 @@
 
 
   <script type="text/template" id="clndr-multimonth-template">
+    <div class="multi-month-controls">
+      <div class="clndr-previous-year-button quarter-button">&laquo;</div><!--
+  --><div class="clndr-previous-button quarter-button">&lsaquo;</div><!--
+  --><div class="clndr-next-button quarter-button right-align">&rsaquo;</div><!--
+  --><div class="clndr-next-year-button quarter-button right-align">&raquo;</div>
+    </div>
     <% _.each(months, function(oneMonth){ %>
       <div class="clndr-controls">
-        <div class="month"><%= oneMonth.month %></div>
+        <div class="month"><%= oneMonth.month.format('MMMM YYYY') %></div>
       </div>
       <div class="clndr-grid">
         <div class="days-of-the-week">
@@ -87,7 +93,7 @@
             <div class="header-day"><%= day %></div>
           <% }); %>
           <div class="days">
-            <% _.each(days, function(day) { %>
+            <% _.each(oneMonth.days, function(day) { %>
               <div class="<%= day.classes %>"><%= day.day %></div>
             <% }); %>
           </div>
@@ -101,7 +107,7 @@
   <script type="text/template" id="clndr-oneweek-template">
     <div class="clndr-controls">
       <div class="clndr-previous-button">&lsaquo;</div>
-      <div class="month"><%= intervalStart.format('MMMM Do') %> - <%= intervalEnd.format('MMMM Do') %></div>
+      <div class="month"><%= intervalStart.format('MM/DD') %> - <%= intervalEnd.format('MM/DD') %></div>
       <div class="clndr-next-button">&rsaquo;</div>
     </div>
     <div class="clndr-grid">

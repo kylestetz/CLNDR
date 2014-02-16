@@ -161,7 +161,7 @@ $( function() {
 
   // test forceSixRows option
   // ================================================================================
-  clndr.api = $('#six-rows').clndr({
+  clndr.sixRows = $('#six-rows').clndr({
     forceSixRows: true
   });
 
@@ -170,18 +170,52 @@ $( function() {
   // ================================================================================
   clndr.threeMonths = $('#three-months').clndr({
     template: $('#clndr-multimonth-template').html(),
+    events: multidayArray,
+
     lengthOfTime: {
       months: 3,
-      interval: 1
+      interval: 1,
+      startDate: moment().subtract('months', 1).startOf('month')
+    },
+
+    clickEvents: {
+      previousInterval: function(start, end) {
+        console.log('previous interval:', start, end);
+      },
+      nextInterval: function(start, end) {
+        console.log('next interval:', start, end);
+      },
+      onIntervalChange: function(start, end) {
+        console.log('interval change:', start, end);
+      }
+    },
+
+    multiDayEvents: {
+      startDate: 'startDate',
+      endDate: 'endDate'
+    },
+
+    constraints: {
+      startDate: moment().format('YYYY-MM-') + '04',
+      endDate: moment().add('months', 12).format('YYYY-MM-12')
     }
   });
 
-  // test lengthOfTime.days option (three month views in one)
+  // test lengthOfTime.days option (14 days incremented by 7)
   // ================================================================================
-  clndr.oneWeek = $('#three-months').clndr({
+  clndr.oneWeek = $('#one-week').clndr({
     template: $('#clndr-oneweek-template').html(),
+    events: eventsArray,
+
     lengthOfTime: {
-      days: 7
+      days: 14,
+      interval: 7,
+      startDate: moment().add('weeks', 1).weekday(0)
+    },
+
+    constraints: {
+      startDate: moment().format('YYYY-MM-') + '04',
+      endDate: moment().add('months', 1).format('YYYY-MM-12')
     }
   });
 

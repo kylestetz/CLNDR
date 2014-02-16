@@ -44,6 +44,12 @@ p {
   border-bottom: 2px solid #414141;
   background: #f4f4f4;
 }
+.left-align {
+  text-align: left;
+}
+.right-align {
+  text-align: right;
+}
 .cal1 {
   margin: 30px auto;
   max-width: 600px;
@@ -272,4 +278,33 @@ p {
 }
 .cal2 .clndr .clndr-today-button:hover {
   background-color: #ddd;
+}
+.cal2 .multi-month-controls .quarter-button {
+  display: inline-block;
+  width: 25%;
+}
+.cal2 .multi-month-controls .quarter-button:hover {
+  cursor: pointer;
+  background-color: #f4f4f4;
+}
+.cal2 .day.inactive {
+  background-color: #aaa;
+}
+.clndr-next-button,
+.clndr-previous-button,
+.clndr-next-year-button,
+.clndr-previous-year-button {
+  -webkit-user-select: none;
+  /* Chrome/Safari */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* IE10+ */
+}
+.clndr-next-button.inactive,
+.clndr-previous-button.inactive,
+.clndr-next-year-button.inactive,
+.clndr-previous-year-button.inactive {
+  opacity: 0.5;
+  cursor: default;
 }
