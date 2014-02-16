@@ -82,7 +82,12 @@
     adjacentDaysChangeMonth: false,
     ready: null,
     constraints: null,
-    forceSixRows: null
+    forceSixRows: null,
+    lengthOfTime: {
+      months: null,
+      days: null,
+      interval: 1
+    }
   };
 
   // The actual plugin constructor
@@ -103,30 +108,63 @@
       }
     }
 
-    // this object will store a reference to the current month.
-    // it's a moment object, which allows us to poke at it a little if we need to.
-    // this will serve as the basis for switching between months & is the go-to
-    // internally if we want to know which month we're currently at.
-    if(this.options.startWithMonth) {
-      this.month = moment(this.options.startWithMonth).startOf('month');
+    // this used to be a place where we'd figure out the current month, but since
+    // we want to open up support for arbitrary lengths of time we're going to
+    // store the current range in addition to the current month.
+    if(this.options.lengthOfTime.months || this.options.lengthOfTime.days) {
+      // we want to establish intervalStart and intervalEnd, which will keep track
+      // of our boundaries. Let's look at the possibilities...
+      if(this.options.lengthOfTime.months) {
+        // the length is specified in months. Is there a start date?
+        if(this.options.lengthOfTime.startDate) {
+          this.intervalStart = moment(this.options.lengthOfTime.startDate);
+        } else if(this.options.startWithMonth) {
+          this.intervalStart = moment(this.options.startWithMonth);
+        } else {
+          this.intervalStart = moment().startOf('month');
+        }
+        // subtract a day so that we are at the end of the interval. We always
+        // want intervalEnd to be inclusive.
+        this.intervalEnd = moment(this.intervalStart).add('months', this.options.lengthOfTime.months).subtract('days', 1);
+        this.month = this.intervalStart.clone();
+      } else if(this.options.lengthOfTime.days) {
+        // the length is specified in days. Start date?
+        if(this.options.lengthOfTime.startDate) {
+          this.intervalStart = moment(this.options.lengthOfTime.startDate);
+        } else {
+          this.intervalStart = moment();
+        }
+        this.intervalEnd = moment(this.intervalStart).add('days', this.options.lengthOfTime.days);
+        this.month = this.intervalStart.clone();
+      }
     } else {
       this.month = moment().startOf('month');
+      this.intervalStart = moment(this.month);
+      this.intervalEnd = moment(this.month).endOf('month');
     }
 
-    // if we've got constraints set, make sure the month is within them.
+    if(this.options.startWithMonth) {
+      this.month = moment(this.options.startWithMonth).startOf('month');
+      this.intervalStart = moment(this.month);
+      this.intervalEnd = moment(this.month).endOf('month');
+    }
+
+    // if we've got constraints set, make sure the interval is within them.
     if(this.options.constraints) {
       // first check if the start date exists & is later than now.
       if(this.options.constraints.startDate) {
         var startMoment = moment(this.options.constraints.startDate);
-        if(this.month.isBefore(startMoment, 'month')) {
-          this.month.set('month', startMoment.month());
-          this.month.set('year', startMoment.year());
+        if(this.intervalStart.isBefore(startMoment, 'month')) {
+          // try to preserve the date by moving only the month...
+          this.intervalStart.set('month', startMoment.month()).set('year', startMoment.year());
+          this.month.set('month', startMoment.month()).set('year', startMoment.year());
         }
       }
-      // make sure the month (whether modified or not) is before the endDate
+      // make sure the intervalEnd is before the endDate
       if(this.options.constraints.endDate) {
         var endMoment = moment(this.options.constraints.endDate);
-        if(this.month.isAfter(endMoment, 'month')) {
+        if(this.intervalEnd.isAfter(endMoment, 'month')) {
+          this.intervalEnd.set('month', endMoment.month()).set('year', endMoment.year());
           this.month.set('month', endMoment.month()).set('year', endMoment.year());
         }
       }
@@ -194,108 +232,116 @@
   // This is where the magic happens. Given a moment object representing the current month,
   // an array of calendarDay objects is constructed that contains appropriate events and
   // classes depending on the circumstance.
-  Clndr.prototype.createDaysObject = function(currentMonth) {
+  Clndr.prototype.createDaysObject = function(startDate, endDate) {
     // this array will hold numbers for the entire grid (even the blank spaces)
     daysArray = [];
-    var date = currentMonth.startOf('month');
+    var date = startDate.clone();
+    var lengthOfInterval = endDate.diff(startDate, 'days');
+
+    // this is a helper object so that days can resolve their classes correctly.
+    // Don't use it for anything please.
+    this._currentIntervalStart = startDate.clone();
 
     // filter the events list (if it exists) to events that are happening last month, this month and next month (within the current grid view)
     this.eventsLastMonth = [];
-    this.eventsThisMonth = [];
+    this.eventsThisInterval = [];
     this.eventsNextMonth = [];
 
     if(this.options.events.length) {
 
-      // MULTI-DAY EVENT PARSING
-      // if we're using multi-day events, the start or end must be in the current month
-      if(this.options.multiDayEvents) {
-        this.eventsThisMonth = $(this.options.events).filter( function() {
-          return this._clndrStartDateObject.format("YYYY-MM") <= currentMonth.format("YYYY-MM")
-          || currentMonth.format("YYYY-MM") <= this._clndrEndDateObject.format("YYYY-MM");
+      // EVENT PARSING
+      // here are the only two cases where we don't get an event in our interval:
+      // startDate | endDate   | e.start   | e.end
+      // e.start   | e.end     | startDate | endDate
+      this.eventsThisInterval = $(this.options.events).filter( function() {
+        if(
+          this._clndrEndDateObject.isBefore(startDate) ||
+          this._clndrStartDateObject.isAfter(endDate)
+        ) {
+          return false;
+        } else {
+          return true;
+        }
+      }).toArray();
+
+      if(this.options.showAdjacentMonths) {
+        var startOfLastMonth = startDate.clone().subtract('months', 1).startOf('month');
+        var endOfLastMonth = startOfLastMonth.clone().endOf('month');
+        var startOfNextMonth = endDate.clone().add('months', 1).startOf('month');
+        var endOfNextMonth = startOfNextMonth.clone().endOf('month');
+
+        this.eventsLastMonth = $(this.options.events).filter( function() {
+          if(
+            this._clndrEndDateObject.isBefore(startOfLastMonth) ||
+            this._clndrStartDateObject.isAfter(endOfLastMonth)
+          ) {
+            return false;
+          } else {
+            return true;
+          }
         }).toArray();
 
-        if(this.options.showAdjacentMonths) {
-          var lastMonth = currentMonth.clone().subtract('months', 1);
-          var nextMonth = currentMonth.clone().add('months', 1);
-          this.eventsLastMonth = $(this.options.events).filter( function() {
-            return this._clndrStartDateObject.format("YYYY-MM") <= lastMonth.format("YYYY-MM")
-          || lastMonth.format("YYYY-MM") <= this._clndrEndDateObject.format("YYYY-MM");
-          }).toArray();
-
-          this.eventsNextMonth = $(this.options.events).filter( function() {
-            return this._clndrStartDateObject.format("YYYY-MM") <= nextMonth.format("YYYY-MM")
-          || nextMonth.format("YYYY-MM") <= this._clndrEndDateObject.format("YYYY-MM");
-          }).toArray();
-        }
-      }
-
-      // SINGLE-DAY EVENT PARSING
-      // if we're using single-day events, use _clndrDateObject
-      else {
-        this.eventsThisMonth = $(this.options.events).filter( function() {
-          return this._clndrDateObject.format("YYYY-MM") == currentMonth.format("YYYY-MM");
+        this.eventsNextMonth = $(this.options.events).filter( function() {
+          if(
+            this._clndrEndDateObject.isBefore(startOfNextMonth) ||
+            this._clndrStartDateObject.isAfter(endOfNextMonth)
+          ) {
+            return false;
+          } else {
+            return true;
+          }
         }).toArray();
-
-        // filter the adjacent months as well, if the option is true
-        if(this.options.showAdjacentMonths) {
-          var lastMonth = currentMonth.clone().subtract('months', 1);
-          var nextMonth = currentMonth.clone().add('months', 1);
-          this.eventsLastMonth = $(this.options.events).filter( function() {
-            return this._clndrDateObject.format("YYYY-MM") == lastMonth.format("YYYY-MM");
-          }).toArray();
-
-          this.eventsNextMonth = $(this.options.events).filter( function() {
-            return this._clndrDateObject.format("YYYY-MM") == nextMonth.format("YYYY-MM");
-          }).toArray();
-        }
       }
     }
 
     // if diff is greater than 0, we'll have to fill in last days of the previous month
     // to account for the empty boxes in the grid.
-    // we also need to take into account the weekOffset parameter
-    var diff = date.weekday() - this.options.weekOffset;
-    if(diff < 0) diff += 7;
+    // we also need to take into account the weekOffset parameter.
+    // None of this needs to happen if the interval is being specified in days rather than months.
+    if(!this.options.lengthOfTime.days) {
+      var diff = date.weekday() - this.options.weekOffset;
+      if(diff < 0) diff += 7;
 
-    if(this.options.showAdjacentMonths) {
-      for(var i = 0; i < diff; i++) {
-        var day = moment([currentMonth.year(), currentMonth.month(), i - diff + 1]);
-        daysArray.push( this.createDayObject(day, this.eventsLastMonth) );
-      }
-    } else {
-      for(var i = 0; i < diff; i++) {
-        daysArray.push( this.calendarDay({ classes: this.options.targets.empty + " last-month" }) );
+      if(this.options.showAdjacentMonths) {
+        for(var i = 0; i < diff; i++) {
+          var day = moment([startDate.year(), startDate.month(), i - diff + 1]);
+          daysArray.push( this.createDayObject(day, this.eventsLastMonth) );
+        }
+      } else {
+        for(var i = 0; i < diff; i++) {
+          daysArray.push( this.calendarDay({ classes: this.options.targets.empty + " last-month" }) );
+        }
       }
     }
 
-    // now we push all of the days in a month
-    var numOfDays = date.daysInMonth();
-    for(var i = 1; i <= numOfDays; i++) {
-      var day = moment([currentMonth.year(), currentMonth.month(), i]);
-      daysArray.push(this.createDayObject(day, this.eventsThisMonth) )
+    // now we push all of the days in the interval
+    var dateIterator = startDate.clone();
+    while( dateIterator.isBefore(endDate) ) {
+      daysArray.push( this.createDayObject(dateIterator.clone(), this.eventsThisInterval) );
+      dateIterator.add('days', 1);
     }
 
     // ...and if there are any trailing blank boxes, fill those in
-    // with the next month first days
-    var i = 1;
-    while(daysArray.length % 7 !== 0) {
-      if(this.options.showAdjacentMonths) {
-        var day = moment([currentMonth.year(), currentMonth.month(), numOfDays + i]);
-        daysArray.push( this.createDayObject(day, this.eventsNextMonth) );
-      } else {
-        daysArray.push( this.calendarDay({ classes: this.options.targets.empty + " next-month" }) );
+    // with the next month first days.
+    // Again, we can ignore this if the interval is specified in days.
+    if(!this.options.lengthOfTime.days) {
+      while(daysArray.length % 7 !== 0) {
+        if(this.options.showAdjacentMonths) {
+          daysArray.push( this.createDayObject(dateIterator.clone(), this.eventsNextMonth) );
+        } else {
+          daysArray.push( this.calendarDay({ classes: this.options.targets.empty + " next-month" }) );
+        }
+        dateIterator.add('days', 1);
       }
-      i++;
     }
 
     // if we want to force six rows of calendar, now's our last chance to add another row.
     // if the 42 seems explicit it's because we're creating a 7-row grid and 6 rows of 7 is always 42!
     if(this.options.forceSixRows && daysArray.length !== 42 ) {
-      var start = moment(daysArray[daysArray.length - 1].date).add('days', 1);
       while(daysArray.length < 42) {
         if(this.options.showAdjacentMonths) {
-          daysArray.push( this.createDayObject(moment(start), this.eventsNextMonth) );
-          start.add('days', 1);
+          daysArray.push( this.createDayObject(dateIterator.clone(), this.eventsNextMonth) );
+          dateIterator.add('days', 1);
         } else {
           daysArray.push( this.calendarDay({ classes: this.options.targets.empty + " next-month" }) );
         }
@@ -310,24 +356,23 @@
     var now = moment();
     var self = this;
 
+    // validate moment date
+    if (!day.isValid() && day.hasOwnProperty('_d') && day._d != undefined) {
+        day = moment(day._d);
+    }
+
     var j = 0, l = monthEvents.length;
     for(j; j < l; j++) {
       // keep in mind that the events here already passed the month/year test.
       // now all we have to compare is the moment.date(), which returns the day of the month.
-      if(self.options.multiDayEvents) {
-        var start = monthEvents[j]._clndrStartDateObject;
-        var end = monthEvents[j]._clndrEndDateObject;
-        // if today is the same day as start or is after the start, and
-        // if today is the same day as the end or before the end ...
-        // woohoo semantics!
-        if( ( day.isSame(start, 'day') || day.isAfter(start, 'day') ) &&
-          ( day.isSame(end, 'day') || day.isBefore(end, 'day') ) ) {
-          eventsToday.push( monthEvents[j] );
-        }
-      } else {
-        if( monthEvents[j]._clndrDateObject.date() == day.date() ) {
-          eventsToday.push( monthEvents[j] );
-        }
+      var start = monthEvents[j]._clndrStartDateObject;
+      var end = monthEvents[j]._clndrEndDateObject;
+      // if today is the same day as start or is after the start, and
+      // if today is the same day as the end or before the end ...
+      // woohoo semantics!
+      if( ( day.isSame(start, 'day') || day.isAfter(start, 'day') ) &&
+        ( day.isSame(end, 'day') || day.isBefore(end, 'day') ) ) {
+        eventsToday.push( monthEvents[j] );
       }
     }
 
@@ -342,19 +387,21 @@
     if(eventsToday.length) {
        extraClasses += " event";
     }
-    if(this.month.month() > day.month()) {
-       extraClasses += " adjacent-month";
+    if(!this.options.lengthOfTime.days) {
+      if(this._currentIntervalStart.month() > day.month()) {
+         extraClasses += " adjacent-month";
 
-       this.month.year() === day.year()
-           ? extraClasses += " last-month"
-           : extraClasses += " next-month";
+         this._currentIntervalStart.year() === day.year()
+             ? extraClasses += " last-month"
+             : extraClasses += " next-month";
 
-    } else if(this.month.month() < day.month()) {
-       extraClasses += " adjacent-month";
+      } else if(this._currentIntervalStart.month() < day.month()) {
+         extraClasses += " adjacent-month";
 
-       this.month.year() === day.year()
-           ? extraClasses += " next-month"
-           : extraClasses += " last-month";
+         this._currentIntervalStart.year() === day.year()
+             ? extraClasses += " next-month"
+             : extraClasses += " last-month";
+      }
     }
 
     // if there are constraints, we need to add the inactive class to the days outside of them
@@ -367,14 +414,7 @@
       }
     }
 
-    // validate moment date
-    if (!day.isValid() && day.hasOwnProperty('_d') && day._d != undefined) {
-        day = moment(day._d);
-    }
-
-    // we're moving away from using IDs in favor of classes, since when
-    // using multiple calendars on a page we are technically violating the
-    // uniqueness of IDs.
+    // These are important.
     extraClasses += " calendar-day-" + day.format("YYYY-MM-DD");
 
     // day of week
@@ -392,22 +432,63 @@
     // get rid of the previous set of calendar parts.
     // TODO: figure out if this is the right way to ensure proper garbage collection?
     this.calendarContainer.children().remove();
-    // get an array of days and blank spaces
-    var days = this.createDaysObject(this.month);
-    // this is to prevent a scope/naming issue between this.month and data.month
-    var currentMonth = this.month;
 
-    var data = {
-      daysOfTheWeek: this.daysOfTheWeek,
-      numberOfRows: Math.ceil(days.length / 7),
-      days: days,
-      month: this.month.format('MMMM'),
-      year: this.month.year(),
-      eventsThisMonth: this.eventsThisMonth,
-      eventsLastMonth: this.eventsLastMonth,
-      eventsNextMonth: this.eventsNextMonth,
-      extras: this.options.extras
-    };
+    var data = {};
+
+    if(this.options.lengthOfTime.days) {
+      var days = this.createDaysObject(this.intervalStart.clone(), this.intervalEnd.clone());
+
+      data = {
+        daysOfTheWeek: this.daysOfTheWeek,
+        days: days,
+        intervalStart: this.intervalStart.clone(),
+        intervalEnd: this.intervalEnd.clone(),
+        eventsThisInterval: this.eventsThisInterval,
+        extras: this.options.extras
+      };
+
+    } else if(this.options.lengthOfTime.months) {
+
+      var months = [];
+
+      for(i = 0; i < this.options.lengthOfTime.months; i++) {
+        var currentIntervalStart = this.intervalStart.clone().add('months', i);
+        var currentIntervalEnd = currentIntervalStart.clone().endOf('month');
+        months.push({
+          month: currentIntervalStart,
+          days: this.createDaysObject(currentIntervalStart, currentIntervalEnd)
+        });
+      }
+
+      data = {
+        daysOfTheWeek: this.daysOfTheWeek,
+        months: months,
+        intervalStart: this.intervalStart,
+        intervalEnd: this.intervalEnd,
+        eventsThisInterval: this.eventsThisInterval,
+        eventsLastMonth: this.eventsLastMonth,
+        eventsNextMonth: this.eventsNextMonth,
+        extras: this.options.extras
+      };
+
+    } else {
+      // get an array of days and blank spaces
+      var days = this.createDaysObject(this.month.clone().startOf('month'), this.month.clone().endOf('month'));
+      // this is to prevent a scope/naming issue between this.month and data.month
+      var currentMonth = this.month;
+
+      var data = {
+        daysOfTheWeek: this.daysOfTheWeek,
+        numberOfRows: Math.ceil(days.length / 7),
+        days: days,
+        month: this.month.format('MMMM'),
+        year: this.month.year(),
+        eventsThisMonth: this.eventsThisMonth,
+        eventsLastMonth: this.eventsLastMonth,
+        eventsNextMonth: this.eventsNextMonth,
+        extras: this.options.extras
+      };
+    }
 
     // render the calendar with the data above & bind events to its elements
     if(!this.options.render) {
@@ -575,21 +656,40 @@
       return;
     }
 
-    // is subtracting one month going to switch the year?
-    var yearChanged = !self.month.isSame( moment(self.month).subtract('months', 1), 'year');
-    self.month.subtract('months', 1);
+    var yearChanged = null;
+
+    if(!self.options.lengthOfTime.days) {
+      // shift the interval by a month (or several months)
+      self.intervalStart.subtract('months', self.options.lengthOfTime.interval).startOf('month');
+      self.intervalEnd = self.intervalStart.clone().add('months', self.options.lengthOfTime.interval).subtract('days', 1).endOf('month');
+
+      if(!self.options.lengthOfTime.months) {
+        yearChanged = !self.month.isSame( moment(self.month).subtract('months', 1), 'year');
+      }
+
+      self.month = self.intervalStart.clone();
+      }
+    } else {
+      // shift the interval in days
+      self.intervalStart.subtract('days', self.options.lengthOfTime.interval);
+      self.intervalEnd = self.intervalStart.clone().add('days', self.options.lengthOfTime.interval);
+      // this is useless, i think, but i'll keep it as a precaution for now
+      self.month = self.intervalStart.clone();
+    }
 
     self.render();
 
-    if(self.options.clickEvents.previousMonth) {
-      self.options.clickEvents.previousMonth.apply( self, [moment(self.month)] );
-    }
-    if(self.options.clickEvents.onMonthChange) {
-      self.options.clickEvents.onMonthChange.apply( self, [moment(self.month)] );
-    }
-    if(yearChanged) {
-      if(self.options.clickEvents.onYearChange) {
-        self.options.clickEvents.onYearChange.apply( self, [moment(self.month)] );
+    if(!self.options.lengthOfTime.days) {
+      if(self.options.clickEvents.previousMonth) {
+        self.options.clickEvents.previousMonth.apply( self, [moment(self.month)] );
+      }
+      if(self.options.clickEvents.onMonthChange) {
+        self.options.clickEvents.onMonthChange.apply( self, [moment(self.month)] );
+      }
+      if(yearChanged) {
+        if(self.options.clickEvents.onYearChange) {
+          self.options.clickEvents.onYearChange.apply( self, [moment(self.month)] );
+        }
       }
     }
   };
@@ -816,7 +916,9 @@
     for(i; i < l; i++) {
       // stuff a _clndrDateObject in each event, which really, REALLY should not be
       // overriding any existing object... Man that would be weird.
-      events[i]._clndrDateObject = moment( events[i][self.options.dateParameter] );
+      // events[i]._clndrDateObject = moment( events[i][self.options.dateParameter] );
+      events[i]._clndrStartDateObject = moment( events[i][self.options.dateParameter] );
+      events[i]._clndrEndDateObject = moment( events[i][self.options.dateParameter] );
     }
     return events;
   }
