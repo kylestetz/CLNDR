@@ -994,15 +994,15 @@
 
   Clndr.prototype.nextYear = function(options) {
     this.month.add('years', 1);
-    self.intervalStart.add('years', 1);
-    self.intervalEnd.add('years', 1);
+    this.intervalStart.add('years', 1);
+    this.intervalEnd.add('years', 1);
     this.render();
     if(options && options.withCallbacks) {
       if(this.options.clickEvents.onYearChange) {
         this.options.clickEvents.onYearChange.apply( this, [moment(this.month)] );
       }
-      if(self.options.clickEvents.onIntervalChange) {
-        self.options.clickEvents.onIntervalChange.apply( self, [moment(self.intervalStart), moment(self.intervalEnd)] );
+      if(this.options.clickEvents.onIntervalChange) {
+        this.options.clickEvents.onIntervalChange.apply( this, [moment(this.intervalStart), moment(this.intervalEnd)] );
       }
     }
     return this;
@@ -1010,15 +1010,15 @@
 
   Clndr.prototype.previousYear = function(options) {
     this.month.subtract('years', 1);
-    self.intervalStart.subtract('years', 1);
-    self.intervalEnd.subtract('years', 1);
+    this.intervalStart.subtract('years', 1);
+    this.intervalEnd.subtract('years', 1);
     this.render();
     if(options && options.withCallbacks) {
       if(this.options.clickEvents.onYearChange) {
         this.options.clickEvents.onYearChange.apply( this, [moment(this.month)] );
       }
-      if(self.options.clickEvents.onIntervalChange) {
-        self.options.clickEvents.onIntervalChange.apply( self, [moment(self.intervalStart), moment(self.intervalEnd)] );
+      if(this.options.clickEvents.onIntervalChange) {
+        this.options.clickEvents.onIntervalChange.apply( this, [moment(this.intervalStart), moment(this.intervalEnd)] );
       }
     }
     return this;
@@ -1026,15 +1026,15 @@
 
   Clndr.prototype.setYear = function(newYear, options) {
     this.month.year(newYear);
-    self.intervalStart.year(newYear);
-    self.intervalEnd.year(newYear);
+    this.intervalStart.year(newYear);
+    this.intervalEnd.year(newYear);
     this.render();
     if(options && options.withCallbacks) {
       if(this.options.clickEvents.onYearChange) {
         this.options.clickEvents.onYearChange.apply( this, [moment(this.month)] );
       }
-      if(self.options.clickEvents.onIntervalChange) {
-        self.options.clickEvents.onIntervalChange.apply( self, [moment(self.intervalStart), moment(self.intervalEnd)] );
+      if(this.options.clickEvents.onIntervalChange) {
+        this.options.clickEvents.onIntervalChange.apply( this, [moment(this.intervalStart), moment(this.intervalEnd)] );
       }
     }
     return this;
