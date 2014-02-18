@@ -485,7 +485,7 @@
         days: days,
         month: this.month.format('MMMM'),
         year: this.month.year(),
-        eventsThisMonth: this.eventsThisMonth,
+        eventsThisMonth: this.eventsThisInterval,
         eventsLastMonth: this.eventsLastMonth,
         eventsNextMonth: this.eventsNextMonth,
         extras: this.options.extras
