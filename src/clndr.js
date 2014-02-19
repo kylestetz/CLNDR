@@ -619,18 +619,11 @@
       // do we have events?
       if(this.options.events) {
         // are any of the events happening today?
-        if(this.options.multiDayEvents) {
-          target.events = $.makeArray( $(this.options.events).filter( function() {
-            // filter the dates down to the ones that match.
-            return ( ( target.date.isSame(this._clndrStartDateObject, 'day') || target.date.isAfter(this._clndrStartDateObject, 'day') ) &&
-              ( target.date.isSame(this._clndrEndDateObject, 'day') || target.date.isBefore(this._clndrEndDateObject, 'day') ) );
-          }) );
-        } else {
-          target.events = $.makeArray( $(this.options.events).filter( function() {
-            // filter the dates down to the ones that match.
-            return this._clndrDateObject.format('YYYY-MM-DD') == dateString;
-          }) );
-        }
+        target.events = $.makeArray( $(this.options.events).filter( function() {
+          // filter the dates down to the ones that match.
+          return ( ( target.date.isSame(this._clndrStartDateObject, 'day') || target.date.isAfter(this._clndrStartDateObject, 'day') ) &&
+            ( target.date.isSame(this._clndrEndDateObject, 'day') || target.date.isBefore(this._clndrEndDateObject, 'day') ) );
+        }) );
       }
     }
 
@@ -955,6 +948,8 @@
     // accepts 0 - 11 or a full/partial month name e.g. "Jan", "February", "Mar"
     if(!this.options.lengthOfTime.days && !this.options.lengthOfTime.months) {
       this.month.month(newMonth);
+      this.intervalStart = this.month.clone().startOf('month');
+      this.intervalEnd = this.intervalStart.clone().endOf('month');
       this.render();
       if(options && options.withCallbacks) {
         if(this.options.clickEvents.onMonthChange) {
@@ -973,7 +968,7 @@
       this.intervalStart = moment(newDate).startOf('day');
       this.intervalEnd = this.intervalStart.clone().add('days', this.options.lengthOfTime.days - 1).endOf('day');
     } else if(this.options.lengthOfTime.months) {
-      this.intervalStart = moment(newMonth).startOf('month');
+      this.intervalStart = moment(newDate).startOf('month');
       this.intervalEnd = this.intervalStart.clone().add('months', this.options.lengthOfTime.months || this.options.lengthOfTime.interval).subtract('days', 1).endOf('month');
       this.month = this.intervalStart.clone();
     }
