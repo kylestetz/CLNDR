@@ -978,7 +978,7 @@
 
       if(options && options.withCallbacks) {
         if(this.options.clickEvents.onIntervalChange) {
-          this.options.clickEvents.onIntervalChange.apply( this, [moment(this.month)] );
+          this.options.clickEvents.onIntervalChange.apply( this, [moment(this.intervalStart), moment(this.intervalEnd)] );
         }
       }
     } else {
