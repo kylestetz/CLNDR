@@ -52,6 +52,7 @@
     template: clndrTemplate,
     weekOffset: 0,
     startWithMonth: null,
+    timezoneOffset: (new Date()).getTimezoneOffset(),
     clickEvents: {
       click: null,
       nextMonth: null,
@@ -108,16 +109,16 @@
     // this will serve as the basis for switching between months & is the go-to
     // internally if we want to know which month we're currently at.
     if(this.options.startWithMonth) {
-      this.month = moment(this.options.startWithMonth).startOf('month');
+      this.month = this.moment(this.options.startWithMonth).startOf('month');
     } else {
-      this.month = moment().startOf('month');
+      this.month = this.moment().startOf('month');
     }
 
     // if we've got constraints set, make sure the month is within them.
     if(this.options.constraints) {
       // first check if the start date exists & is later than now.
       if(this.options.constraints.startDate) {
-        var startMoment = moment(this.options.constraints.startDate);
+        var startMoment = this.moment(this.options.constraints.startDate);
         if(this.month.isBefore(startMoment, 'month')) {
           this.month.set('month', startMoment.month());
           this.month.set('year', startMoment.year());
@@ -125,7 +126,7 @@
       }
       // make sure the month (whether modified or not) is before the endDate
       if(this.options.constraints.endDate) {
-        var endMoment = moment(this.options.constraints.endDate);
+        var endMoment = this.moment(this.options.constraints.endDate);
         if(this.month.isAfter(endMoment, 'month')) {
           this.month.set('month', endMoment.month()).set('year', endMoment.year());
         }
@@ -147,7 +148,7 @@
     if(!this.options.daysOfTheWeek) {
       this.daysOfTheWeek = [];
       for(var i = 0; i < 7; i++) {
-        this.daysOfTheWeek.push( moment().weekday(i).format('dd').charAt(0) );
+        this.daysOfTheWeek.push( this.moment().weekday(i).format('dd').charAt(0) );
       }
     }
     // shuffle the week if there's an offset
@@ -182,6 +183,12 @@
       this.options.ready.apply(this, []);
     }
   };
+
+  Clndr.prototype.moment = function() {
+    var m = moment.apply(this, arguments);
+    m.zone(this.options.timezoneOffset);
+    return m;
+  }
 
   Clndr.prototype.shiftWeekdayLabels = function(offset) {
     var days = this.daysOfTheWeek;
@@ -259,7 +266,7 @@
 
     if(this.options.showAdjacentMonths) {
       for(var i = 0; i < diff; i++) {
-        var day = moment([currentMonth.year(), currentMonth.month(), i - diff + 1]);
+        var day = this.moment([currentMonth.year(), currentMonth.month(), i - diff + 1]);
         daysArray.push( this.createDayObject(day, this.eventsLastMonth) );
       }
     } else {
@@ -271,7 +278,7 @@
     // now we push all of the days in a month
     var numOfDays = date.daysInMonth();
     for(var i = 1; i <= numOfDays; i++) {
-      var day = moment([currentMonth.year(), currentMonth.month(), i]);
+      var day = this.moment([currentMonth.year(), currentMonth.month(), i]);
       daysArray.push(this.createDayObject(day, this.eventsThisMonth) )
     }
 
@@ -280,7 +287,7 @@
     var i = 1;
     while(daysArray.length % 7 !== 0) {
       if(this.options.showAdjacentMonths) {
-        var day = moment([currentMonth.year(), currentMonth.month(), numOfDays + i]);
+        var day = this.moment([currentMonth.year(), currentMonth.month(), numOfDays + i]);
         daysArray.push( this.createDayObject(day, this.eventsNextMonth) );
       } else {
         daysArray.push( this.calendarDay({ classes: this.options.targets.empty + " next-month" }) );
@@ -291,10 +298,10 @@
     // if we want to force six rows of calendar, now's our last chance to add another row.
     // if the 42 seems explicit it's because we're creating a 7-row grid and 6 rows of 7 is always 42!
     if(this.options.forceSixRows && daysArray.length !== 42 ) {
-      var start = moment(daysArray[daysArray.length - 1].date).add('days', 1);
+      var start = this.moment(daysArray[daysArray.length - 1].date).add('days', 1);
       while(daysArray.length < 42) {
         if(this.options.showAdjacentMonths) {
-          daysArray.push( this.createDayObject(moment(start), this.eventsNextMonth) );
+          daysArray.push( this.createDayObject(this.moment(start), this.eventsNextMonth) );
           start.add('days', 1);
         } else {
           daysArray.push( this.calendarDay({ classes: this.options.targets.empty + " next-month" }) );
@@ -307,7 +314,7 @@
 
   Clndr.prototype.createDayObject = function(day, monthEvents) {
     var eventsToday = [];
-    var now = moment();
+    var now = this.moment();
     var self = this;
 
     var j = 0, l = monthEvents.length;
@@ -359,17 +366,17 @@
 
     // if there are constraints, we need to add the inactive class to the days outside of them
     if(this.options.constraints) {
-      if(this.options.constraints.startDate && day.isBefore(moment( this.options.constraints.startDate ))) {
+      if(this.options.constraints.startDate && day.isBefore(this.moment( this.options.constraints.startDate ))) {
         extraClasses += " inactive";
       }
-      if(this.options.constraints.endDate && day.isAfter(moment( this.options.constraints.endDate ))) {
+      if(this.options.constraints.endDate && day.isAfter(this.moment( this.options.constraints.endDate ))) {
         extraClasses += " inactive";
       }
     }
 
     // validate moment date
     if (!day.isValid() && day.hasOwnProperty('_d') && day._d != undefined) {
-        day = moment(day._d);
+        day = this.moment(day._d);
     }
 
     // we're moving away from using IDs in favor of classes, since when
@@ -429,10 +436,10 @@
       var end = null;
 
       if(this.options.constraints.startDate) {
-        start = moment(this.options.constraints.startDate);
+        start = this.moment(this.options.constraints.startDate);
       }
       if(this.options.constraints.endDate) {
-        end = moment(this.options.constraints.endDate);
+        end = this.moment(this.options.constraints.endDate);
       }
       // deal with the month controls first.
       // are we at the start month?
@@ -444,15 +451,15 @@
         this.element.find('.' + this.options.targets.nextButton).toggleClass('inactive', true);
       }
       // what's last year looking like?
-      if(start && moment(start).subtract('years', 1).isBefore(moment(this.month).subtract('years', 1)) ) {
+      if(start && this.moment(start).subtract('years', 1).isBefore(this.moment(this.month).subtract('years', 1)) ) {
         this.element.find('.' + this.options.targets.previousYearButton).toggleClass('inactive', true);
       }
       // how about next year?
-      if(end && moment(end).add('years', 1).isAfter(moment(this.month).add('years', 1)) ) {
+      if(end && this.moment(end).add('years', 1).isAfter(this.moment(this.month).add('years', 1)) ) {
         this.element.find('.' + this.options.targets.nextYearButton).toggleClass('inactive', true);
       }
       // today? we could put this in init(), but we want to support the user changing the constraints on a living instance.
-      if(( start && start.isAfter( moment(), 'month' ) ) || ( end && end.isBefore( moment(), 'month' ) )) {
+      if(( start && start.isAfter( this.moment(), 'month' ) ) || ( end && end.isBefore( this.moment(), 'month' ) )) {
         this.element.find('.' + this.options.targets.today).toggleClass('inactive', true);
       }
     }
@@ -528,7 +535,7 @@
         // If this feels a little wonky, that's probably because it is.
         // Open to suggestions on how to improve this guy.
         dateString = currentTarget.className.substring(classNameIndex + 13, classNameIndex + 23);
-        target.date = moment(dateString);
+        target.date = this.moment(dateString);
       } else {
         target.date = null;
       }
@@ -576,20 +583,20 @@
     }
 
     // is subtracting one month going to switch the year?
-    var yearChanged = !self.month.isSame( moment(self.month).subtract('months', 1), 'year');
+    var yearChanged = !self.month.isSame( this.moment(self.month).subtract('months', 1), 'year');
     self.month.subtract('months', 1);
 
     self.render();
 
     if(self.options.clickEvents.previousMonth) {
-      self.options.clickEvents.previousMonth.apply( self, [moment(self.month)] );
+      self.options.clickEvents.previousMonth.apply( self, [this.moment(self.month)] );
     }
     if(self.options.clickEvents.onMonthChange) {
-      self.options.clickEvents.onMonthChange.apply( self, [moment(self.month)] );
+      self.options.clickEvents.onMonthChange.apply( self, [this.moment(self.month)] );
     }
     if(yearChanged) {
       if(self.options.clickEvents.onYearChange) {
-        self.options.clickEvents.onYearChange.apply( self, [moment(self.month)] );
+        self.options.clickEvents.onYearChange.apply( self, [this.moment(self.month)] );
       }
     }
   };
@@ -602,20 +609,20 @@
     }
 
     // is adding one month going to switch the year?
-    var yearChanged = !self.month.isSame( moment(self.month).add('months', 1), 'year');
+    var yearChanged = !self.month.isSame( this.moment(self.month).add('months', 1), 'year');
     self.month.add('months', 1);
 
     self.render();
 
     if(self.options.clickEvents.nextMonth) {
-      self.options.clickEvents.nextMonth.apply(self, [moment(self.month)]);
+      self.options.clickEvents.nextMonth.apply(self, [this.moment(self.month)]);
     }
     if(self.options.clickEvents.onMonthChange) {
-      self.options.clickEvents.onMonthChange.apply(self, [moment(self.month)]);
+      self.options.clickEvents.onMonthChange.apply(self, [this.moment(self.month)]);
     }
     if(yearChanged) {
       if(self.options.clickEvents.onYearChange) {
-        self.options.clickEvents.onYearChange.apply( self, [moment(self.month)] );
+        self.options.clickEvents.onYearChange.apply( self, [this.moment(self.month)] );
       }
     }
   };
@@ -624,29 +631,29 @@
     var self = event.data.context;
 
     // did we switch months when the today button was hit?
-    var monthChanged = !self.month.isSame(moment(), 'month');
-    var yearChanged = !self.month.isSame(moment(), 'year');
+    var monthChanged = !self.month.isSame(this.moment(), 'month');
+    var yearChanged = !self.month.isSame(this.moment(), 'year');
 
-    self.month = moment().startOf('month');
+    self.month = this.moment().startOf('month');
 
     // fire the today event handler regardless of whether the month changed.
     if(self.options.clickEvents.today) {
-      self.options.clickEvents.today.apply( self, [moment(self.month)] );
+      self.options.clickEvents.today.apply( self, [this.moment(self.month)] );
     }
 
     if(monthChanged) {
       // no need to re-render if we didn't change months.
       self.render();
 
-      self.month = moment();
+      self.month = this.moment();
       // fire the onMonthChange callback
       if(self.options.clickEvents.onMonthChange) {
-        self.options.clickEvents.onMonthChange.apply( self, [moment(self.month)] );
+        self.options.clickEvents.onMonthChange.apply( self, [this.moment(self.month)] );
       }
       // maybe fire the onYearChange callback?
       if(yearChanged) {
         if(self.options.clickEvents.onYearChange) {
-          self.options.clickEvents.onYearChange.apply( self, [moment(self.month)] );
+          self.options.clickEvents.onYearChange.apply( self, [this.moment(self.month)] );
         }
       }
     }
@@ -816,7 +823,7 @@
     for(i; i < l; i++) {
       // stuff a _clndrDateObject in each event, which really, REALLY should not be
       // overriding any existing object... Man that would be weird.
-      events[i]._clndrDateObject = moment( events[i][self.options.dateParameter] );
+      events[i]._clndrDateObject = this.moment( events[i][self.options.dateParameter] );
     }
     return events;
   }
@@ -825,8 +832,8 @@
     var self = this;
     var i = 0, l = events.length;
     for(i; i < l; i++) {
-      events[i]._clndrStartDateObject = moment( events[i][self.options.multiDayEvents.startDate] );
-      events[i]._clndrEndDateObject = moment( events[i][self.options.multiDayEvents.endDate] );
+      events[i]._clndrStartDateObject = this.moment( events[i][self.options.multiDayEvents.startDate] );
+      events[i]._clndrEndDateObject = this.moment( events[i][self.options.multiDayEvents.endDate] );
     }
     return events;
   }

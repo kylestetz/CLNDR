@@ -139,6 +139,9 @@ $('.parent-element').clndr({
   // determines which month to start with using either a date string or a moment object.
   startWithMonth: "YYYY-MM-DD" or moment(),
 
+  // Force the dates rendering in a given timezone. Default to locale (browser) timezone.
+  timezoneOffset: 240,
+
   // an array of day abbreviation labels. If you have moment.js set to a different language,
   // it will guess these for you! If for some reason that doesn't work, use this...
   // the array MUST start with Sunday
