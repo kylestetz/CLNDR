@@ -1,5 +1,5 @@
 /*
- *               ~ CLNDR v1.2.0 ~
+ *               ~ CLNDR v1.2.1 ~
  * ==============================================
  *       https://github.com/kylestetz/CLNDR
  * ==============================================
@@ -228,15 +228,15 @@
         this.eventsThisMonth = $(this.options.events).filter( function() {
 //          return this._clndrStartDateObject.format("YYYY-MM") <= currentMonth.format("YYYY-MM")
 //          || currentMonth.format("YYYY-MM") <= this._clndrEndDateObject.format("YYYY-MM");
-            if ( this._clndrStartDateObject.format("YYYY-MM") === currentMonth.format("YYYY-MM") 
+            if ( this._clndrStartDateObject.format("YYYY-MM") === currentMonth.format("YYYY-MM")
                     || this._clndrEndDateObject.format("YYYY-MM") === currentMonth.format("YYYY-MM") ) {
                 return true;
             }
-            if ( this._clndrStartDateObject.format("YYYY-MM") <= currentMonth.format("YYYY-MM") 
+            if ( this._clndrStartDateObject.format("YYYY-MM") <= currentMonth.format("YYYY-MM")
                     && this._clndrEndDateObject.format("YYYY-MM") >= currentMonth.format("YYYY-MM") ) {
                 return true;
             }
-            
+
             return false;
         }).toArray();
 
@@ -246,30 +246,30 @@
           this.eventsLastMonth = $(this.options.events).filter( function() {
 //            return this._clndrStartDateObject.format("YYYY-MM") <= lastMonth.format("YYYY-MM")
 //          || lastMonth.format("YYYY-MM") <= this._clndrEndDateObject.format("YYYY-MM");
-            if ( this._clndrStartDateObject.format("YYYY-MM") === lastMonth.format("YYYY-MM") 
+            if ( this._clndrStartDateObject.format("YYYY-MM") === lastMonth.format("YYYY-MM")
                     || this._clndrEndDateObject.format("YYYY-MM") === lastMonth.format("YYYY-MM") ) {
                 return true;
             }
-            if ( this._clndrStartDateObject.format("YYYY-MM") <= lastMonth.format("YYYY-MM") 
+            if ( this._clndrStartDateObject.format("YYYY-MM") <= lastMonth.format("YYYY-MM")
                     && this._clndrEndDateObject.format("YYYY-MM") >= lastMonth.format("YYYY-MM") ) {
                 return true;
             }
-            
+
             return false;
           }).toArray();
 
           this.eventsNextMonth = $(this.options.events).filter( function() {
 //            return this._clndrStartDateObject.format("YYYY-MM") <= nextMonth.format("YYYY-MM")
 //          || nextMonth.format("YYYY-MM") <= this._clndrEndDateObject.format("YYYY-MM");
-            if ( this._clndrStartDateObject.format("YYYY-MM") === nextMonth.format("YYYY-MM") 
+            if ( this._clndrStartDateObject.format("YYYY-MM") === nextMonth.format("YYYY-MM")
                     || this._clndrEndDateObject.format("YYYY-MM") === nextMonth.format("YYYY-MM") ) {
                 return true;
             }
-            if ( this._clndrStartDateObject.format("YYYY-MM") <= nextMonth.format("YYYY-MM") 
+            if ( this._clndrStartDateObject.format("YYYY-MM") <= nextMonth.format("YYYY-MM")
                     && this._clndrEndDateObject.format("YYYY-MM") >= nextMonth.format("YYYY-MM") ) {
                 return true;
             }
-            
+
             return false;
           }).toArray();
         }

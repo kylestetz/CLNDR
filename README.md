@@ -510,6 +510,8 @@ Todo
 
 Changelog
 =========
+`v1.2.1 ~ 2014-07-10`: Fixed a bug in `eventsLastMonth`, `eventsThisMonth`, and `eventsNextMonth`. Added CommonJS/AMD wrapper to the plugin.
+
 `v1.2.0 ~ 2014-01-22`: BC break for Bower users! Underscore is no longer listed as a dependency in the Bower plugin, allowing you the flexibility of choosing the templating language you prefer. Also added a day of the week class to all clndr days in the format `calendar-dow-<0 - 6>`, allowing you to style weekends/specific days of the week differently.
 
 `v1.1.3 ~ 2014-01-17`: fixed a bug where multiday events longer than two months would not show up. Fixed a bug that prevented clndr from loading in IE8.
