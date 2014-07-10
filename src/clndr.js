@@ -226,21 +226,51 @@
       // if we're using multi-day events, the start or end must be in the current month
       if(this.options.multiDayEvents) {
         this.eventsThisMonth = $(this.options.events).filter( function() {
-          return this._clndrStartDateObject.format("YYYY-MM") <= currentMonth.format("YYYY-MM")
-          || currentMonth.format("YYYY-MM") <= this._clndrEndDateObject.format("YYYY-MM");
+//          return this._clndrStartDateObject.format("YYYY-MM") <= currentMonth.format("YYYY-MM")
+//          || currentMonth.format("YYYY-MM") <= this._clndrEndDateObject.format("YYYY-MM");
+            if ( this._clndrStartDateObject.format("YYYY-MM") === currentMonth.format("YYYY-MM") 
+                    || this._clndrEndDateObject.format("YYYY-MM") === currentMonth.format("YYYY-MM") ) {
+                return true;
+            }
+            if ( this._clndrStartDateObject.format("YYYY-MM") <= currentMonth.format("YYYY-MM") 
+                    && this._clndrEndDateObject.format("YYYY-MM") >= currentMonth.format("YYYY-MM") ) {
+                return true;
+            }
+            
+            return false;
         }).toArray();
 
         if(this.options.showAdjacentMonths) {
           var lastMonth = currentMonth.clone().subtract('months', 1);
           var nextMonth = currentMonth.clone().add('months', 1);
           this.eventsLastMonth = $(this.options.events).filter( function() {
-            return this._clndrStartDateObject.format("YYYY-MM") <= lastMonth.format("YYYY-MM")
-          || lastMonth.format("YYYY-MM") <= this._clndrEndDateObject.format("YYYY-MM");
+//            return this._clndrStartDateObject.format("YYYY-MM") <= lastMonth.format("YYYY-MM")
+//          || lastMonth.format("YYYY-MM") <= this._clndrEndDateObject.format("YYYY-MM");
+            if ( this._clndrStartDateObject.format("YYYY-MM") === lastMonth.format("YYYY-MM") 
+                    || this._clndrEndDateObject.format("YYYY-MM") === lastMonth.format("YYYY-MM") ) {
+                return true;
+            }
+            if ( this._clndrStartDateObject.format("YYYY-MM") <= lastMonth.format("YYYY-MM") 
+                    && this._clndrEndDateObject.format("YYYY-MM") >= lastMonth.format("YYYY-MM") ) {
+                return true;
+            }
+            
+            return false;
           }).toArray();
 
           this.eventsNextMonth = $(this.options.events).filter( function() {
-            return this._clndrStartDateObject.format("YYYY-MM") <= nextMonth.format("YYYY-MM")
-          || nextMonth.format("YYYY-MM") <= this._clndrEndDateObject.format("YYYY-MM");
+//            return this._clndrStartDateObject.format("YYYY-MM") <= nextMonth.format("YYYY-MM")
+//          || nextMonth.format("YYYY-MM") <= this._clndrEndDateObject.format("YYYY-MM");
+            if ( this._clndrStartDateObject.format("YYYY-MM") === nextMonth.format("YYYY-MM") 
+                    || this._clndrEndDateObject.format("YYYY-MM") === nextMonth.format("YYYY-MM") ) {
+                return true;
+            }
+            if ( this._clndrStartDateObject.format("YYYY-MM") <= nextMonth.format("YYYY-MM") 
+                    && this._clndrEndDateObject.format("YYYY-MM") >= nextMonth.format("YYYY-MM") ) {
+                return true;
+            }
+            
+            return false;
           }).toArray();
         }
       }
