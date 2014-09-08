@@ -4,6 +4,11 @@
   "description": "Development environment for clndr.js",
   "author": "Kyle Stetz",
   "license": "MIT",
+  "main": "src/clndr.js",
+  "dependencies": {
+    "jquery": ">=1.9",
+    "moment": ">=2.2.1"
+  },
   "devDependencies": {
     "grunt": "*",
     "grunt-contrib-uglify": "~0.2.4",
