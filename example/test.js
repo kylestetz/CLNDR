@@ -88,8 +88,8 @@ $( function() {
   // test really long multi-day events
   // ================================================================================
   var multidayLongArray = [
-    { startDate: moment().subtract('months', 3).format('YYYY-MM-') + '12', endDate: moment().format('YYYY-MM-') + '17', title: 'Multi1' },
-    { startDate: moment().format('YYYY-MM-') + '24', endDate: moment().add('months', 4).format('YYYY-MM-') + '27', title: 'Multi2' }
+    { startDate: moment().subtract(3, 'months').format('YYYY-MM-') + '12', endDate: moment().format('YYYY-MM-') + '17', title: 'Multi1' },
+    { startDate: moment().format('YYYY-MM-') + '24', endDate: moment().add(4, 'months').format('YYYY-MM-') + '27', title: 'Multi2' }
   ];
 
   clndr.multidayLong = $('#multiday-long').clndr({
@@ -112,7 +112,7 @@ $( function() {
   clndr.constraints = $('#constraints').clndr({
     constraints: {
       startDate: moment().format('YYYY-MM-') + '04',
-      endDate: moment().add('months', 1).format('YYYY-MM-12')
+      endDate: moment().add(1, 'months').format('YYYY-MM-12')
     },
     clickEvents: {
       click: function(target) {
@@ -139,7 +139,7 @@ $( function() {
   // ================================================================================
   clndr.endConstriant = $('#end-constraint').clndr({
     constraints: {
-      endDate: moment().add('months', 1).format('YYYY-MM-') + '12'
+      endDate: moment().add(1, 'months').format('YYYY-MM-') + '12'
     }
   });
 

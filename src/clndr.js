@@ -241,8 +241,8 @@
         }).toArray();
 
         if(this.options.showAdjacentMonths) {
-          var lastMonth = currentMonth.clone().subtract('months', 1);
-          var nextMonth = currentMonth.clone().add('months', 1);
+          var lastMonth = currentMonth.clone().subtract(1, 'months');
+          var nextMonth = currentMonth.clone().add(1, 'months');
           this.eventsLastMonth = $(this.options.events).filter( function() {
 //            return this._clndrStartDateObject.format("YYYY-MM") <= lastMonth.format("YYYY-MM")
 //          || lastMonth.format("YYYY-MM") <= this._clndrEndDateObject.format("YYYY-MM");
@@ -284,8 +284,8 @@
 
         // filter the adjacent months as well, if the option is true
         if(this.options.showAdjacentMonths) {
-          var lastMonth = currentMonth.clone().subtract('months', 1);
-          var nextMonth = currentMonth.clone().add('months', 1);
+          var lastMonth = currentMonth.clone().subtract(1, 'months');
+          var nextMonth = currentMonth.clone().add(1, 'months');
           this.eventsLastMonth = $(this.options.events).filter( function() {
             return this._clndrDateObject.format("YYYY-MM") == lastMonth.format("YYYY-MM");
           }).toArray();
@@ -337,11 +337,11 @@
     // if we want to force six rows of calendar, now's our last chance to add another row.
     // if the 42 seems explicit it's because we're creating a 7-row grid and 6 rows of 7 is always 42!
     if(this.options.forceSixRows && daysArray.length !== 42 ) {
-      var start = moment(daysArray[daysArray.length - 1].date).add('days', 1);
+      var start = moment(daysArray[daysArray.length - 1].date).add(1, 'days');
       while(daysArray.length < 42) {
         if(this.options.showAdjacentMonths) {
           daysArray.push( this.createDayObject(moment(start), this.eventsNextMonth) );
-          start.add('days', 1);
+          start.add(1, 'days');
         } else {
           daysArray.push( this.calendarDay({ classes: this.options.targets.empty + " next-month" }) );
         }
@@ -490,11 +490,11 @@
         this.element.find('.' + this.options.targets.nextButton).toggleClass('inactive', true);
       }
       // what's last year looking like?
-      if(start && moment(start).subtract('years', 1).isBefore(moment(this.month).subtract('years', 1)) ) {
+      if(start && moment(start).subtract(1, 'years').isBefore(moment(this.month).subtract(1, 'years')) ) {
         this.element.find('.' + this.options.targets.previousYearButton).toggleClass('inactive', true);
       }
       // how about next year?
-      if(end && moment(end).add('years', 1).isAfter(moment(this.month).add('years', 1)) ) {
+      if(end && moment(end).add(1, 'years').isAfter(moment(this.month).add(1, 'years')) ) {
         this.element.find('.' + this.options.targets.nextYearButton).toggleClass('inactive', true);
       }
       // today? we could put this in init(), but we want to support the user changing the constraints on a living instance.
@@ -622,8 +622,8 @@
     }
 
     // is subtracting one month going to switch the year?
-    var yearChanged = !self.month.isSame( moment(self.month).subtract('months', 1), 'year');
-    self.month.subtract('months', 1);
+    var yearChanged = !self.month.isSame( moment(self.month).subtract(1, 'months'), 'year');
+    self.month.subtract(1, 'months');
 
     self.render();
 
@@ -648,8 +648,8 @@
     }
 
     // is adding one month going to switch the year?
-    var yearChanged = !self.month.isSame( moment(self.month).add('months', 1), 'year');
-    self.month.add('months', 1);
+    var yearChanged = !self.month.isSame( moment(self.month).add(1, 'months'), 'year');
+    self.month.add(1, 'months');
 
     self.render();
 
@@ -706,7 +706,7 @@
       return;
     }
 
-    self.month.add('years', 1);
+    self.month.add(1, 'years');
     self.render();
 
     if(self.options.clickEvents.nextYear) {
@@ -728,7 +728,7 @@
       return;
     }
 
-    self.month.subtract('years', 1);
+    self.month.subtract(1, 'years');
     self.render();
 
     if(self.options.clickEvents.previousYear) {
@@ -743,7 +743,7 @@
   };
 
   Clndr.prototype.forward = function(options) {
-    this.month.add('months', 1);
+    this.month.add(1, 'months');
     this.render();
     if(options && options.withCallbacks) {
       if(this.options.clickEvents.onMonthChange) {
@@ -760,7 +760,7 @@
   }
 
   Clndr.prototype.back = function(options) {
-    this.month.subtract('months', 1);
+    this.month.subtract(1, 'months');
     this.render();
     if(options && options.withCallbacks) {
       if(this.options.clickEvents.onMonthChange) {
@@ -800,7 +800,7 @@
   }
 
   Clndr.prototype.nextYear = function(options) {
-    this.month.add('year', 1);
+    this.month.add(1, 'year');
     this.render();
     if(options && options.withCallbacks) {
       if(this.options.clickEvents.onYearChange) {
@@ -811,7 +811,7 @@
   }
 
   Clndr.prototype.previousYear = function(options) {
-    this.month.subtract('year', 1);
+    this.month.subtract(1, 'year');
     this.render();
     if(options && options.withCallbacks) {
       if(this.options.clickEvents.onYearChange) {
