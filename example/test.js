@@ -161,7 +161,7 @@ $( function() {
 
   // test forceSixRows option
   // ================================================================================
-  clndr.api = $('#six-rows').clndr({
+  clndr.sixRows = $('#six-rows').clndr({
     forceSixRows: true
   });
 
