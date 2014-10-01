@@ -70,7 +70,7 @@ $(document).ready( function() {
       startDate: 'startDate',
       endDate: 'endDate'
     },
-    startWithMonth: moment().add('month', 1),
+    startWithMonth: moment().add(1, 'month'),
     clickEvents: {
       click: function(target) {
         console.log(target);
