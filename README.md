@@ -510,6 +510,8 @@ Todo
 
 Changelog
 =========
+`v1.2.2 ~ 2014-10-01`: Updated internal usage of deprecated moment.js functions.
+
 `v1.2.1 ~ 2014-07-10`: Fixed a bug in `eventsLastMonth`, `eventsThisMonth`, and `eventsNextMonth`. Added CommonJS/AMD wrapper to the plugin.
 
 `v1.2.0 ~ 2014-01-22`: BC break for Bower users! Underscore is no longer listed as a dependency in the Bower plugin, allowing you the flexibility of choosing the templating language you prefer. Also added a day of the week class to all clndr days in the format `calendar-dow-<0 - 6>`, allowing you to style weekends/specific days of the week differently.

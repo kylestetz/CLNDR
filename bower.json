@@ -1,6 +1,6 @@
 {
   "name": "clndr",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "main": "clndr.min.js",
   "homepage": "http://kylestetz.github.io/CLNDR/",
   "keywords": ["clndr", "calendar", "clndrjs", "templating"],
@@ -13,6 +13,6 @@
   ],
   "dependencies": {
     "jquery": ">=1.9",
-    "moment": ">=2.2.1"
+    "moment": ">=2.8.3"
   }
 }
