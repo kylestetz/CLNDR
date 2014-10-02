@@ -5,7 +5,7 @@ $(document).ready( function() {
 
   // assuming you've got the appropriate language files,
   // clndr will respect whatever moment's language is set to.
-  // moment.lang('ru');
+  // moment.locale('ru');
 
   // here's some magic to make sure the dates are happening this month.
   var thisMonth = moment().format('YYYY-MM');
