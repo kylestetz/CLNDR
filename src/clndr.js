@@ -355,6 +355,7 @@
     var eventsToday = [];
     var now = moment();
     var self = this;
+    var extraClasses = "";
 
     var j = 0, l = monthEvents.length;
     for(j; j < l; j++) {
@@ -369,15 +370,19 @@
         if( ( day.isSame(start, 'day') || day.isAfter(start, 'day') ) &&
           ( day.isSame(end, 'day') || day.isBefore(end, 'day') ) ) {
           eventsToday.push( monthEvents[j] );
+		  if( monthEvents[j].classes ) {
+            extraClasses += " " + monthEvents[j].classes;
+          }
         }
       } else {
         if( monthEvents[j]._clndrDateObject.date() == day.date() ) {
           eventsToday.push( monthEvents[j] );
+		  if( monthEvents[j].classes ) {
+            extraClasses += " " + monthEvents[j].classes;
+          }
         }
       }
     }
-
-    var extraClasses = "";
 
     if(now.format("YYYY-MM-DD") == day.format("YYYY-MM-DD")) {
        extraClasses += " today";
