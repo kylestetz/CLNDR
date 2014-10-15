@@ -465,7 +465,7 @@
     // if there are constraints, we need to add the 'inactive' class to the controls
     if(this.options.constraints) {
       // in the interest of clarity we're just going to remove all inactive classes and re-apply them each render.
-      for(target in this.options.targets) {
+      for(var target in this.options.targets) {
         if(target != this.options.targets.day) {
           this.element.find('.' + this.options.targets[target]).toggleClass('inactive', false);
         }
