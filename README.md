@@ -204,8 +204,6 @@ $('.parent-element').clndr({
   // field in your event object containing a date string.
   // It's set to 'date' by default.
   dateParameter: 'date',
-  // show the numbers of days in months adjacent to the current month
-  // (and populate them with their events). defaults to true.
   // CLNDR can accept events lasting more than one day!
   // just pass in the multiDayEvents option and specify what the start and
   // end fields are called within your event objects. See the example file
