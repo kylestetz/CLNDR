@@ -510,6 +510,8 @@ Todo
 
 Changelog
 =========
+`v1.2.3 ~ 2014-10-15`: Fixed a bug that introduced a global variable. It's possible (but very unlikely) that this might have caused some weirdness when using multiple instances of CLNDR on the same page.
+
 `v1.2.2 ~ 2014-10-01`: Updated internal usage of deprecated moment.js functions.
 
 `v1.2.1 ~ 2014-07-10`: Fixed a bug in `eventsLastMonth`, `eventsThisMonth`, and `eventsNextMonth`. Added CommonJS/AMD wrapper to the plugin.
