@@ -1,4 +1,3 @@
-/*! clndr.min.js v1.2.2 2014-10-15 */
 /*
  *               ~ CLNDR v1.2.3 ~
  * ==============================================
@@ -306,7 +305,7 @@
 
     if(this.options.showAdjacentMonths) {
       for(var i = 0; i < diff; i++) {
-        var day = moment.utc([currentMonth.year(), currentMonth.month(), i - diff + 1]);
+        var day = moment([currentMonth.year(), currentMonth.month(), i - diff + 1]);
         daysArray.push( this.createDayObject(day, this.eventsLastMonth) );
       }
     } else {
@@ -341,7 +340,7 @@
       var start = moment(daysArray[daysArray.length - 1].date).add(1, 'days');
       while(daysArray.length < 42) {
         if(this.options.showAdjacentMonths) {
-          daysArray.push( this.createDayObject(moment.utc(start), this.eventsNextMonth) );
+          daysArray.push( this.createDayObject(moment(start), this.eventsNextMonth) );
           start.add(1, 'days');
         } else {
           daysArray.push( this.calendarDay({ classes: this.options.targets.empty + " next-month" }) );
