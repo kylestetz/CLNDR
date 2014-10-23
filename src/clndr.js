@@ -1,3 +1,4 @@
+/*! clndr.min.js v1.2.2 2014-10-15 */
 /*
  *               ~ CLNDR v1.2.3 ~
  * ==============================================
@@ -305,7 +306,7 @@
 
     if(this.options.showAdjacentMonths) {
       for(var i = 0; i < diff; i++) {
-        var day = moment([currentMonth.year(), currentMonth.month(), i - diff + 1]);
+        var day = moment.utc([currentMonth.year(), currentMonth.month(), i - diff + 1]);
         daysArray.push( this.createDayObject(day, this.eventsLastMonth) );
       }
     } else {
@@ -317,7 +318,7 @@
     // now we push all of the days in a month
     var numOfDays = date.daysInMonth();
     for(var i = 1; i <= numOfDays; i++) {
-      var day = moment([currentMonth.year(), currentMonth.month(), i]);
+      var day = moment.utc([currentMonth.year(), currentMonth.month(), i]);
       daysArray.push(this.createDayObject(day, this.eventsThisMonth) )
     }
 
@@ -326,7 +327,7 @@
     var i = 1;
     while(daysArray.length % 7 !== 0) {
       if(this.options.showAdjacentMonths) {
-        var day = moment([currentMonth.year(), currentMonth.month(), numOfDays + i]);
+        var day = moment.utc([currentMonth.year(), currentMonth.month(), numOfDays + i]);
         daysArray.push( this.createDayObject(day, this.eventsNextMonth) );
       } else {
         daysArray.push( this.calendarDay({ classes: this.options.targets.empty + " next-month" }) );
@@ -334,13 +335,13 @@
       i++;
     }
 
-    // if we want to force six rows of calendar, now's our last chance to add another row.
+    // if we want to force six rows of calendar, now's our Last Chance to add another row.
     // if the 42 seems explicit it's because we're creating a 7-row grid and 6 rows of 7 is always 42!
     if(this.options.forceSixRows && daysArray.length !== 42 ) {
       var start = moment(daysArray[daysArray.length - 1].date).add(1, 'days');
       while(daysArray.length < 42) {
         if(this.options.showAdjacentMonths) {
-          daysArray.push( this.createDayObject(moment(start), this.eventsNextMonth) );
+          daysArray.push( this.createDayObject(moment.utc(start), this.eventsNextMonth) );
           start.add(1, 'days');
         } else {
           daysArray.push( this.calendarDay({ classes: this.options.targets.empty + " next-month" }) );
