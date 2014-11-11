@@ -857,7 +857,7 @@
   };
 
   Clndr.prototype.removeEvents = function(matchingFunction) {
-    for (i = 0; i < this.options.events.length; i++) {
+    for (var i = this.options.events.length-1; i >= 0; i--) {
       if(matchingFunction(this.options.events[i]) == true) {
         this.options.events.splice(i, 1);
       }
