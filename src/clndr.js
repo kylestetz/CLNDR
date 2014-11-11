@@ -856,6 +856,17 @@
     return this;
   };
 
+  Clndr.prototype.removeEvents = function(matchingFunction) {
+    for (i = 0; i < this.options.events.length; i++) {
+      if(matchingFunction(this.options.events[i]) == true) {
+        this.options.events.splice(i, 1);
+      }
+    }
+
+    this.render();
+    return this;
+  };
+
   Clndr.prototype.addMomentObjectToEvents = function(events) {
     var self = this;
     var i = 0, l = events.length;
