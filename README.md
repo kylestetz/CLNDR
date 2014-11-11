@@ -376,6 +376,12 @@ myCalendar.setEvents(newEventsArray);
 
 // Add events. Note that this triggers a re-render of the calendar.
 myCalendar.addEvents(additionalEventsArray);
+
+// Remove events.  All events for which the passed in function returns true will be removed from the calendar.
+// Note that this triggers a re-render of the calendar.
+myCalendar.removeEvents(function(event){
+  return event.id == idToRemove;
+});
 ```
 
 If you are taking advantage of the `onMonthChange` and `onYearChange` callbacks, you might want them to fire whenver you call `setMonth`, `setYear`, `forward`, `back`, etc. Just pass in an object as an argument with `withCallbacks: true` like this:
