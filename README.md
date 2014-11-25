@@ -514,6 +514,9 @@ Todo
 
 Changelog
 =========
+
+`v1.2.4 ~ 2014-11-25`: Fixed a bug related to DST in specific timezones that would cause duplicate dates to appear. Added `removeEvents` filtering function.
+
 `v1.2.3 ~ 2014-10-15`: Fixed a bug that introduced a global variable. It's possible (but very unlikely) that this might have caused some weirdness when using multiple instances of CLNDR on the same page.
 
 `v1.2.2 ~ 2014-10-01`: Updated internal usage of deprecated moment.js functions.
