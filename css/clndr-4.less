@@ -1,0 +1,89 @@
+#clndr-4
+{
+  box-shadow: 4px 4px 0 darken(@dark-gray, 5%);
+  .date-range
+  {
+    padding: 0.4em;
+    text-align: center;
+    color: white;
+  }
+
+  .days-of-the-week
+  {
+    background-color: lighten(@red, 15%);
+    padding: 0.4em 8%;
+  }
+
+  .day-of-the-week
+  {
+    display: inline-block;
+    width: 14.2857%;
+    text-align: center;
+  }
+
+  .clndr-previous-button, .clndr-next-button
+  {
+    display: inline-block;
+    vertical-align: top;
+    width: 8%;
+    height: 160px;
+    padding-top: 54px;
+    background-color: @light-gray;
+    text-align: center;
+    font-size: 32px;
+    .transition(background-color 0.2s);
+    &:hover
+    {
+      cursor: pointer;
+      background-color: darken(@light-gray, 5%);
+    }
+  }
+
+  .days-container
+  {
+    display: inline-block;
+    width: 84%;
+  }
+
+  .day
+  {
+    display: inline-block;
+    width: 14.2857%;
+    height: 160px;
+    overflow: scroll;
+    padding: 0.5em;
+    background-color: #f4f4f4;
+    border-right: 2px solid @light-gray;
+    text-align: right;
+    &:last-child
+    {
+      border-right: none;
+    }
+    &.today
+    {
+      .day-number
+      {
+        color: @red;
+        padding-bottom: 2px;
+        border-bottom: 2px solid @red;
+      }
+    }
+  }
+
+  .events
+  {
+    margin-top: 1em;
+  }
+
+  .event-listing
+  {
+    display: inline-block;
+    width: 100%;
+    padding: 0.25em;
+    border: 2px solid @dark-gray;
+    border-radius: 2px;
+    text-align: left;
+    font-size: 10px;
+    color: @dark-gray;
+  }
+}

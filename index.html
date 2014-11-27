@@ -65,13 +65,19 @@
 
         <div id="full-clndr" class="clearfix">
           <script type="text/template" id="full-clndr-template">
+            <div class="clndr-controls">
+              <div class="clndr-previous-button">&lt;</div>
+              <div class="clndr-next-button">&gt;</div>
+              <div class="current-month"><%= month %> <%= year %></div>
+
+            </div>
             <div class="clndr-grid">
               <div class="days-of-the-week clearfix">
                 <% _.each(daysOfTheWeek, function(day) { %>
                   <div class="header-day"><%= day %></div>
                 <% }); %>
               </div>
-              <div class="days clearfix">
+              <div class="days">
                 <% _.each(days, function(day) { %>
                   <div class="<%= day.classes %>" id="<%= day.id %>"><span class="day-number"><%= day.day %></span></div>
                 <% }); %>
@@ -91,6 +97,13 @@
 
         <h3 class="banner-text below">Get the code at <a href="http://github.com/kylestetz/CLNDR">http://github.com/kylestetz/CLNDR</a></h3>
 
+      </div>
+    </div>
+
+    <div class="block bg-green center">
+      <div class="inner">
+        <h1>Looking for collaborators!</h1>
+        <p>If you are interested in helping to build CLNDR 2, check out <a href="https://github.com/kylestetz/CLNDR/issues/136">this issue on GitHub</a>.</p>
       </div>
     </div>
 
@@ -285,7 +298,7 @@ extras: { }
 
         <pre><code class="language-javascript">
 $('.parent-element').clndr({
-  // the template: this could be stored in markup as a <script type="text/template"></script>
+  // the template: this could be stored in markup as a &lt;script type="text/template"&rt;&lt;/script&rt;
   // or pulled in as a string
   template: clndrTemplate,
   // start the week off on Sunday (0), Monday (1), etc. Sunday is the default.
@@ -375,11 +388,53 @@ theCalendarInstance.addEvents(additionalEventsArray);
         </code></pre>
 
         <p>Want to play with an instance of CLNDR right now? Open the developer console and poke at the variable <span class="code">clndr</span>, which controls the first calendar on this page.</p>
+      </div>
+    </div>
+
+    <!--
+
+    <div class="block bg-gray">
+      <div class="inner">
+
+      <div id="clndr-4">
+        <script type="text/template" id="clndr-4-template">
+          <div class="week-view">
+            <div class="date-range bg-red"><%= intervalStart.format('MMMM Do, YYYY') %> - <%= intervalEnd.format('MMMM Do, YYYY') %></div>
+            <div class="days-of-the-week">
+              <% _.each(daysOfTheWeek, function(day) { %><div class="day-of-the-week"><%= day %></div><% }); %>
+            </div>
+            <div class="clndr-previous-button">&lsaquo;</div>
+            <div class="days-container">
+              <% _.each(days, function(day) { %><div class="<%= day.classes %>">
+                <span class="day-number"><%= day.day %></span>
+                <div class="events">
+                  <% _.each(day.events, function(event){ %>
+                    <div class="event-listing"><span class="event-listing-title"><%= event.title %></span></div>
+                  <% }); %>
+                </div>
+              </div><% }); %>
+            </div>
+            <div class="clndr-next-button">&rsaquo;</div>
+          </div>
+        </script>
+      </div>
+
+      </div>
+    </div>
+
+
+    <div class="block bg-blue">
+      <div class="inner">
+        <h3>I want a week or a year view, not a month view.</h3>
+        <p>CLNDR supports arbitrary lengths of time, allowing you to build views that span a week, several months, or even several years.</p>
+
+        // code
 
         <h3>There's more to know: head over to the GitHub.</h3>
         <p>If you've still got questions, the GitHub readme probably has some answers ~ <a href="http://github.com/kylestetz/CLNDR">CLNDR on GitHub</a>. If not, open issues and make pull requests!</p>
       </div>
     </div>
+    -->
 
     <div class="block bg-gray header">
       <div class="inner">

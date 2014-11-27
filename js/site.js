@@ -15,7 +15,8 @@ $( function() {
 
   clndr = $('#full-clndr').clndr({
     template: $('#full-clndr-template').html(),
-    events: events
+    events: events,
+    forceSixRows: true
   });
 
   $('#mini-clndr').clndr({
@@ -32,7 +33,8 @@ $( function() {
         }
       }
     },
-    adjacentDaysChangeMonth: true
+    adjacentDaysChangeMonth: true,
+    forceSixRows: true
   });
 
   $('#clndr-3').clndr({
@@ -40,4 +42,13 @@ $( function() {
     events: events,
     showAdjacentMonths: false
   });
+
+  // $('#clndr-4').clndr({
+  //   template: $('#clndr-4-template').html(),
+  //   events: events,
+  //   lengthOfTime: {
+  //     days: 7,
+  //     interval: 7
+  //   }
+  // });
 });

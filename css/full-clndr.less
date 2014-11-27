@@ -1,10 +1,42 @@
 #full-clndr
 {
+  width: 100%;
   background-color: @light-gray;
   font-weight: 700;
-  -moz-box-shadow: 4px 4px 0 darken(@dark-gray, 5%);
-  -webkit-box-shadow: 4px 4px 0 darken(@dark-gray, 5%);
-  box-shadow: 4px 4px 0 darken(@dark-gray, 5%);
+  -moz-box-shadow: 0px 4px 0 darken(@dark-gray, 5%);
+  -webkit-box-shadow: 0px 4px 0 darken(@dark-gray, 5%);
+  box-shadow: 0px 4px 0 darken(@dark-gray, 5%);
+
+  .clndr-controls
+  {
+    padding: 14px;
+    background-color: @dark-gray;
+    color: white;
+    text-align: center;
+
+    .clndr-previous-button
+    {
+      float: left;
+      text-align: left;
+    }
+
+    .clndr-next-button
+    {
+      float: right;
+      text-align: right;
+    }
+
+    .clndr-previous-button, .clndr-next-button
+    {
+      width: 30px;
+      cursor: pointer;
+      .noselect;
+      &:hover
+      {
+        opacity: 0.5;
+      }
+    }
+  }
 
   .clndr-grid
   {

@@ -1,8 +1,10 @@
 @import url(http://fonts.googleapis.com/css?family=Asap:400,700);
 @import url(http://fonts.googleapis.com/css?family=Inconsolata:400,700);
+
 @import 'full-clndr.less';
 @import 'mini-clndr.less';
 @import 'clndr-3.less';
+@import 'clndr-4.less';
 
 
 *
@@ -153,6 +155,11 @@ strong
   background-color: @yellow;
 }
 
+.center
+{
+  text-align: center;
+}
+
 // structure
 .header
 {
@@ -224,5 +231,30 @@ strong
   pre[class*="language-"]
   {
     font-size: 14px;
+  }
+
+  #clndr-4
+  {
+    .day, .clndr-next-button, .clndr-previous-button
+    {
+      height: 100px;
+    }
+    .clndr-next-button, .clndr-previous-button
+    {
+      padding-top: 30px;
+    }
+    .events
+    {
+      margin-top: 0.1em;
+    }
+    .event-listing
+    {
+      width: 1px;
+      height: 1px;
+    }
+    .event-listing-title
+    {
+      display: none;
+    }
   }
 }
