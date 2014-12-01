@@ -317,7 +317,7 @@
     // now we push all of the days in a month
     var numOfDays = date.daysInMonth();
     for(var i = 1; i <= numOfDays; i++) {
-      var day = moment.utc([currentMonth.year(), currentMonth.month(), i]);
+      var day = moment([currentMonth.year(), currentMonth.month(), i]);
       daysArray.push(this.createDayObject(day, this.eventsThisMonth) )
     }
 
@@ -326,7 +326,7 @@
     var i = 1;
     while(daysArray.length % 7 !== 0) {
       if(this.options.showAdjacentMonths) {
-        var day = moment.utc([currentMonth.year(), currentMonth.month(), numOfDays + i]);
+        var day = moment([currentMonth.year(), currentMonth.month(), numOfDays + i]);
         daysArray.push( this.createDayObject(day, this.eventsNextMonth) );
       } else {
         daysArray.push( this.calendarDay({ classes: this.options.targets.empty + " next-month" }) );
