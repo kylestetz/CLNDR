@@ -515,7 +515,9 @@ Todo
 Changelog
 =========
 
-`v1.2.4 ~ 2014-11-25`: Fixed a bug related to DST in specific timezones that would cause duplicate dates to appear. Added `removeEvents` filtering function.
+`v1.2.5 ~ 2014-12-01`: Reverting the previous DST code change, which introduced a bug for a large number of users.
+
+`v1.2.4 ~ 2014-11-25`: Fixed a bug related to DST in specific timezones that would cause duplicate dates to appear. Added `removeEvents` filtering function. `warning`! This version is buggy. Please upgrade to `v1.2.5` if you are currently on this version.
 
 `v1.2.3 ~ 2014-10-15`: Fixed a bug that introduced a global variable. It's possible (but very unlikely) that this might have caused some weirdness when using multiple instances of CLNDR on the same page.
 
