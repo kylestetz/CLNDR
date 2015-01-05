@@ -55,6 +55,10 @@ Underscore is not installed by default. This allows you to use whichever templat
 
 If you want to integrate clndr into an [angular.js](http://angularjs.org/) site, get started with this directive: [angular-clndr](https://github.com/10KB/angular-clndr).
 
+### Clndr Using Rails
+
+If you're building a rails application you may be interested in this gem by [@sedx](https://github.com/sedx): [clndr-rails](https://github.com/sedx/clndr-rails).
+
 
 Introduction: You Write The Markup
 ==================================
