@@ -15,6 +15,7 @@ See a demo: [kylestetz.github.io/CLNDR/](http://kylestetz.github.io/CLNDR/)
   - [Pass in your Events](https://github.com/kylestetz/CLNDR#pass-in-your-events)
 - [Usage](https://github.com/kylestetz/CLNDR#usage)
   - [Multi-day Events](https://github.com/kylestetz/CLNDR#multi-day-events)
+  - [Custom Classes](https://github.com/kylestetz/CLNDR#custom-classes)
   - [Constraints & Datepickers](https://github.com/kylestetz/CLNDR#constraints--datepickers)
   - [Returning the Instance / API](https://github.com/kylestetz/CLNDR#returning-the-instance--public-api)
   - [Template Requirements](https://github.com/kylestetz/CLNDR#template-requirements)
@@ -161,6 +162,20 @@ $('.parent-element').clndr({
     day: 'day',
     empty: 'empty'
   },
+
+  // custom classes to avoid styling issues. pass in only the
+  // classnames that you wish to override.
+  // these are the defaults.
+  classes: {
+    today: "today",
+    event: "event",
+    past: "past",
+    lastMonth: "last-month",
+    nextMonth: "next-month",
+    adjacentMonth: "adjacent-month",
+    inactive: "inactive"
+  }
+
   // click callbacks! the keyword 'this' is set to the clndr instance in all callbacks.
   clickEvents: {
     // fired whenever a calendar box is clicked.
@@ -301,6 +316,29 @@ $('#calendar').clndr({
 ```
 
 When looping through days in my template, 'Monday to Friday Event' will be passed to *every single day* between the start and end date. See index.html in the example folder for a demo of this feature.
+
+Custom Classes
+--------------
+
+The classes that get added to a `day` object automatically can be customized to avoid styling conflicts. The `classes` option accepts `today`, `event`, `past`, `lastMonth`, `nextMonth`, `adjacentMonth`, and `inactive`. Pass in only the classnames you wish to override and the rest will be set to their defaults.
+
+In this example we create a `my-` namespace for all of the classes:
+
+```javascript
+clndr.customClasses = $('#custom-classes').clndr({
+  classes: {
+    today: "my-today",
+    event: "my-event",
+    past: "my-past",
+    lastMonth: "my-last-month",
+    nextMonth: "my-next-month",
+    adjacentMonth: "my-adjacent-month",
+    inactive: "my-inactive"
+  }
+});
+```
+
+To configure the `day`, `empty`, and next/previous/today/etc. button classes, use the `targets` option documented in the [usage](https://github.com/kylestetz/CLNDR#usage) section.
 
 Constraints & Datepickers
 -------------------------
@@ -519,6 +557,8 @@ Todo
 
 Changelog
 =========
+
+`v1.2.6 ~ 2015-01-07`: Added the ability to specify custom classnames for `event`, `next-month`, `previous-month`, etc. using `options.classes`. This update is backwards-compatible.
 
 `v1.2.5 ~ 2014-12-01`: Reverting the previous DST code change, which introduced a bug for a large number of users.
 
