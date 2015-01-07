@@ -87,6 +87,15 @@
       day: 'day',
       empty: 'empty'
     },
+    classes: {
+      today: "today",
+      event: "event",
+      past: "past",
+      lastMonth: "last-month",
+      nextMonth: "next-month",
+      adjacentMonth: "adjacent-month",
+      inactive: "inactive"
+    },
     events: [],
     extras: null,
     dateParameter: 'date',
@@ -310,7 +319,9 @@
       }
     } else {
       for(var i = 0; i < diff; i++) {
-        daysArray.push( this.calendarDay({ classes: this.options.targets.empty + " last-month" }) );
+        daysArray.push( this.calendarDay({
+          classes: this.options.targets.empty + " " + this.options.classes.lastMonth
+        }) );
       }
     }
 
@@ -318,7 +329,7 @@
     var numOfDays = date.daysInMonth();
     for(var i = 1; i <= numOfDays; i++) {
       var day = moment([currentMonth.year(), currentMonth.month(), i]);
-      daysArray.push(this.createDayObject(day, this.eventsThisMonth) )
+      daysArray.push(this.createDayObject(day, this.eventsThisMonth) );
     }
 
     // ...and if there are any trailing blank boxes, fill those in
@@ -329,7 +340,9 @@
         var day = moment([currentMonth.year(), currentMonth.month(), numOfDays + i]);
         daysArray.push( this.createDayObject(day, this.eventsNextMonth) );
       } else {
-        daysArray.push( this.calendarDay({ classes: this.options.targets.empty + " next-month" }) );
+        daysArray.push( this.calendarDay({
+          classes: this.options.targets.empty + " " + this.options.classes.nextMonth
+        }) );
       }
       i++;
     }
@@ -343,7 +356,9 @@
           daysArray.push( this.createDayObject(moment(start), this.eventsNextMonth) );
           start.add(1, 'days');
         } else {
-          daysArray.push( this.calendarDay({ classes: this.options.targets.empty + " next-month" }) );
+          daysArray.push( this.calendarDay({
+            classes: this.options.targets.empty + " " + this.options.classes.nextMonth
+          }) );
         }
       }
     }
@@ -380,36 +395,32 @@
     var extraClasses = "";
 
     if(now.format("YYYY-MM-DD") == day.format("YYYY-MM-DD")) {
-       extraClasses += " today";
+       extraClasses += (" " + this.options.classes.today);
     }
     if(day.isBefore(now, 'day')) {
-      extraClasses += " past";
+      extraClasses += (" " + this.options.classes.past);
     }
     if(eventsToday.length) {
-       extraClasses += " event";
+      extraClasses += (" " + this.options.classes.event);
     }
     if(this.month.month() > day.month()) {
-       extraClasses += " adjacent-month";
-
-       this.month.year() === day.year()
-           ? extraClasses += " last-month"
-           : extraClasses += " next-month";
+      extraClasses += (" " + this.options.classes.adjacentMonth);
+      extraClasses += (this.month.year() === day.year()) ?
+        (" " + this.options.classes.lastMonth) : (" " + this.options.classes.nextMonth);
 
     } else if(this.month.month() < day.month()) {
-       extraClasses += " adjacent-month";
-
-       this.month.year() === day.year()
-           ? extraClasses += " next-month"
-           : extraClasses += " last-month";
+      extraClasses += (" " + this.options.classes.adjacentMonth);
+      extraClasses += (this.month.year() === day.year()) ?
+        (" " + this.options.classes.nextMonth) : (" " + this.options.classes.lastMonth);
     }
 
     // if there are constraints, we need to add the inactive class to the days outside of them
     if(this.options.constraints) {
       if(this.options.constraints.startDate && day.isBefore(moment( this.options.constraints.startDate ))) {
-        extraClasses += " inactive";
+        extraClasses += (" " + this.options.classes.inactive);
       }
       if(this.options.constraints.endDate && day.isAfter(moment( this.options.constraints.endDate ))) {
-        extraClasses += " inactive";
+        extraClasses += (" " + this.options.classes.inactive);
       }
     }
 
@@ -467,7 +478,7 @@
       // in the interest of clarity we're just going to remove all inactive classes and re-apply them each render.
       for(var target in this.options.targets) {
         if(target != this.options.targets.day) {
-          this.element.find('.' + this.options.targets[target]).toggleClass('inactive', false);
+          this.element.find('.' + this.options.targets[target]).toggleClass(this.options.classes.inactive, false);
         }
       }
 
@@ -483,23 +494,23 @@
       // deal with the month controls first.
       // are we at the start month?
       if(start && this.month.isSame( start, 'month' )) {
-        this.element.find('.' + this.options.targets.previousButton).toggleClass('inactive', true);
+        this.element.find('.' + this.options.targets.previousButton).toggleClass(this.options.classes.inactive, true);
       }
       // are we at the end month?
       if(end && this.month.isSame( end, 'month' )) {
-        this.element.find('.' + this.options.targets.nextButton).toggleClass('inactive', true);
+        this.element.find('.' + this.options.targets.nextButton).toggleClass(this.options.classes.inactive, true);
       }
       // what's last year looking like?
       if(start && moment(start).subtract(1, 'years').isBefore(moment(this.month).subtract(1, 'years')) ) {
-        this.element.find('.' + this.options.targets.previousYearButton).toggleClass('inactive', true);
+        this.element.find('.' + this.options.targets.previousYearButton).toggleClass(this.options.classes.inactive, true);
       }
       // how about next year?
       if(end && moment(end).add(1, 'years').isAfter(moment(this.month).add(1, 'years')) ) {
-        this.element.find('.' + this.options.targets.nextYearButton).toggleClass('inactive', true);
+        this.element.find('.' + this.options.targets.nextYearButton).toggleClass(this.options.classes.inactive, true);
       }
       // today? we could put this in init(), but we want to support the user changing the constraints on a living instance.
       if(( start && start.isAfter( moment(), 'month' ) ) || ( end && end.isBefore( moment(), 'month' ) )) {
-        this.element.find('.' + this.options.targets.today).toggleClass('inactive', true);
+        this.element.find('.' + this.options.targets.today).toggleClass(this.options.classes.inactive, true);
       }
     }
 
@@ -521,9 +532,9 @@
       }
       // if adjacentDaysChangeMonth is on, we need to change the month here.
       if(self.options.adjacentDaysChangeMonth) {
-        if($(event.currentTarget).is(".last-month")) {
+        if($(event.currentTarget).is( '.' + self.options.classes.lastMonth )) {
           self.backActionWithContext(self);
-        } else if($(event.currentTarget).is(".next-month")) {
+        } else if($(event.currentTarget).is( '.' + self.options.classes.nextMonth )) {
           self.forwardActionWithContext(self);
         }
       }
@@ -535,9 +546,9 @@
         self.options.clickEvents.click.apply(self, [target]);
       }
       if(self.options.adjacentDaysChangeMonth) {
-        if($(event.currentTarget).is(".last-month")) {
+        if($(event.currentTarget).is( '.' + self.options.classes.lastMonth )) {
           self.backActionWithContext(self);
-        } else if($(event.currentTarget).is(".next-month")) {
+        } else if($(event.currentTarget).is( '.' + self.options.classes.nextMonth )) {
           self.forwardActionWithContext(self);
         }
       }
