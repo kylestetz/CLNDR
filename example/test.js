@@ -166,4 +166,25 @@ $( function() {
   });
 
 
+  // test options.classes
+  // ================================================================================
+  clndr.customClasses = $('#custom-classes').clndr({
+    events: eventsArray,
+    classes: {
+      today: "my-today",
+      event: "my-event",
+      past: "my-past",
+      lastMonth: "my-last-month",
+      nextMonth: "my-next-month",
+      adjacentMonth: "my-adjacent-month",
+      inactive: "my-inactive"
+    },
+    clickEvents: {
+      click: function(target) {
+        console.log(target);
+      }
+    }
+  });
+
+
 });
