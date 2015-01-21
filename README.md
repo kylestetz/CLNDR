@@ -320,6 +320,7 @@ $('#calendar').clndr({
     endDate: 'end'
   }
 });
+```
 
 When looping through days in my template, 'Monday to Friday Event' will be passed to *every single day* between the start and end date. See index.html in the example folder for a demo of this feature.
 
@@ -327,6 +328,7 @@ When looping through days in my template, 'Monday to Friday Event' will be passe
 
 If you _also_ have single-day events mixed in with different date fields, as of clndr `v1.2.7` you can specify a third property of `multiDayEvents` called `singleDay` that refers to the date field for a single-day event.
 
+```
 var lotsOfMixedEvents = [
   { start: '2015-11-04', end: '2015-11-08', title: 'Monday to Friday Event' },
   { start: '2015-11-15', end: '2015-11-20', title: 'Another Long Event' },
