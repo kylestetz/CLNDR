@@ -139,17 +139,19 @@ $('.parent-element').clndr({
   // or pulled in as a string
   template: clndrTemplate,
 
-  // start the week off on Sunday (0), Monday (1), etc. Sunday is the default.
-  weekOffset: 0,
-
   // determines which month to start with using either a date string or a moment object.
   startWithMonth: "YYYY-MM-DD" or moment(),
 
+  // start the week off on Sunday (0), Monday (1), etc. Sunday is the default.
+  // WARNING: if you are dealing with i18n and multiple languages, you probably
+  // don't want this! See the "Internationalization" section below for more.
+  weekOffset: 0,
+
   // an array of day abbreviation labels. If you have moment.js set to a different language,
   // it will guess these for you! If for some reason that doesn't work, use this...
-  // the array MUST start with Sunday
-  // (use in conjunction with weekOffset to change the starting day to Monday)
-  daysOfTheWeek: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
+  // WARNING: if you are dealing with i18n and multiple languages, you probably
+  // don't want this! See the "Internationalization" section below for more.
+  daysOfTheWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
 
   // the target classnames that CLNDR will look for to bind events.
   // these are the defaults.
@@ -220,17 +222,22 @@ $('.parent-element').clndr({
 
   // an array of event objects
   events: [],
+
   // if you're supplying an events array, dateParameter points to the
   // field in your event object containing a date string.
   // It's set to 'date' by default.
   dateParameter: 'date',
+
   // CLNDR can accept events lasting more than one day!
   // just pass in the multiDayEvents option and specify what the start and
   // end fields are called within your event objects. See the example file
   // for a working instance of this.
   multiDayEvents: {
     startDate: 'startDate',
-    endDate: 'endDate'
+    endDate: 'endDate',
+    // if you also have single day events with a different date field,
+    // use the singleDay property and point it to the date field.
+    singleDay: 'date'
   },
 
   // show the dates of days in months adjacent to the current month.
@@ -298,7 +305,7 @@ extras: { }
 Multi-day Events
 ----------------
 
-Clndr now accepts events lasting more than one day. You just need to tell it how to access the start and end dates of your events:
+Clndr accepts events lasting more than one day. You just need to tell it how to access the start and end dates of your events:
 
 ```javascript
 var lotsOfEvents = [
@@ -313,9 +320,28 @@ $('#calendar').clndr({
     endDate: 'end'
   }
 });
-```
 
 When looping through days in my template, 'Monday to Friday Event' will be passed to *every single day* between the start and end date. See index.html in the example folder for a demo of this feature.
+
+#### Mixing Multi- and Single-day Events
+
+If you _also_ have single-day events mixed in with different date fields, as of clndr `v1.2.7` you can specify a third property of `multiDayEvents` called `singleDay` that refers to the date field for a single-day event.
+
+var lotsOfMixedEvents = [
+  { start: '2015-11-04', end: '2015-11-08', title: 'Monday to Friday Event' },
+  { start: '2015-11-15', end: '2015-11-20', title: 'Another Long Event' },
+  { date: '2015-07-16', title: 'Birthday' }
+];
+
+$('#calendar').clndr({
+  events: lotsOfEvents,
+  multiDayEvents: {
+    startDate: 'start',
+    endDate: 'end',
+    singleDay: 'date'
+  }
+});
+```
 
 Custom Classes
 --------------
@@ -518,7 +544,7 @@ Clndr has support for internationalization insofar as Moment.js supports it. By 
 
 If you are using a moment.js language configuration in which weeks begin on a Monday (e.g. French), Clndr will detect this automatically and there is no need to provide a `weekOffset` or a `daysOfTheWeek` array. If you want to reverse this behavior, there is a field in each moment.js language config file called `dow` which you can set to your liking.
 
-The day of the week abbreviations are created automatically using moment.js's current language setting, however if this does not suit your needs you should override them using the `daysOfTheWeek` option. Make sure the array you provide begins on the same day of the week as your current language setting.
+The day of the week abbreviations are created automatically using moment.js's current language setting, however if this does not suit your needs you should override them using the `daysOfTheWeek` option. Make sure the array you provide begins on the same day of the week as your current language setting. **Warning**: using `daysOfTheWeek` and `weekOffset` in conjunction with different language settings is _not_ recommended and may cause you headaches.
 
 
 Underscore Template Delimiters
@@ -557,6 +583,8 @@ Todo
 
 Changelog
 =========
+
+`v1.2.7 ~ 2015-01-21`: Added the ability to mix multi-day and single-day events using the new `multiDayEvents.singleDay` property. Also introduced lazy setting of `startDate` and `endDate` in multi-day events so that if one of them is missing they will both be set to the value that is present. This update is backwards-compatible.
 
 `v1.2.6 ~ 2015-01-07`: Added the ability to specify custom classnames for `event`, `next-month`, `previous-month`, etc. using `options.classes`. This update is backwards-compatible.
 
