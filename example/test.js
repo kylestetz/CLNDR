@@ -85,6 +85,28 @@ $( function() {
     }
   });
 
+  // test multi-day events
+  // ================================================================================
+  var multidayMixedArray = [
+    { startDate: moment().format('YYYY-MM-') + '12', endDate: moment().format('YYYY-MM-') + '17', title: 'Multi1' },
+    { startDate: moment().format('YYYY-MM-') + '24', endDate: moment().format('YYYY-MM-') + '27', title: 'Multi2' },
+    { date: moment().format('YYYY-MM-') + '19', title: 'Single' }
+  ];
+
+  clndr.multiday = $('#multiday-mixed').clndr({
+    events: multidayMixedArray,
+    multiDayEvents: {
+      startDate: 'startDate',
+      endDate: 'endDate',
+      singleDay: 'date'
+    },
+    clickEvents: {
+      click: function(target) {
+        console.log(target);
+      }
+    }
+  });
+
   // test really long multi-day events
   // ================================================================================
   var multidayLongArray = [

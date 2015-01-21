@@ -893,8 +893,15 @@
     var self = this;
     var i = 0, l = events.length;
     for(i; i < l; i++) {
-      events[i]._clndrStartDateObject = moment( events[i][self.options.multiDayEvents.startDate] );
-      events[i]._clndrEndDateObject = moment( events[i][self.options.multiDayEvents.endDate] );
+      // if we don't find the startDate OR endDate fields, look for singleDay
+      if(!events[i][self.options.multiDayEvents.endDate] && !events[i][self.options.multiDayEvents.startDate]) {
+        events[i]._clndrEndDateObject = moment( events[i][self.options.multiDayEvents.singleDay] );
+        events[i]._clndrStartDateObject = moment( events[i][self.options.multiDayEvents.singleDay] );
+      } else {
+        // otherwise use startDate and endDate, or whichever one is present.
+        events[i]._clndrEndDateObject = moment( events[i][self.options.multiDayEvents.endDate] || events[i][self.options.multiDayEvents.startDate] );
+        events[i]._clndrStartDateObject = moment( events[i][self.options.multiDayEvents.startDate] || events[i][self.options.multiDayEvents.endDate] );
+      }
     }
     return events;
   }

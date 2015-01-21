@@ -12,7 +12,8 @@ $(document).ready( function() {
 
   var eventArray = [
     { startDate: thisMonth + '-10', endDate: thisMonth + '-14', title: 'Multi-Day Event' },
-    { startDate: thisMonth + '-21', endDate: thisMonth + '-23', title: 'Another Multi-Day Event' }
+    { startDate: thisMonth + '-21', endDate: thisMonth + '-23', title: 'Another Multi-Day Event' },
+    { date: thisMonth + '-27', title: 'Single Day Event' }
   ];
 
   // the order of the click handlers is predictable.
@@ -57,7 +58,8 @@ $(document).ready( function() {
     },
     multiDayEvents: {
       startDate: 'startDate',
-      endDate: 'endDate'
+      endDate: 'endDate',
+      singleDay: 'date'
     },
     showAdjacentMonths: true,
     adjacentDaysChangeMonth: false
@@ -68,7 +70,8 @@ $(document).ready( function() {
     events: eventArray,
     multiDayEvents: {
       startDate: 'startDate',
-      endDate: 'endDate'
+      endDate: 'endDate',
+      singleDay: 'date'
     },
     startWithMonth: moment().add(1, 'month'),
     clickEvents: {
