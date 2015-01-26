@@ -289,7 +289,9 @@ numberOfRows: 5
 days: [ { day, classes, id, events, date } ]
 // the month name- don't forget that you can do things like
 // month.substring(0, 1) and month.toLowerCase() in your template
+previousMonth: "April"
 month: "May"
+nextMonth: "June"
 // the year that the calendar is currently focused on
 year: "2013"
 // all of the events happening this month
