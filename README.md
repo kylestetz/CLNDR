@@ -8,7 +8,7 @@ See a demo: [kylestetz.github.io/CLNDR/](http://kylestetz.github.io/CLNDR/)
 --------
 
 #### Clndr.js version 2.0 is coming
-If you are using cldndr.js and have any feedback or ideas about a new version, please take a moment to contribute to [#151](https://github.com/kylestetz/CLNDR/issues/151). If you are interested in helping to develop the new version, your give a shout in [#136](https://github.com/kylestetz/CLNDR/issues/136). Thanks!
+If you are using clndr.js and have any feedback or ideas about a new version, please take a moment to contribute to [#151](https://github.com/kylestetz/CLNDR/issues/151). If you are interested in helping to develop the new version, give a shout in [#136](https://github.com/kylestetz/CLNDR/issues/136). Thanks!
 
 --------
 
