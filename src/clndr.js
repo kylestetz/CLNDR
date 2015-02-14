@@ -402,6 +402,12 @@
     }
     if(eventsToday.length) {
       extraClasses += (" " + this.options.classes.event);
+      //To support custom classes for events
+      eventsToday.forEach(function(e) {
+        if(e.type) {
+          extraClasses += (" " + self.options.classes.event + "-" + e.type);
+        }
+      });
     }
     if(this.month.month() > day.month()) {
       extraClasses += (" " + this.options.classes.adjacentMonth);
