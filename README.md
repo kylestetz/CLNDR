@@ -595,6 +595,8 @@ Todo
 Changelog
 =========
 
+`v1.2.8 ~ 2015-02-16`: Added `previousMonth` and `nextMonth` variables into the template, which match `month` in format, so that now in "April" you also have access to the strings "March" and "May". This update is backwards-compatible.
+
 `v1.2.7 ~ 2015-01-21`: Added the ability to mix multi-day and single-day events using the new `multiDayEvents.singleDay` property. Also introduced lazy setting of `startDate` and `endDate` in multi-day events so that if one of them is missing they will both be set to the value that is present. This update is backwards-compatible.
 
 `v1.2.6 ~ 2015-01-07`: Added the ability to specify custom classnames for `event`, `next-month`, `previous-month`, etc. using `options.classes`. This update is backwards-compatible.
