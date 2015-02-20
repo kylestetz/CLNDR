@@ -221,7 +221,7 @@
   // classes depending on the circumstance.
   Clndr.prototype.createDaysObject = function(currentMonth) {
     // this array will hold numbers for the entire grid (even the blank spaces)
-    daysArray = [];
+    var daysArray = [];
     var date = currentMonth.startOf('month');
 
     // filter the events list (if it exists) to events that are happening last month, this month and next month (within the current grid view)
