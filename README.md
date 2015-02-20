@@ -589,11 +589,12 @@ If you're planning on supporting IE8 and below, you'll have to be careful about 
 Todo
 ====
 
-- Improve mobile experience
-- Node.js module for server-side rendering of the initial calendar.
+- [Write clndr.js v2.0](https://github.com/kylestetz/CLNDR/issues/151)
 
 Changelog
 =========
+
+`v1.2.9 ~ 2015-02-20`: Fixed a bug where the `daysArray` was accidently introduced into the global namespace. This shouldn't have affected your world. This update is backwards-compatible.
 
 `v1.2.8 ~ 2015-02-16`: Added `previousMonth` and `nextMonth` variables into the template, which match `month` in format, so that now in "April" you also have access to the strings "March" and "May". This update is backwards-compatible.
 
