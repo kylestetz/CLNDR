@@ -13,7 +13,8 @@
     "calendar",
     "jquery",
     "plugin",
-    "widget"
+    "widget",
+    "jquery-plugin"
   ],
   "bugs": {
     "url": "https://github.com/kylestetz/CLNDR/issues"
