@@ -107,6 +107,39 @@ $( function() {
     }
   });
 
+  // test multi-day event performance
+  // ================================================================================
+  var multidayMixedPerfArray = [
+    { startDate: moment().format('YYYY-MM-') + '12', endDate: moment().format('YYYY-MM-') + '17', title: 'Multi1' },
+    { startDate: moment().format('YYYY-MM-') + '24', endDate: moment().format('YYYY-MM-') + '27', title: 'Multi2' },
+  ];
+
+  // Add two events a day for three months
+  for (var i = 1; i < 28; i++) {
+    // Last month
+    multidayMixedPerfArray.push({ startDate: moment().add(-1, 'month').format('YYYY-MM-') + i, endDate: moment().add(-1, 'month').format('YYYY-MM-') + i, title: 'Single'+ ((2 * i) - 1) });
+    multidayMixedPerfArray.push({ startDate: moment().add(-1, 'month').format('YYYY-MM-') + i, endDate: moment().add(-1, 'month').format('YYYY-MM-') + i, title: 'Single'+ (2 * i) });
+    // This month
+    multidayMixedPerfArray.push({ startDate: moment().format('YYYY-MM-') + i, endDate: moment().format('YYYY-MM-') + i, title: 'Single'+ ((2 * i) - 1) });
+    multidayMixedPerfArray.push({ startDate: moment().format('YYYY-MM-') + i, endDate: moment().format('YYYY-MM-') + i, title: 'Single'+ (2 * i) });
+    // Next month
+    multidayMixedPerfArray.push({ startDate: moment().add(1, 'month').format('YYYY-MM-') + i, endDate: moment().add(1, 'month').format('YYYY-MM-') + i, title: 'Single'+ ((2 * i) - 1) });
+    multidayMixedPerfArray.push({ startDate: moment().add(1, 'month').format('YYYY-MM-') + i, endDate: moment().add(1, 'month').format('YYYY-MM-') + i, title: 'Single'+ (2 * i) });
+  }
+
+  var start = moment();
+
+  clndr.multiday = $('#multiday-mixed-performance').clndr({
+    events: multidayMixedPerfArray,
+    multiDayEvents: {
+      startDate: 'startDate',
+      endDate: 'endDate',
+      singleDay: 'date'
+    }
+  });
+
+$('#multiday-mixed-performance-val').text(moment.duration(moment().diff(start)).asSeconds());
+
   // test really long multi-day events
   // ================================================================================
   var multidayLongArray = [
