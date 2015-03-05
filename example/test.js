@@ -116,15 +116,9 @@ $( function() {
 
   // Add two events a day for three months
   for (var i = 1; i < 28; i++) {
-    // Last month
-    multidayMixedPerfArray.push({ startDate: moment().add(-1, 'month').format('YYYY-MM-') + i, endDate: moment().add(-1, 'month').format('YYYY-MM-') + i, title: 'Single'+ ((2 * i) - 1) });
-    multidayMixedPerfArray.push({ startDate: moment().add(-1, 'month').format('YYYY-MM-') + i, endDate: moment().add(-1, 'month').format('YYYY-MM-') + i, title: 'Single'+ (2 * i) });
-    // This month
-    multidayMixedPerfArray.push({ startDate: moment().format('YYYY-MM-') + i, endDate: moment().format('YYYY-MM-') + i, title: 'Single'+ ((2 * i) - 1) });
-    multidayMixedPerfArray.push({ startDate: moment().format('YYYY-MM-') + i, endDate: moment().format('YYYY-MM-') + i, title: 'Single'+ (2 * i) });
-    // Next month
-    multidayMixedPerfArray.push({ startDate: moment().add(1, 'month').format('YYYY-MM-') + i, endDate: moment().add(1, 'month').format('YYYY-MM-') + i, title: 'Single'+ ((2 * i) - 1) });
-    multidayMixedPerfArray.push({ startDate: moment().add(1, 'month').format('YYYY-MM-') + i, endDate: moment().add(1, 'month').format('YYYY-MM-') + i, title: 'Single'+ (2 * i) });
+    for (var j = 0; j < 10; j++) {
+      multidayMixedPerfArray.push({ startDate: moment().format('YYYY-MM-') + i, endDate: moment().format('YYYY-MM-') + i });
+    }
   }
 
   var start = moment();
