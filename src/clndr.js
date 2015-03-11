@@ -376,14 +376,19 @@
       // keep in mind that the events here already passed the month/year test.
       // now all we have to compare is the moment.date(), which returns the day of the month.
       var e = monthEvents[j];
-      var start = e._clndrStartDateObject;
-      var end = e._clndrEndDateObject;
+      var start, end;
+      if(self.options.multiDayEvents) {
+        start = e._clndrStartDateObject;
+        end = e._clndrEndDateObject;
+      } else {
+        start = e._clndrDateObject;
+      }
 
       // Check if multiday events are enabled and if the current event is
       // longer than a day
       if (self.options.multiDayEvents && end.diff(start, 'day' > 0)) {
         // Same rules as before to check if the event is on the current day.
-        // Could be replaced if moment.js dependancy upgraded to 2.9 with
+        // Could be replaced if moment.js dependency upgraded to 2.9 with
         // if (day.isSame(start, 'day') || day.isBetween(start,end) || day.isSame(end, 'day'))
         if((day.isSame(start, 'day') || day.isAfter(start, 'day'))
         && (day.isSame(end, 'day') || day.isBefore(end, 'day'))) {
