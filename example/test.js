@@ -42,7 +42,6 @@ $( function() {
     events: eventsArray
   });
 
-
   // test the clickEvent callbacks
   // ================================================================================
   clndr.callbacks = $('#callbacks').clndr({
@@ -109,13 +108,17 @@ $( function() {
 
   // test multi-day event performance
   // ================================================================================
+
+  // Start with two truly multiday events.
   var multidayMixedPerfArray = [
     { startDate: moment().format('YYYY-MM-') + '12', endDate: moment().format('YYYY-MM-') + '17', title: 'Multi1' },
     { startDate: moment().format('YYYY-MM-') + '24', endDate: moment().format('YYYY-MM-') + '27', title: 'Multi2' },
   ];
 
-  // Add two events a day for three months
-  for (var i = 1; i < 28; i++) {
+  // Add ten events every day this month that are only a day long,
+  // which triggers clndr to use a performance optimization.
+  var daysInMonth = moment().daysInMonth();
+  for (var i = 1; i <= daysInMonth; i++) {
     for (var j = 0; j < 10; j++) {
       multidayMixedPerfArray.push({ startDate: moment().format('YYYY-MM-') + i, endDate: moment().format('YYYY-MM-') + i });
     }
@@ -123,12 +126,17 @@ $( function() {
 
   var start = moment();
 
-  clndr.multiday = $('#multiday-mixed-performance').clndr({
+  clndr.multidayMixedPerformance = $('#multiday-mixed-performance').clndr({
     events: multidayMixedPerfArray,
     multiDayEvents: {
       startDate: 'startDate',
       endDate: 'endDate',
       singleDay: 'date'
+    },
+    clickEvents: {
+      click: function(target) {
+        console.log(target);
+      }
     }
   });
 
