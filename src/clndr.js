@@ -375,20 +375,23 @@
     for(j; j < l; j++) {
       // keep in mind that the events here already passed the month/year test.
       // now all we have to compare is the moment.date(), which returns the day of the month.
-      if(self.options.multiDayEvents) {
-        var start = monthEvents[j]._clndrStartDateObject;
-        var end = monthEvents[j]._clndrEndDateObject;
-        // if today is the same day as start or is after the start, and
-        // if today is the same day as the end or before the end ...
-        // woohoo semantics!
-        if( ( day.isSame(start, 'day') || day.isAfter(start, 'day') ) &&
-          ( day.isSame(end, 'day') || day.isBefore(end, 'day') ) ) {
-          eventsToday.push( monthEvents[j] );
+      var e = monthEvents[j];
+      var start = e._clndrStartDateObject;
+      var end = e._clndrEndDateObject;
+
+      // Check if multiday events are enabled and if the current event is
+      // longer than a day
+      if (self.options.multiDayEvents && end.diff(start, 'day' > 0)) {
+        // Same rules as before to check if the event is on the current day.
+        // Could be replaced if moment.js dependancy upgraded to 2.9 with
+        // if (day.isSame(start, 'day') || day.isBetween(start,end) || day.isSame(end, 'day'))
+        if((day.isSame(start, 'day') || day.isAfter(start, 'day'))
+        && (day.isSame(end, 'day') || day.isBefore(end, 'day'))) {
+          eventsToday.push(e);
         }
-      } else {
-        if( monthEvents[j]._clndrDateObject.date() == day.date() ) {
-          eventsToday.push( monthEvents[j] );
-        }
+      }
+      else if (day.isSame(start, 'day')){
+        eventsToday.push(e);
       }
     }
 
