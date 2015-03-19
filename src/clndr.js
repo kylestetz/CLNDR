@@ -400,10 +400,16 @@
       }
     }
 
+    var properties = {
+       isInactive: false,
+       isAdjacentMonth: false,
+       isToday: false,
+    };
     var extraClasses = "";
 
     if(now.format("YYYY-MM-DD") == day.format("YYYY-MM-DD")) {
        extraClasses += (" " + this.options.classes.today);
+       properties.isToday = true;
     }
     if(day.isBefore(now, 'day')) {
       extraClasses += (" " + this.options.classes.past);
@@ -415,20 +421,23 @@
       extraClasses += (" " + this.options.classes.adjacentMonth);
       extraClasses += (this.month.year() === day.year()) ?
         (" " + this.options.classes.lastMonth) : (" " + this.options.classes.nextMonth);
-
+      properties.isAdjacentMonth = true;
     } else if(this.month.month() < day.month()) {
       extraClasses += (" " + this.options.classes.adjacentMonth);
       extraClasses += (this.month.year() === day.year()) ?
         (" " + this.options.classes.nextMonth) : (" " + this.options.classes.lastMonth);
+      properties.isAdjacentMonth = true;
     }
 
     // if there are constraints, we need to add the inactive class to the days outside of them
     if(this.options.constraints) {
       if(this.options.constraints.startDate && day.isBefore(moment( this.options.constraints.startDate ))) {
-        extraClasses += (" " + this.options.classes.inactive);
+      	 extraClasses += (" " + this.options.classes.inactive);
+      	properties.isInactive = true;
       }
       if(this.options.constraints.endDate && day.isAfter(moment( this.options.constraints.endDate ))) {
-        extraClasses += (" " + this.options.classes.inactive);
+      	 extraClasses += (" " + this.options.classes.inactive);
+      	properties.isInactive = true;
       }
     }
 
@@ -449,7 +458,8 @@
       day: day.date(),
       classes: this.options.targets.day + extraClasses,
       events: eventsToday,
-      date: day
+      date: day,
+      properties: properties
     });
   };
 
