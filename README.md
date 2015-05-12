@@ -216,7 +216,7 @@ $('.parent-element').clndr({
   },
 
   // use the 'touchstart' event instead of 'click'
-  useTouchEvents: false
+  useTouchEvents: false,
 
   // this is called only once after clndr has been initialized and rendered.
   // use this to bind custom event handlers that don't need to be re-attached

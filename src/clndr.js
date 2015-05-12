@@ -78,6 +78,7 @@
       onMonthChange: null,
       onYearChange: null
     },
+    useTouchEvents: false,
     targets: {
       nextButton: 'clndr-next-button',
       previousButton: 'clndr-previous-button',
