@@ -215,6 +215,9 @@ $('.parent-element').clndr({
     today: function(month){ }
   },
 
+  // use the 'touchstart' event instead of 'click'
+  useTouchEvents: false
+
   // this is called only once after clndr has been initialized and rendered.
   // use this to bind custom event handlers that don't need to be re-attached
   // every time the month changes (most event handlers fall in this category).
