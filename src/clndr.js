@@ -25,7 +25,7 @@
   var clndrTemplate = "<div class='clndr-controls'>" +
     "<div class='clndr-control-button'><span class='clndr-previous-button'>previous</span></div><div class='month'><%= month %> <%= year %></div><div class='clndr-control-button rightalign'><span class='clndr-next-button'>next</span></div>" +
     "</div>" +
-  "<table class='clndr-table' border='0' cellspacing='0' cellpadding='0'>" +
+    "<table class='clndr-table' border='0' cellspacing='0' cellpadding='0'>" +
     "<thead>" +
     "<tr class='header-days'>" +
     "<% for(var i = 0; i < daysOfTheWeek.length; i++) { %>" +
@@ -231,9 +231,9 @@
     return days;
   };
 
-  // This is where the magic happens. Given a moment object representing the current month,
-  // an array of calendarDay objects is constructed that contains appropriate events and
-  // classes depending on the circumstance.
+  // This is where the magic happens. Given a starting date and ending date,
+  // an array of calendarDay objects is constructed that contains appropriate
+  // events and classes depending on the circumstance.
   Clndr.prototype.createDaysObject = function(startDate, endDate) {
     // this array will hold numbers for the entire grid (even the blank spaces)
     daysArray = [];
@@ -442,37 +442,53 @@
 
       data = {
         daysOfTheWeek: this.daysOfTheWeek,
+        numberOfRows: Math.ceil(days.length / 7),
+        months: [],
         days: days,
+        month: null,
+        year: null,
         intervalStart: this.intervalStart.clone(),
         intervalEnd: this.intervalEnd.clone(),
         eventsThisInterval: this.eventsThisInterval,
+        eventsLastMonth: [],
+        eventsNextMonth: [],
         extras: this.options.extras
       };
 
     } else if(this.options.lengthOfTime.months) {
 
       var months = [];
+      var eventsThisInterval = [];
 
       for(i = 0; i < this.options.lengthOfTime.months; i++) {
         var currentIntervalStart = this.intervalStart.clone().add('months', i);
         var currentIntervalEnd = currentIntervalStart.clone().endOf('month');
+        var days = this.createDaysObject(currentIntervalStart, currentIntervalEnd);
+        // save events processed for each month into a master array of events for
+        // this interval
+        eventsThisInterval.push(this.eventsThisInterval);
         months.push({
           month: currentIntervalStart,
-          days: this.createDaysObject(currentIntervalStart, currentIntervalEnd)
+          days: days
         });
       }
 
       data = {
         daysOfTheWeek: this.daysOfTheWeek,
+        numberOfRows: _.reduce(months, function(memo, monthObj) {
+          return memo + Math.ceil(monthObj.days.length / 7);
+        }, 0),
         months: months,
+        days: [],
+        month: null,
+        year: null,
         intervalStart: this.intervalStart,
         intervalEnd: this.intervalEnd,
-        eventsThisInterval: this.eventsThisInterval,
+        eventsThisInterval: eventsThisInterval,
         eventsLastMonth: this.eventsLastMonth,
         eventsNextMonth: this.eventsNextMonth,
         extras: this.options.extras
       };
-
     } else {
       // get an array of days and blank spaces
       var days = this.createDaysObject(this.month.clone().startOf('month'), this.month.clone().endOf('month'));
@@ -482,6 +498,7 @@
       var data = {
         daysOfTheWeek: this.daysOfTheWeek,
         numberOfRows: Math.ceil(days.length / 7),
+        months: [],
         days: days,
         month: this.month.format('MMMM'),
         year: this.month.year(),
@@ -539,7 +556,6 @@
         this.element.find('.' + this.options.targets.today).toggleClass('inactive', true);
       }
     }
-
 
     if(this.options.doneRendering) {
       this.options.doneRendering.apply(this, []);
