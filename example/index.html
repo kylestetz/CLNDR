@@ -13,7 +13,7 @@
       <script type="text/template" id="template-calendar">
         <div class="clndr-controls">
           <div class="clndr-previous-button">&lsaquo;</div>
-          <div class="month"><%= month %></div>
+          <div class="month"><%= intervalStart.format('M/DD') + ' &mdash; ' + intervalEnd.format('M/DD') %></div>
           <div class="clndr-next-button">&rsaquo;</div>
         </div>
         <div class="clndr-grid">
@@ -27,6 +27,39 @@
               <% }); %>
             </div>
           </div>
+        </div>
+        <div class="clndr-today-button">Today</div>
+      </script>
+
+    </div>
+
+    <div class="cal3">
+
+      <script type="text/template" id="template-calendar-months">
+        <div class="clndr-controls top">
+          <div class="clndr-previous-button">&lsaquo;</div>
+          <div class="clndr-next-button">&rsaquo;</div>
+        </div>
+        <div class="clearfix">
+        <% _.each(months, function(cal) { %>
+          <div class="cal">
+            <div class="clndr-controls">
+              <div class="month"><%= cal.month.format('MMMM') %></div>
+            </div>
+            <div class="clndr-grid">
+              <div class="days-of-the-week">
+                <% _.each(daysOfTheWeek, function(day) { %>
+                  <div class="header-day"><%= day %></div>
+                <% }); %>
+                <div class="days">
+                  <% _.each(cal.days, function(day) { %>
+                    <div class="<%= day.classes %>"><%= day.day %></div>
+                  <% }); %>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% }); %>
         </div>
         <div class="clndr-today-button">Today</div>
       </script>

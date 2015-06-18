@@ -198,7 +198,7 @@ p {
 }
 .cal2 {
   max-width: 177px;
-  margin: 0 auto;
+  margin: 30px auto;
   font-family: 'Droid Sans Mono';
 }
 .cal2 .clndr .clndr-controls {
@@ -289,6 +289,106 @@ p {
 }
 .cal2 .day.inactive {
   background-color: #aaa;
+}
+.cal3 {
+  max-width: 354px;
+  margin: 0 auto;
+  font-family: 'Droid Sans Mono';
+}
+.cal3 .cal {
+  float: left;
+  width: 177px;
+}
+.cal3 .clndr .clndr-controls {
+  display: block;
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 8px;
+}
+.cal3 .clndr .clndr-controls.top {
+  margin-bottom: -22px;
+  position: relative;
+  z-index: 1;
+}
+.cal3 .clndr .clndr-controls .clndr-previous-button {
+  float: left;
+  width: 10%;
+  text-align: left;
+  cursor: pointer;
+  -webkit-user-select: none;
+  /* Chrome/Safari */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* IE10+ */
+}
+.cal3 .clndr .clndr-controls .clndr-previous-button:hover {
+  background-color: #f4f4f4;
+}
+.cal3 .clndr .clndr-controls .month {
+  text-align: center;
+  width: 80%;
+  margin: 0 auto;
+}
+.cal3 .clndr .clndr-controls .clndr-next-button {
+  float: right;
+  width: 10%;
+  text-align: right;
+  cursor: pointer;
+  -webkit-user-select: none;
+  /* Chrome/Safari */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* IE10+ */
+}
+.cal3 .clndr .clndr-controls .clndr-next-button:hover {
+  background-color: #f4f4f4;
+}
+.cal3 .clndr .clndr-grid {
+  text-align: center;
+  border: 1px solid #FF4545;
+  display: inline-block;
+}
+.cal3 .clndr .clndr-grid .header-day {
+  float: left;
+  width: 25px;
+  height: 25px;
+  background: #FF4545;
+}
+.cal3 .clndr .clndr-grid .day {
+  float: left;
+  width: 25px;
+  height: 25px;
+}
+.cal3 .clndr .clndr-grid .day.event {
+  background-color: #B4E09F;
+}
+.cal3 .clndr .clndr-grid .day.today {
+  background-color: #E3C57F;
+}
+.cal3 .clndr .clndr-grid .empty,
+.cal3 .clndr .clndr-grid .adjacent-month {
+  float: left;
+  width: 25px;
+  height: 25px;
+  background: #ddd;
+}
+.cal3 .clndr .clndr-today-button {
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+}
+.cal3 .clndr .clndr-today-button:hover {
+  background-color: #ddd;
+}
+.cal3 .multi-month-controls .quarter-button {
+  display: inline-block;
+  width: 25%;
+}
+.cal3 .multi-month-controls .quarter-button:hover {
+  cursor: pointer;
+  background-color: #f4f4f4;
 }
 .clndr-next-button,
 .clndr-previous-button,

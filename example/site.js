@@ -70,13 +70,33 @@ $(document).ready( function() {
       startDate: 'startDate',
       endDate: 'endDate'
     },
-    startWithMonth: moment().add('month', 1),
+    lengthOfTime: {
+      days: 14,
+      interval: 7
+    },
     clickEvents: {
       click: function(target) {
         console.log(target);
       }
+    }
+  });
+
+  calendars.clndr2 = $('.cal3').clndr({
+    template: $('#template-calendar-months').html(),
+    events: eventArray,
+    multiDayEvents: {
+      startDate: 'startDate',
+      endDate: 'endDate'
     },
-    forceSixRows: true
+    lengthOfTime: {
+      months: 2,
+      interval: 1
+    },
+    clickEvents: {
+      click: function(target) {
+        console.log(target);
+      }
+    }
   });
 
   // bind both clndrs to the left and right arrow keys
