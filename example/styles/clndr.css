@@ -147,22 +147,28 @@ p {
 .cal1 .clndr .clndr-table tr .day:hover {
   background: #eee;
 }
-.cal1 .clndr .clndr-table tr .day.today {
+.cal1 .clndr .clndr-table tr .day.today,
+.cal1 .clndr .clndr-table tr .day.my-today {
   background: #9AD6E3;
 }
-.cal1 .clndr .clndr-table tr .day.today:hover {
+.cal1 .clndr .clndr-table tr .day.today:hover,
+.cal1 .clndr .clndr-table tr .day.my-today:hover {
   background: #72c6d8;
 }
-.cal1 .clndr .clndr-table tr .day.today.event {
+.cal1 .clndr .clndr-table tr .day.today.event,
+.cal1 .clndr .clndr-table tr .day.my-today.event {
   background: #a7dbc1;
 }
-.cal1 .clndr .clndr-table tr .day.event {
+.cal1 .clndr .clndr-table tr .day.event,
+.cal1 .clndr .clndr-table tr .day.my-event {
   background: #B4E09F;
 }
-.cal1 .clndr .clndr-table tr .day.event:hover {
+.cal1 .clndr .clndr-table tr .day.event:hover,
+.cal1 .clndr .clndr-table tr .day.my-event:hover {
   background: #96d478;
 }
-.cal1 .clndr .clndr-table tr .day.inactive {
+.cal1 .clndr .clndr-table tr .day.inactive,
+.cal1 .clndr .clndr-table tr .day.my-inactive {
   background: #ddd;
 }
 .cal1 .clndr .clndr-table tr .day:last-child {
@@ -175,7 +181,9 @@ p {
   text-align: right;
 }
 .cal1 .clndr .clndr-table tr .empty,
-.cal1 .clndr .clndr-table tr .adjacent-month {
+.cal1 .clndr .clndr-table tr .adjacent-month,
+.cal1 .clndr .clndr-table tr .my-empty,
+.cal1 .clndr .clndr-table tr .my-adjacent-month {
   border-left: 1px solid #000000;
   border-top: 1px solid #000000;
   width: 100%;
@@ -183,17 +191,23 @@ p {
   background: #eee;
 }
 .cal1 .clndr .clndr-table tr .empty:hover,
-.cal1 .clndr .clndr-table tr .adjacent-month:hover {
+.cal1 .clndr .clndr-table tr .adjacent-month:hover,
+.cal1 .clndr .clndr-table tr .my-empty:hover,
+.cal1 .clndr .clndr-table tr .my-adjacent-month:hover {
   background: #ddd;
 }
 .cal1 .clndr .clndr-table tr .empty:last-child,
-.cal1 .clndr .clndr-table tr .adjacent-month:last-child {
+.cal1 .clndr .clndr-table tr .adjacent-month:last-child,
+.cal1 .clndr .clndr-table tr .my-empty:last-child,
+.cal1 .clndr .clndr-table tr .my-adjacent-month:last-child {
   border-right: 1px solid #000000;
 }
-.cal1 .clndr .clndr-table tr:last-child .day {
+.cal1 .clndr .clndr-table tr:last-child .day,
+.cal1 .clndr .clndr-table tr:last-child .my-day {
   border-bottom: 1px solid #000000;
 }
-.cal1 .clndr .clndr-table tr:last-child .empty {
+.cal1 .clndr .clndr-table tr:last-child .empty,
+.cal1 .clndr .clndr-table tr:last-child .my-empty {
   border-bottom: 1px solid #000000;
 }
 .cal2 {

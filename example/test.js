@@ -85,11 +85,69 @@ $( function() {
     }
   });
 
+  // test multi-day events
+  // ================================================================================
+  var multidayMixedArray = [
+    { startDate: moment().format('YYYY-MM-') + '12', endDate: moment().format('YYYY-MM-') + '17', title: 'Multi1' },
+    { startDate: moment().format('YYYY-MM-') + '24', endDate: moment().format('YYYY-MM-') + '27', title: 'Multi2' },
+    { date: moment().format('YYYY-MM-') + '19', title: 'Single' }
+  ];
+
+  clndr.multiday = $('#multiday-mixed').clndr({
+    events: multidayMixedArray,
+    multiDayEvents: {
+      startDate: 'startDate',
+      endDate: 'endDate',
+      singleDay: 'date'
+    },
+    clickEvents: {
+      click: function(target) {
+        console.log(target);
+      }
+    }
+  });
+
+  // test multi-day event performance
+  // ================================================================================
+
+  // Start with two truly multiday events.
+  var multidayMixedPerfArray = [
+    { startDate: moment().format('YYYY-MM-') + '12', endDate: moment().format('YYYY-MM-') + '17', title: 'Multi1' },
+    { startDate: moment().format('YYYY-MM-') + '24', endDate: moment().format('YYYY-MM-') + '27', title: 'Multi2' },
+  ];
+
+  // Add ten events every day this month that are only a day long,
+  // which triggers clndr to use a performance optimization.
+  var daysInMonth = moment().daysInMonth();
+  for (var i = 1; i <= daysInMonth; i++) {
+    for (var j = 0; j < 10; j++) {
+      multidayMixedPerfArray.push({ startDate: moment().format('YYYY-MM-') + i, endDate: moment().format('YYYY-MM-') + i });
+    }
+  }
+
+  var start = moment();
+
+  clndr.multidayMixedPerformance = $('#multiday-mixed-performance').clndr({
+    events: multidayMixedPerfArray,
+    multiDayEvents: {
+      startDate: 'startDate',
+      endDate: 'endDate',
+      singleDay: 'date'
+    },
+    clickEvents: {
+      click: function(target) {
+        console.log(target);
+      }
+    }
+  });
+
+$('#multiday-mixed-performance-val').text(moment.duration(moment().diff(start)).asSeconds());
+
   // test really long multi-day events
   // ================================================================================
   var multidayLongArray = [
-    { startDate: moment().subtract('months', 3).format('YYYY-MM-') + '12', endDate: moment().format('YYYY-MM-') + '17', title: 'Multi1' },
-    { startDate: moment().format('YYYY-MM-') + '24', endDate: moment().add('months', 4).format('YYYY-MM-') + '27', title: 'Multi2' }
+    { startDate: moment().subtract(3, 'months').format('YYYY-MM-') + '12', endDate: moment().format('YYYY-MM-') + '17', title: 'Multi1' },
+    { startDate: moment().format('YYYY-MM-') + '24', endDate: moment().add(4, 'months').format('YYYY-MM-') + '27', title: 'Multi2' }
   ];
 
   clndr.multidayLong = $('#multiday-long').clndr({
@@ -112,7 +170,7 @@ $( function() {
   clndr.constraints = $('#constraints').clndr({
     constraints: {
       startDate: moment().format('YYYY-MM-') + '04',
-      endDate: moment().add('months', 1).format('YYYY-MM-12')
+      endDate: moment().add(1, 'months').format('YYYY-MM-12')
     },
     clickEvents: {
       click: function(target) {
@@ -139,7 +197,7 @@ $( function() {
   // ================================================================================
   clndr.endConstriant = $('#end-constraint').clndr({
     constraints: {
-      endDate: moment().add('months', 1).format('YYYY-MM-') + '12'
+      endDate: moment().add(1, 'months').format('YYYY-MM-') + '12'
     }
   });
 
@@ -166,6 +224,26 @@ $( function() {
   });
 
 
+  // test options.classes
+  // ================================================================================
+  clndr.customClasses = $('#custom-classes').clndr({
+    events: eventsArray,
+    classes: {
+      today: "my-today",
+      event: "my-event",
+      past: "my-past",
+      lastMonth: "my-last-month",
+      nextMonth: "my-next-month",
+      adjacentMonth: "my-adjacent-month",
+      inactive: "my-inactive"
+    },
+    clickEvents: {
+      click: function(target) {
+        console.log(target);
+      }
+    }
+  });
+
   // test lengthOfTime.months option (three month views in one)
   // ================================================================================
   clndr.threeMonths = $('#three-months').clndr({
@@ -175,7 +253,7 @@ $( function() {
     lengthOfTime: {
       months: 3,
       interval: 1,
-      startDate: moment().subtract('months', 1).startOf('month')
+      startDate: moment().subtract(1, 'months').startOf('month')
     },
 
     clickEvents: {
@@ -197,7 +275,7 @@ $( function() {
 
     constraints: {
       startDate: moment().format('YYYY-MM-') + '04',
-      endDate: moment().add('months', 12).format('YYYY-MM-12')
+      endDate: moment().add(12, 'months').format('YYYY-MM-12')
     }
   });
 
@@ -210,12 +288,12 @@ $( function() {
     lengthOfTime: {
       days: 14,
       interval: 7,
-      startDate: moment().add('weeks', 1).weekday(0)
+      startDate: moment().add(1, 'weeks').weekday(0)
     },
 
     constraints: {
       startDate: moment().format('YYYY-MM-') + '04',
-      endDate: moment().add('months', 1).format('YYYY-MM-12')
+      endDate: moment().add(1, 'months').format('YYYY-MM-12')
     }
   });
 

@@ -1,5 +1,5 @@
 /*
- *               ~ CLNDR v1.2.0 ~
+ *               ~ CLNDR v1.2.10 ~
  * ==============================================
  *       https://github.com/kylestetz/CLNDR
  * ==============================================
@@ -19,7 +19,23 @@
  * Licensed under the MIT license
  */
 
-;(function ( $, window, document, undefined ) {
+(function (factory) {
+
+  if (typeof define === 'function' && define.amd) {
+
+    // AMD. Register as an anonymous module.
+    define(['jquery', 'moment'], factory);
+  } else if (typeof exports === 'object') {
+
+    // Node/CommonJS
+    factory(require('jquery'), require('moment'));
+  } else {
+
+    // Browser globals
+    factory(jQuery, moment);
+  }
+
+}(function ($, moment) {
 
   // This is the default calendar template. This can be overridden.
   var clndrTemplate = "<div class='clndr-controls'>" +
@@ -70,6 +86,15 @@
       todayButton: 'clndr-today-button',
       day: 'day',
       empty: 'empty'
+    },
+    classes: {
+      today: "today",
+      event: "event",
+      past: "past",
+      lastMonth: "last-month",
+      nextMonth: "next-month",
+      adjacentMonth: "adjacent-month",
+      inactive: "inactive"
     },
     events: [],
     extras: null,
@@ -127,7 +152,7 @@
         }
         // subtract a day so that we are at the end of the interval. We always
         // want intervalEnd to be inclusive.
-        this.intervalEnd = moment(this.intervalStart).add('months', this.options.lengthOfTime.months).subtract('days', 1);
+        this.intervalEnd = moment(this.intervalStart).add(this.options.lengthOfTime.months, 'months').subtract(1, 'days');
         this.month = this.intervalStart.clone();
       } else if(this.options.lengthOfTime.days) {
         // the length is specified in days. Start date?
@@ -136,7 +161,7 @@
         } else {
           this.intervalStart = moment().weekday(0).startOf('day');
         }
-        this.intervalEnd = moment(this.intervalStart).add('days', this.options.lengthOfTime.days - 1).endOf('day');
+        this.intervalEnd = moment(this.intervalStart).add(this.options.lengthOfTime.days - 1, 'days').endOf('day');
         this.month = this.intervalStart.clone();
       }
     } else {
@@ -236,7 +261,7 @@
   // events and classes depending on the circumstance.
   Clndr.prototype.createDaysObject = function(startDate, endDate) {
     // this array will hold numbers for the entire grid (even the blank spaces)
-    daysArray = [];
+    var daysArray = [];
     var date = startDate.clone();
     var lengthOfInterval = endDate.diff(startDate, 'days');
 
@@ -267,9 +292,9 @@
       }).toArray();
 
       if(this.options.showAdjacentMonths) {
-        var startOfLastMonth = startDate.clone().subtract('months', 1).startOf('month');
+        var startOfLastMonth = startDate.clone().subtract(1, 'months').startOf('month');
         var endOfLastMonth = startOfLastMonth.clone().endOf('month');
-        var startOfNextMonth = endDate.clone().add('months', 1).startOf('month');
+        var startOfNextMonth = endDate.clone().add(1, 'months').startOf('month');
         var endOfNextMonth = startOfNextMonth.clone().endOf('month');
 
         this.eventsLastMonth = $(this.options.events).filter( function() {
@@ -311,7 +336,9 @@
         }
       } else {
         for(var i = 0; i < diff; i++) {
-          daysArray.push( this.calendarDay({ classes: this.options.targets.empty + " last-month" }) );
+          daysArray.push( this.calendarDay({
+            classes: this.options.targets.empty + " " + this.options.classes.lastMonth
+          }) );
         }
       }
     }
@@ -320,7 +347,7 @@
     var dateIterator = startDate.clone();
     while( dateIterator.isBefore(endDate) || dateIterator.isSame(endDate, 'day') ) {
       daysArray.push( this.createDayObject(dateIterator.clone(), this.eventsThisInterval) );
-      dateIterator.add('days', 1);
+      dateIterator.add(1, 'days');
     }
 
     // ...and if there are any trailing blank boxes, fill those in
@@ -331,21 +358,25 @@
         if(this.options.showAdjacentMonths) {
           daysArray.push( this.createDayObject(dateIterator.clone(), this.eventsNextMonth) );
         } else {
-          daysArray.push( this.calendarDay({ classes: this.options.targets.empty + " next-month" }) );
+          daysArray.push( this.calendarDay({
+            classes: this.options.targets.empty + " " + this.options.classes.nextMonth
+          }) );
         }
-        dateIterator.add('days', 1);
+        dateIterator.add(1, 'days');
       }
     }
 
-    // if we want to force six rows of calendar, now's our last chance to add another row.
+    // if we want to force six rows of calendar, now's our Last Chance to add another row.
     // if the 42 seems explicit it's because we're creating a 7-row grid and 6 rows of 7 is always 42!
     if(this.options.forceSixRows && daysArray.length !== 42 ) {
       while(daysArray.length < 42) {
         if(this.options.showAdjacentMonths) {
           daysArray.push( this.createDayObject(dateIterator.clone(), this.eventsNextMonth) );
-          dateIterator.add('days', 1);
+          dateIterator.add(1, 'days');
         } else {
-          daysArray.push( this.calendarDay({ classes: this.options.targets.empty + " next-month" }) );
+          daysArray.push( this.calendarDay({
+            classes: this.options.targets.empty + " " + this.options.classes.nextMonth
+          }) );
         }
       }
     }
@@ -381,38 +412,38 @@
     var extraClasses = "";
 
     if(now.format("YYYY-MM-DD") == day.format("YYYY-MM-DD")) {
-       extraClasses += " today";
+       extraClasses += (" " + this.options.classes.today);
     }
     if(day.isBefore(now, 'day')) {
-      extraClasses += " past";
+      extraClasses += (" " + this.options.classes.past);
     }
     if(eventsToday.length) {
-       extraClasses += " event";
+      extraClasses += (" " + this.options.classes.event);
     }
     if(!this.options.lengthOfTime.days) {
       if(this._currentIntervalStart.month() > day.month()) {
-         extraClasses += " adjacent-month";
+         extraClasses += (" " + this.options.classes.adjacentMonth);
 
          this._currentIntervalStart.year() === day.year()
-             ? extraClasses += " last-month"
-             : extraClasses += " next-month";
+             ? extraClasses += (" " + this.options.classes.lastMonth)
+             : extraClasses += (" " + this.options.classes.nextMonth);
 
       } else if(this._currentIntervalStart.month() < day.month()) {
-         extraClasses += " adjacent-month";
+         extraClasses += (" " + this.options.classes.adjacentMonth);
 
          this._currentIntervalStart.year() === day.year()
-             ? extraClasses += " next-month"
-             : extraClasses += " last-month";
+             ? extraClasses += (" " + this.options.classes.nextMonth)
+             : extraClasses += (" " + this.options.classes.lastMonth);
       }
     }
 
     // if there are constraints, we need to add the inactive class to the days outside of them
     if(this.options.constraints) {
       if(this.options.constraints.startDate && day.isBefore(moment( this.options.constraints.startDate ))) {
-        extraClasses += " inactive";
+        extraClasses += (" " + this.options.classes.inactive);
       }
       if(this.options.constraints.endDate && day.isAfter(moment( this.options.constraints.endDate ))) {
-        extraClasses += " inactive";
+        extraClasses += (" " + this.options.classes.inactive);
       }
     }
 
@@ -461,7 +492,7 @@
       var eventsThisInterval = [];
 
       for(i = 0; i < this.options.lengthOfTime.months; i++) {
-        var currentIntervalStart = this.intervalStart.clone().add('months', i);
+        var currentIntervalStart = this.intervalStart.clone().add(i, 'months');
         var currentIntervalEnd = currentIntervalStart.clone().endOf('month');
         var days = this.createDaysObject(currentIntervalStart, currentIntervalEnd);
         // save events processed for each month into a master array of events for
@@ -519,9 +550,9 @@
     // if there are constraints, we need to add the 'inactive' class to the controls
     if(this.options.constraints) {
       // in the interest of clarity we're just going to remove all inactive classes and re-apply them each render.
-      for(target in this.options.targets) {
+      for(var target in this.options.targets) {
         if(target != this.options.targets.day) {
-          this.element.find('.' + this.options.targets[target]).toggleClass('inactive', false);
+          this.element.find('.' + this.options.targets[target]).toggleClass(this.options.classes.inactive, false);
         }
       }
 
@@ -537,23 +568,23 @@
       // deal with the month controls first.
       // do we have room to go back?
       if(start && (start.isAfter(this.intervalStart) || start.isSame(this.intervalStart, 'day'))) {
-        this.element.find('.' + this.options.targets.previousButton).toggleClass('inactive', true);
+        this.element.find('.' + this.options.targets.previousButton).toggleClass(this.options.classes.inactive, true);
       }
       // do we have room to go forward?
       if(end && (end.isBefore(this.intervalEnd) || end.isSame(this.intervalEnd, 'day'))) {
-        this.element.find('.' + this.options.targets.nextButton).toggleClass('inactive', true);
+        this.element.find('.' + this.options.targets.nextButton).toggleClass(this.options.classes.inactive, true);
       }
       // what's last year looking like?
-      if(start && start.isAfter(this.intervalStart.clone().subtract('years', 1)) ) {
-        this.element.find('.' + this.options.targets.previousYearButton).toggleClass('inactive', true);
+      if(start && start.isAfter(this.intervalStart.clone().subtract(1, 'years')) ) {
+        this.element.find('.' + this.options.targets.previousYearButton).toggleClass(this.options.classes.inactive, true);
       }
       // how about next year?
-      if(end && end.isBefore(this.intervalEnd.clone().add('years', 1)) ) {
-        this.element.find('.' + this.options.targets.nextYearButton).toggleClass('inactive', true);
+      if(end && end.isBefore(this.intervalEnd.clone().add(1, 'years')) ) {
+        this.element.find('.' + this.options.targets.nextYearButton).toggleClass(this.options.classes.inactive, true);
       }
       // today? we could put this in init(), but we want to support the user changing the constraints on a living instance.
       if(( start && start.isAfter( moment(), 'month' ) ) || ( end && end.isBefore( moment(), 'month' ) )) {
-        this.element.find('.' + this.options.targets.today).toggleClass('inactive', true);
+        this.element.find('.' + this.options.targets.today).toggleClass(this.options.classes.inactive, true);
       }
     }
 
@@ -574,9 +605,9 @@
       }
       // if adjacentDaysChangeMonth is on, we need to change the month here.
       if(self.options.adjacentDaysChangeMonth) {
-        if($(event.currentTarget).is(".last-month")) {
+        if($(event.currentTarget).is( '.' + self.options.classes.lastMonth )) {
           self.backActionWithContext(self);
-        } else if($(event.currentTarget).is(".next-month")) {
+        } else if($(event.currentTarget).is( '.' + self.options.classes.nextMonth )) {
           self.forwardActionWithContext(self);
         }
       }
@@ -588,9 +619,9 @@
         self.options.clickEvents.click.apply(self, [target]);
       }
       if(self.options.adjacentDaysChangeMonth) {
-        if($(event.currentTarget).is(".last-month")) {
+        if($(event.currentTarget).is( '.' + self.options.classes.lastMonth )) {
           self.backActionWithContext(self);
-        } else if($(event.currentTarget).is(".next-month")) {
+        } else if($(event.currentTarget).is( '.' + self.options.classes.nextMonth )) {
           self.forwardActionWithContext(self);
         }
       }
@@ -635,11 +666,18 @@
       // do we have events?
       if(this.options.events) {
         // are any of the events happening today?
-        target.events = $.makeArray( $(this.options.events).filter( function() {
-          // filter the dates down to the ones that match.
-          return ( ( target.date.isSame(this._clndrStartDateObject, 'day') || target.date.isAfter(this._clndrStartDateObject, 'day') ) &&
-            ( target.date.isSame(this._clndrEndDateObject, 'day') || target.date.isBefore(this._clndrEndDateObject, 'day') ) );
-        }) );
+        if(this.options.multiDayEvents) {
+          target.events = $.makeArray( $(this.options.events).filter( function() {
+            // filter the dates down to the ones that match.
+            return ( ( target.date.isSame(this._clndrStartDateObject, 'day') || target.date.isAfter(this._clndrStartDateObject, 'day') ) &&
+              ( target.date.isSame(this._clndrEndDateObject, 'day') || target.date.isBefore(this._clndrEndDateObject, 'day') ) );
+          }) );
+        } else {
+          target.events = $.makeArray( $(this.options.events).filter( function() {
+            // filter the dates down to the ones that match.
+            return this._clndrDateObject.format('YYYY-MM-DD') == dateString;
+          }) );
+        }
       }
     }
 
@@ -671,18 +709,18 @@
 
     if(!self.options.lengthOfTime.days) {
       // shift the interval by a month (or several months)
-      self.intervalStart.subtract('months', self.options.lengthOfTime.interval).startOf('month');
-      self.intervalEnd = self.intervalStart.clone().add('months', self.options.lengthOfTime.months || self.options.lengthOfTime.interval).subtract('days', 1).endOf('month');
+      self.intervalStart.subtract(self.options.lengthOfTime.interval, 'months').startOf('month');
+      self.intervalEnd = self.intervalStart.clone().add(self.options.lengthOfTime.months || self.options.lengthOfTime.interval, 'months').subtract(1, 'days').endOf('month');
 
       if(!self.options.lengthOfTime.months) {
-        yearChanged = !self.month.isSame( moment(self.month).subtract('months', 1), 'year');
+        yearChanged = !self.month.isSame( moment(self.month).subtract(1, 'months'), 'year');
       }
 
       self.month = self.intervalStart.clone();
     } else {
       // shift the interval in days
-      self.intervalStart.subtract('days', self.options.lengthOfTime.interval).startOf('day');
-      self.intervalEnd = self.intervalStart.clone().add('days', self.options.lengthOfTime.days - 1).endOf('day');
+      self.intervalStart.subtract(self.options.lengthOfTime.interval, 'days').startOf('day');
+      self.intervalEnd = self.intervalStart.clone().add(self.options.lengthOfTime.days - 1, 'days').endOf('day');
       // this is useless, i think, but i'll keep it as a precaution for now
       self.month = self.intervalStart.clone();
     }
@@ -722,18 +760,18 @@
 
     if(!self.options.lengthOfTime.days) {
       // shift the interval by a month (or several months)
-      self.intervalStart.add('months', self.options.lengthOfTime.interval).startOf('month');
-      self.intervalEnd = self.intervalStart.clone().add('months', self.options.lengthOfTime.months || self.options.lengthOfTime.interval).subtract('days', 1).endOf('month');
+      self.intervalStart.add(self.options.lengthOfTime.interval, 'months').startOf('month');
+      self.intervalEnd = self.intervalStart.clone().add(self.options.lengthOfTime.months || self.options.lengthOfTime.interval, 'months').subtract(1, 'days').endOf('month');
 
       if(!self.options.lengthOfTime.months) {
-        yearChanged = !self.month.isSame( moment(self.month).add('months', 1), 'year');
+        yearChanged = !self.month.isSame( moment(self.month).add(1, 'months'), 'year');
       }
 
       self.month = self.intervalStart.clone();
     } else {
       // shift the interval in days
-      self.intervalStart.add('days', self.options.lengthOfTime.interval).startOf('day');
-      self.intervalEnd = self.intervalStart.clone().add('days', self.options.lengthOfTime.days - 1).endOf('day');
+      self.intervalStart.add(self.options.lengthOfTime.interval, 'days').startOf('day');
+      self.intervalEnd = self.intervalStart.clone().add(self.options.lengthOfTime.days - 1, 'days').endOf('day');
       // this is useless, i think, but i'll keep it as a precaution for now
       self.month = self.intervalStart.clone();
     }
@@ -779,12 +817,12 @@
       } else {
         self.intervalStart = moment().weekday(0).startOf('day');
       }
-      self.intervalEnd = self.intervalStart.clone().add('days', self.options.lengthOfTime.days - 1).endOf('day');
+      self.intervalEnd = self.intervalStart.clone().add(self.options.lengthOfTime.days - 1, 'days').endOf('day');
 
     } else if(self.options.lengthOfTime.months) {
       // set the intervalStart to this month.
       self.intervalStart = moment().startOf('month');
-      self.intervalEnd = self.intervalStart.clone().add('months', self.options.lengthOfTime.months || self.options.lengthOfTime.interval).subtract('days', 1).endOf('month');
+      self.intervalEnd = self.intervalStart.clone().add(self.options.lengthOfTime.months || self.options.lengthOfTime.interval, 'months').subtract(1, 'days').endOf('month');
     } else if(monthChanged) {
       // no need to re-render if we didn't change months.
       self.render();
@@ -826,9 +864,9 @@
       return;
     }
 
-    self.month.add('years', 1);
-    self.intervalStart.add('years', 1);
-    self.intervalEnd.add('years', 1);
+    self.month.add(1, 'years');
+    self.intervalStart.add(1, 'years');
+    self.intervalEnd.add(1, 'years');
 
     self.render();
 
@@ -858,9 +896,9 @@
       return;
     }
 
-    self.month.subtract('years', 1);
-    self.intervalStart.subtract('years', 1);
-    self.intervalEnd.subtract('years', 1);
+    self.month.subtract(1, 'years');
+    self.intervalStart.subtract(1, 'years');
+    self.intervalEnd.subtract(1, 'years');
 
     self.render();
 
@@ -884,13 +922,13 @@
   Clndr.prototype.forward = function(options) {
     if(!this.options.lengthOfTime.days) {
       // shift the interval by a month (or several months)
-      this.intervalStart.add('months', this.options.lengthOfTime.interval).startOf('month');
-      this.intervalEnd = this.intervalStart.clone().add('months', this.options.lengthOfTime.months || this.options.lengthOfTime.interval).subtract('days', 1).endOf('month');
+      this.intervalStart.add(this.options.lengthOfTime.interval, 'months').startOf('month');
+      this.intervalEnd = this.intervalStart.clone().add(this.options.lengthOfTime.months || this.options.lengthOfTime.interval, 'months').subtract(1, 'days').endOf('month');
       this.month = this.intervalStart.clone();
     } else {
       // shift the interval in days
-      this.intervalStart.add('days', this.options.lengthOfTime.interval).startOf('day');
-      this.intervalEnd = this.intervalStart.clone().add('days', this.options.lengthOfTime.days - 1).endOf('day');
+      this.intervalStart.add(this.options.lengthOfTime.interval, 'days').startOf('day');
+      this.intervalEnd = this.intervalStart.clone().add(this.options.lengthOfTime.days - 1, 'days').endOf('day');
       this.month = this.intervalStart.clone();
     }
 
@@ -918,13 +956,13 @@
   Clndr.prototype.back = function(options) {
     if(!this.options.lengthOfTime.days) {
       // shift the interval by a month (or several months)
-      this.intervalStart.subtract('months', this.options.lengthOfTime.interval).startOf('month');
-      this.intervalEnd = this.intervalStart.clone().add('months', this.options.lengthOfTime.months || this.options.lengthOfTime.interval).subtract('days', 1).endOf('month');
+      this.intervalStart.subtract(this.options.lengthOfTime.interval, 'months').startOf('month');
+      this.intervalEnd = this.intervalStart.clone().add(this.options.lengthOfTime.months || this.options.lengthOfTime.interval, 'months').subtract(1, 'days').endOf('month');
       this.month = this.intervalStart.clone();
     } else {
       // shift the interval in days
-      this.intervalStart.subtract('days', this.options.lengthOfTime.interval).startOf('day');
-      this.intervalEnd = this.intervalStart.clone().add('days', this.options.lengthOfTime.days - 1).endOf('day');
+      this.intervalStart.subtract(this.options.lengthOfTime.interval, 'days').startOf('day');
+      this.intervalEnd = this.intervalStart.clone().add(this.options.lengthOfTime.days - 1, 'days').endOf('day');
       this.month = this.intervalStart.clone();
     }
 
@@ -982,10 +1020,10 @@
     // accepts a date string or moment object
     if(this.options.lengthOfTime.days) {
       this.intervalStart = moment(newDate).startOf('day');
-      this.intervalEnd = this.intervalStart.clone().add('days', this.options.lengthOfTime.days - 1).endOf('day');
+      this.intervalEnd = this.intervalStart.clone().add(this.options.lengthOfTime.days - 1, 'days').endOf('day');
     } else if(this.options.lengthOfTime.months) {
       this.intervalStart = moment(newDate).startOf('month');
-      this.intervalEnd = this.intervalStart.clone().add('months', this.options.lengthOfTime.months || this.options.lengthOfTime.interval).subtract('days', 1).endOf('month');
+      this.intervalEnd = this.intervalStart.clone().add(this.options.lengthOfTime.months || this.options.lengthOfTime.interval, 'months').subtract(1, 'days').endOf('month');
       this.month = this.intervalStart.clone();
     }
 
@@ -1004,9 +1042,9 @@
   }
 
   Clndr.prototype.nextYear = function(options) {
-    this.month.add('years', 1);
-    this.intervalStart.add('years', 1);
-    this.intervalEnd.add('years', 1);
+    this.month.add(1, 'year');
+    this.intervalStart.add(1, 'year');
+    this.intervalEnd.add(1, 'year');
     this.render();
     if(options && options.withCallbacks) {
       if(this.options.clickEvents.onYearChange) {
@@ -1020,9 +1058,9 @@
   }
 
   Clndr.prototype.previousYear = function(options) {
-    this.month.subtract('years', 1);
-    this.intervalStart.subtract('years', 1);
-    this.intervalEnd.subtract('years', 1);
+    this.month.subtract(1, 'year');
+    this.intervalStart.subtract(1, 'year');
+    this.intervalEnd.subtract(1, 'year');
     this.render();
     if(options && options.withCallbacks) {
       if(this.options.clickEvents.onYearChange) {
@@ -1075,6 +1113,17 @@
     return this;
   };
 
+  Clndr.prototype.removeEvents = function(matchingFunction) {
+    for (var i = this.options.events.length-1; i >= 0; i--) {
+      if(matchingFunction(this.options.events[i]) == true) {
+        this.options.events.splice(i, 1);
+      }
+    }
+
+    this.render();
+    return this;
+  };
+
   Clndr.prototype.addMomentObjectToEvents = function(events) {
     var self = this;
     var i = 0, l = events.length;
@@ -1092,8 +1141,15 @@
     var self = this;
     var i = 0, l = events.length;
     for(i; i < l; i++) {
-      events[i]._clndrStartDateObject = moment( events[i][self.options.multiDayEvents.startDate] );
-      events[i]._clndrEndDateObject = moment( events[i][self.options.multiDayEvents.endDate] );
+      // if we don't find the startDate OR endDate fields, look for singleDay
+      if(!events[i][self.options.multiDayEvents.endDate] && !events[i][self.options.multiDayEvents.startDate]) {
+        events[i]._clndrEndDateObject = moment( events[i][self.options.multiDayEvents.singleDay] );
+        events[i]._clndrStartDateObject = moment( events[i][self.options.multiDayEvents.singleDay] );
+      } else {
+        // otherwise use startDate and endDate, or whichever one is present.
+        events[i]._clndrEndDateObject = moment( events[i][self.options.multiDayEvents.endDate] || events[i][self.options.multiDayEvents.startDate] );
+        events[i]._clndrStartDateObject = moment( events[i][self.options.multiDayEvents.startDate] || events[i][self.options.multiDayEvents.endDate] );
+      }
     }
     return events;
   }
@@ -1115,4 +1171,4 @@
     }
   }
 
-})( jQuery, window, document );
+}));

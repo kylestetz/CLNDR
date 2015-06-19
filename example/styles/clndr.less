@@ -177,7 +177,7 @@ p
 
                     &:hover { background: #eee; }
 
-                    &.today
+                    &.today, &.my-today
                     {
                         background: #9AD6E3;
                         &:hover { background: darken(#9AD6E3, 10%); }
@@ -187,7 +187,7 @@ p
                         }
                     }
 
-                    &.event
+                    &.event, &.my-event
                     {
                         background: #B4E09F;
                         &:hover
@@ -196,7 +196,7 @@ p
                         }
                     }
 
-                    &.inactive
+                    &.inactive, &.my-inactive
                     {
                         background: #ddd;
                     }
@@ -217,7 +217,7 @@ p
                     }
                 }
 
-                .empty, .adjacent-month
+                .empty, .adjacent-month, .my-empty, .my-adjacent-month
                 {
                     border-left: @clndr-border;
                     border-top: @clndr-border;
@@ -235,12 +235,12 @@ p
 
                 &:last-child
                 {
-                    .day
+                    .day, .my-day
                     {
                         border-bottom: @clndr-border;
                     }
 
-                    .empty
+                    .empty, .my-empty
                     {
                         border-bottom: @clndr-border;
                     }

@@ -27,6 +27,12 @@
     <p>clndr.multiday ~ Show multi-day events (12th - 17th, 24th - 27th). Logs in the console.</p>
     <div id="multiday" class="cal1"></div>
 
+    <p>clndr.multidayMixed ~ Show multi-day events (12th - 17th, 24th - 27th), plus a single day event (19th). Logs in the console.</p>
+    <div id="multiday-mixed" class="cal1"></div>
+
+    <p>clndr.multidayMixedPerformance ~ Show multi-day events (12th - 17th, 24th - 27th), plus 10 single-day events every day this month. This tests a performance optimization in clndr's event parsing. Rendered in <span id="multiday-mixed-performance-val"></span> seconds. Logs in the console.</p>
+    <div id="multiday-mixed-performance" class="cal1"></div>
+
     <p>clndr.multidayLong ~ Show multi-day events (12th - 17th, 24th - 27th). Logs in the console.</p>
     <div id="multiday-long" class="cal1"></div>
 
@@ -44,6 +50,9 @@
 
     <p>clndr.sixRows ~ Test the forceSixRows option, which should make a six-row calendar regardless of the length of each month.</p>
     <div id="six-rows" class="cal1"></div>
+
+    <p>clndr.customClasses ~ Test using options.classes to define custom classes. Should appear normally with events &amp; log to the console.</p>
+    <div id="custom-classes" class="cal1"></div>
 
     <hr />
 
@@ -128,7 +137,7 @@
   <script src="json2.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
-  <script src= "moment-2.5.1.js"></script>
+  <script src= "moment-2.8.3.js"></script>
 
   <script src="../src/clndr.js"></script>
   <script src="test.js"></script>
