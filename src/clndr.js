@@ -598,7 +598,7 @@
     var self = this;
 
     // target the day elements and give them click events
-    $container.on('click', '.'+this.options.targets.day, function(event) {
+    $container.on('click.clndr', '.'+this.options.targets.day, function(event) {
       if(self.options.clickEvents.click) {
         var target = self.buildTargetObject(event.currentTarget, true);
         self.options.clickEvents.click.apply(self, [target]);
@@ -613,7 +613,7 @@
       }
     });
     // target the empty calendar boxes as well
-    $container.on('click', '.'+this.options.targets.empty, function(event) {
+    $container.on('click.clndr', '.'+this.options.targets.empty, function(event) {
       if(self.options.clickEvents.click) {
         var target = self.buildTargetObject(event.currentTarget, false);
         self.options.clickEvents.click.apply(self, [target]);
@@ -629,11 +629,11 @@
 
     // bind the previous, next and today buttons
     $container
-      .on('click', '.'+this.options.targets.previousButton, { context: this }, this.backAction)
-      .on('click', '.'+this.options.targets.nextButton, { context: this }, this.forwardAction)
-      .on('click', '.'+this.options.targets.todayButton, { context: this }, this.todayAction)
-      .on('click', '.'+this.options.targets.nextYearButton, { context: this }, this.nextYearAction)
-      .on('click', '.'+this.options.targets.previousYearButton, { context: this }, this.previousYearAction);
+      .on('click.clndr', '.'+this.options.targets.previousButton, { context: this }, this.backAction)
+      .on('click.clndr', '.'+this.options.targets.nextButton, { context: this }, this.forwardAction)
+      .on('click.clndr', '.'+this.options.targets.todayButton, { context: this }, this.todayAction)
+      .on('click.clndr', '.'+this.options.targets.nextYearButton, { context: this }, this.nextYearAction)
+      .on('click.clndr', '.'+this.options.targets.previousYearButton, { context: this }, this.previousYearAction);
   }
 
   // If the user provided a click callback we'd like to give them something nice to work with.
