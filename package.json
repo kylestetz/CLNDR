@@ -1,9 +1,30 @@
 {
   "name": "clndr",
-  "version": "1.2.0",
-  "description": "Development environment for clndr.js",
+  "version": "1.2.10",
+  "description": "A jQuery calendar plugin that uses HTML templates.",
   "author": "Kyle Stetz",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kylestetz/CLNDR"
+  },
+  "keywords": [
+    "clndr",
+    "calendar",
+    "jquery",
+    "plugin",
+    "widget",
+    "jquery-plugin"
+  ],
+  "bugs": {
+    "url": "https://github.com/kylestetz/CLNDR/issues"
+  },
+  "homepage": "https://github.com/kylestetz/CLNDR",
+  "main": "src/clndr.js",
+  "dependencies": {
+    "jquery": ">=1.9",
+    "moment": ">=2.8.3"
+  },
   "devDependencies": {
     "grunt": "*",
     "grunt-contrib-uglify": "~0.2.4",

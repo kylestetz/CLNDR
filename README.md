@@ -5,15 +5,24 @@ CLNDR is a jQuery calendar plugin. It was created- you've heard this before- out
 
 See a demo: [kylestetz.github.io/CLNDR/](http://kylestetz.github.io/CLNDR/)
 
+--------
+
+#### Clndr.js version 2.0 is coming
+If you are using clndr.js and have any feedback or ideas about a new version, please take a moment to contribute to [#151](https://github.com/kylestetz/CLNDR/issues/151). If you are interested in helping to develop the new version, give a shout in [#136](https://github.com/kylestetz/CLNDR/issues/136). Thanks!
+
+--------
+
 - [Download](https://github.com/kylestetz/CLNDR#download)
 - [Dependencies](https://github.com/kylestetz/CLNDR#dependencies)
   - [Using Bower](https://github.com/kylestetz/CLNDR#using-bower)
   - [Clndr using Angular.js](https://github.com/kylestetz/CLNDR#clndr-using-angular)
+  - [Clndr using Rails](https://github.com/kylestetz/CLNDR#clndr-using-rails)
 - [Introduction: You Write The Markup](https://github.com/kylestetz/CLNDR#introduction-you-write-the-markup)
   - [The 'days' Array](https://github.com/kylestetz/CLNDR#the-days-array)
   - [Pass in your Events](https://github.com/kylestetz/CLNDR#pass-in-your-events)
 - [Usage](https://github.com/kylestetz/CLNDR#usage)
   - [Multi-day Events](https://github.com/kylestetz/CLNDR#multi-day-events)
+  - [Custom Classes](https://github.com/kylestetz/CLNDR#custom-classes)
   - [Constraints & Datepickers](https://github.com/kylestetz/CLNDR#constraints--datepickers)
   - [Returning the Instance / API](https://github.com/kylestetz/CLNDR#returning-the-instance--public-api)
   - [Template Requirements](https://github.com/kylestetz/CLNDR#template-requirements)
@@ -54,6 +63,10 @@ Underscore is not installed by default. This allows you to use whichever templat
 ### Clndr Using Angular
 
 If you want to integrate clndr into an [angular.js](http://angularjs.org/) site, get started with this directive: [angular-clndr](https://github.com/10KB/angular-clndr).
+
+### Clndr Using Rails
+
+If you're building a rails application you may be interested in this gem by [@sedx](https://github.com/sedx): [clndr-rails](https://github.com/sedx/clndr-rails).
 
 
 Introduction: You Write The Markup
@@ -133,17 +146,19 @@ $('.parent-element').clndr({
   // or pulled in as a string
   template: clndrTemplate,
 
-  // start the week off on Sunday (0), Monday (1), etc. Sunday is the default.
-  weekOffset: 0,
-
   // determines which month to start with using either a date string or a moment object.
   startWithMonth: "YYYY-MM-DD" or moment(),
 
+  // start the week off on Sunday (0), Monday (1), etc. Sunday is the default.
+  // WARNING: if you are dealing with i18n and multiple languages, you probably
+  // don't want this! See the "Internationalization" section below for more.
+  weekOffset: 0,
+
   // an array of day abbreviation labels. If you have moment.js set to a different language,
   // it will guess these for you! If for some reason that doesn't work, use this...
-  // the array MUST start with Sunday
-  // (use in conjunction with weekOffset to change the starting day to Monday)
-  daysOfTheWeek: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
+  // WARNING: if you are dealing with i18n and multiple languages, you probably
+  // don't want this! See the "Internationalization" section below for more.
+  daysOfTheWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
 
   // the target classnames that CLNDR will look for to bind events.
   // these are the defaults.
@@ -156,6 +171,20 @@ $('.parent-element').clndr({
     day: 'day',
     empty: 'empty'
   },
+
+  // custom classes to avoid styling issues. pass in only the
+  // classnames that you wish to override.
+  // these are the defaults.
+  classes: {
+    today: "today",
+    event: "event",
+    past: "past",
+    lastMonth: "last-month",
+    nextMonth: "next-month",
+    adjacentMonth: "adjacent-month",
+    inactive: "inactive"
+  }
+
   // click callbacks! the keyword 'this' is set to the clndr instance in all callbacks.
   clickEvents: {
     // fired whenever a calendar box is clicked.
@@ -200,17 +229,22 @@ $('.parent-element').clndr({
 
   // an array of event objects
   events: [],
+
   // if you're supplying an events array, dateParameter points to the
   // field in your event object containing a date string.
   // It's set to 'date' by default.
   dateParameter: 'date',
+
   // CLNDR can accept events lasting more than one day!
   // just pass in the multiDayEvents option and specify what the start and
   // end fields are called within your event objects. See the example file
   // for a working instance of this.
   multiDayEvents: {
     startDate: 'startDate',
-    endDate: 'endDate'
+    endDate: 'endDate',
+    // if you also have single day events with a different date field,
+    // use the singleDay property and point it to the date field.
+    singleDay: 'date'
   },
 
   // show the dates of days in months adjacent to the current month.
@@ -262,7 +296,9 @@ numberOfRows: 5
 days: [ { day, classes, id, events, date } ]
 // the month name- don't forget that you can do things like
 // month.substring(0, 1) and month.toLowerCase() in your template
+previousMonth: "April"
 month: "May"
+nextMonth: "June"
 // the year that the calendar is currently focused on
 year: "2013"
 // all of the events happening this month
@@ -278,7 +314,7 @@ extras: { }
 Multi-day Events
 ----------------
 
-Clndr now accepts events lasting more than one day. You just need to tell it how to access the start and end dates of your events:
+Clndr accepts events lasting more than one day. You just need to tell it how to access the start and end dates of your events:
 
 ```javascript
 var lotsOfEvents = [
@@ -296,6 +332,50 @@ $('#calendar').clndr({
 ```
 
 When looping through days in my template, 'Monday to Friday Event' will be passed to *every single day* between the start and end date. See index.html in the example folder for a demo of this feature.
+
+#### Mixing Multi- and Single-day Events
+
+If you _also_ have single-day events mixed in with different date fields, as of clndr `v1.2.7` you can specify a third property of `multiDayEvents` called `singleDay` that refers to the date field for a single-day event.
+
+```
+var lotsOfMixedEvents = [
+  { start: '2015-11-04', end: '2015-11-08', title: 'Monday to Friday Event' },
+  { start: '2015-11-15', end: '2015-11-20', title: 'Another Long Event' },
+  { date: '2015-07-16', title: 'Birthday' }
+];
+
+$('#calendar').clndr({
+  events: lotsOfEvents,
+  multiDayEvents: {
+    startDate: 'start',
+    endDate: 'end',
+    singleDay: 'date'
+  }
+});
+```
+
+Custom Classes
+--------------
+
+The classes that get added to a `day` object automatically can be customized to avoid styling conflicts. The `classes` option accepts `today`, `event`, `past`, `lastMonth`, `nextMonth`, `adjacentMonth`, and `inactive`. Pass in only the classnames you wish to override and the rest will be set to their defaults.
+
+In this example we create a `my-` namespace for all of the classes:
+
+```javascript
+clndr.customClasses = $('#custom-classes').clndr({
+  classes: {
+    today: "my-today",
+    event: "my-event",
+    past: "my-past",
+    lastMonth: "my-last-month",
+    nextMonth: "my-next-month",
+    adjacentMonth: "my-adjacent-month",
+    inactive: "my-inactive"
+  }
+});
+```
+
+To configure the `day`, `empty`, and next/previous/today/etc. button classes, use the `targets` option documented in the [usage](https://github.com/kylestetz/CLNDR#usage) section.
 
 Constraints & Datepickers
 -------------------------
@@ -376,6 +456,12 @@ myCalendar.setEvents(newEventsArray);
 
 // Add events. Note that this triggers a re-render of the calendar.
 myCalendar.addEvents(additionalEventsArray);
+
+// Remove events.  All events for which the passed in function returns true will be removed from the calendar.
+// Note that this triggers a re-render of the calendar.
+myCalendar.removeEvents(function(event){
+  return event.id == idToRemove;
+});
 ```
 
 If you are taking advantage of the `onMonthChange` and `onYearChange` callbacks, you might want them to fire whenver you call `setMonth`, `setYear`, `forward`, `back`, etc. Just pass in an object as an argument with `withCallbacks: true` like this:
@@ -469,7 +555,7 @@ Clndr has support for internationalization insofar as Moment.js supports it. By 
 
 If you are using a moment.js language configuration in which weeks begin on a Monday (e.g. French), Clndr will detect this automatically and there is no need to provide a `weekOffset` or a `daysOfTheWeek` array. If you want to reverse this behavior, there is a field in each moment.js language config file called `dow` which you can set to your liking.
 
-The day of the week abbreviations are created automatically using moment.js's current language setting, however if this does not suit your needs you should override them using the `daysOfTheWeek` option. Make sure the array you provide begins on the same day of the week as your current language setting.
+The day of the week abbreviations are created automatically using moment.js's current language setting, however if this does not suit your needs you should override them using the `daysOfTheWeek` option. Make sure the array you provide begins on the same day of the week as your current language setting. **Warning**: using `daysOfTheWeek` and `weekOffset` in conjunction with different language settings is _not_ recommended and may cause you headaches.
 
 
 Underscore Template Delimiters
@@ -503,11 +589,31 @@ If you're planning on supporting IE8 and below, you'll have to be careful about 
 Todo
 ====
 
-- Improve mobile experience
-- Node.js module for server-side rendering of the initial calendar.
+- [Write clndr.js v2.0](https://github.com/kylestetz/CLNDR/issues/151)
 
 Changelog
 =========
+
+`v1.2.10 ~ 2015-03-11`: Added a performance optimization that should make rendering multiday events slightly faster in the case that some are <= one day long. This update is backwards-compatible.
+
+`v1.2.9 ~ 2015-02-20`: Fixed a bug where the `daysArray` was accidently introduced into the global namespace. This shouldn't have affected your world. This update is backwards-compatible.
+
+`v1.2.8 ~ 2015-02-16`: Added `previousMonth` and `nextMonth` variables into the template, which match `month` in format, so that now in "April" you also have access to the strings "March" and "May". This update is backwards-compatible.
+
+`v1.2.7 ~ 2015-01-21`: Added the ability to mix multi-day and single-day events using the new `multiDayEvents.singleDay` property. Also introduced lazy setting of `startDate` and `endDate` in multi-day events so that if one of them is missing they will both be set to the value that is present. This update is backwards-compatible.
+
+`v1.2.6 ~ 2015-01-07`: Added the ability to specify custom classnames for `event`, `next-month`, `previous-month`, etc. using `options.classes`. This update is backwards-compatible.
+
+`v1.2.5 ~ 2014-12-01`: Reverting the previous DST code change, which introduced a bug for a large number of users.
+
+`v1.2.4 ~ 2014-11-25`: Fixed a bug related to DST in specific timezones that would cause duplicate dates to appear. Added `removeEvents` filtering function. `warning`! This version is buggy. Please upgrade to `v1.2.5` if you are currently on this version.
+
+`v1.2.3 ~ 2014-10-15`: Fixed a bug that introduced a global variable. It's possible (but very unlikely) that this might have caused some weirdness when using multiple instances of CLNDR on the same page.
+
+`v1.2.2 ~ 2014-10-01`: Updated internal usage of deprecated moment.js functions.
+
+`v1.2.1 ~ 2014-07-10`: Fixed a bug in `eventsLastMonth`, `eventsThisMonth`, and `eventsNextMonth`. Added CommonJS/AMD wrapper to the plugin.
+
 `v1.2.0 ~ 2014-01-22`: BC break for Bower users! Underscore is no longer listed as a dependency in the Bower plugin, allowing you the flexibility of choosing the templating language you prefer. Also added a day of the week class to all clndr days in the format `calendar-dow-<0 - 6>`, allowing you to style weekends/specific days of the week differently.
 
 `v1.1.3 ~ 2014-01-17`: fixed a bug where multiday events longer than two months would not show up. Fixed a bug that prevented clndr from loading in IE8.

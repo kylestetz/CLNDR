@@ -177,7 +177,7 @@ p
 
                     &:hover { background: #eee; }
 
-                    &.today
+                    &.today, &.my-today
                     {
                         background: #9AD6E3;
                         &:hover { background: darken(#9AD6E3, 10%); }
@@ -187,7 +187,7 @@ p
                         }
                     }
 
-                    &.event
+                    &.event, &.my-event
                     {
                         background: #B4E09F;
                         &:hover
@@ -196,7 +196,7 @@ p
                         }
                     }
 
-                    &.inactive
+                    &.inactive, &.my-inactive
                     {
                         background: #ddd;
                     }
@@ -217,7 +217,7 @@ p
                     }
                 }
 
-                .empty, .adjacent-month
+                .empty, .adjacent-month, .my-empty, .my-adjacent-month
                 {
                     border-left: @clndr-border;
                     border-top: @clndr-border;
@@ -235,12 +235,12 @@ p
 
                 &:last-child
                 {
-                    .day
+                    .day, .my-day
                     {
                         border-bottom: @clndr-border;
                     }
 
-                    .empty
+                    .empty, .my-empty
                     {
                         border-bottom: @clndr-border;
                     }
@@ -256,7 +256,7 @@ p
 .cal2
 {
     max-width: 177px;
-    margin: 0 auto;
+    margin: 30px auto;
 
     font-family: 'Droid Sans Mono';
 
@@ -373,6 +373,136 @@ p
 .cal2 .day.inactive
 {
     background-color: #aaa;
+}
+
+.cal3
+{
+    max-width: 354px;
+    margin: 0 auto;
+
+    font-family: 'Droid Sans Mono';
+
+    .cal
+    {
+        float: left;
+        width: 177px;
+    }
+
+    .clndr
+    {
+        .clndr-controls
+        {
+            display: block;
+            .clearfix;
+            width: 100%;
+            margin-bottom: 8px;
+
+            &.top
+            {
+                margin-bottom: -22px;
+                position: relative;
+                z-index: 1;
+            }
+
+            .clndr-previous-button
+            {
+                float: left;
+                width: 10%;
+                text-align: left;
+                cursor: pointer;
+                .noselect;
+                &:hover
+                {
+                    background-color: #f4f4f4;
+                }
+            }
+            .month
+            {
+                text-align: center;
+                width: 80%;
+                margin: 0 auto;
+            }
+            .clndr-next-button
+            {
+                float: right;
+                width: 10%;
+                text-align: right;
+                cursor: pointer;
+                .noselect;
+                &:hover
+                {
+                    background-color: #f4f4f4;
+                }
+            }
+        }
+
+        .clndr-grid
+        {
+            text-align: center;
+            border: 1px solid #FF4545;
+            .clearfix;
+
+            .header-day
+            {
+                float: left;
+                width: @box-size;
+                height: @box-size;
+                // padding-top: 5px;
+                background: #FF4545;
+            }
+
+            .day
+            {
+                float: left;
+                width: @box-size;
+                height: @box-size;
+
+                &.event
+                {
+                    background-color: #B4E09F;
+                }
+
+                &.today
+                {
+                    background-color: #E3C57F;
+                }
+            }
+
+            .empty, .adjacent-month
+            {
+                float: left;
+                width: @box-size;
+                height: @box-size;
+                background: #ddd;
+            }
+        }
+
+        .clndr-today-button
+        {
+            width: 100%;
+            text-align: center;
+            cursor: pointer;
+            &:hover
+            {
+                background-color: #ddd;
+            }
+        }
+    }
+
+    .multi-month-controls
+    {
+        .quarter-button
+        {
+            display: inline-block;
+            width: 25%;
+
+            &:hover
+            {
+                cursor: pointer;
+                background-color: #f4f4f4;
+            }
+        }
+    }
 }
 
 .clndr-next-button, .clndr-previous-button, .clndr-next-year-button, .clndr-previous-year-button
