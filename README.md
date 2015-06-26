@@ -142,11 +142,13 @@ With all of the available options:
 ```javascript
 $('.parent-element').clndr({
 
-  // the template: this could be stored in markup as a <script type="text/template"></script>
+  // the template: this could be stored in markup as a
+  //   <script type="text/template"></script>
   // or pulled in as a string
   template: clndrTemplate,
 
-  // determines which month to start with using either a date string or a moment object.
+  // determines which month to start with using either a date string or a
+  // moment object.
   startWithMonth: "YYYY-MM-DD" or moment(),
 
   // start the week off on Sunday (0), Monday (1), etc. Sunday is the default.
@@ -154,8 +156,9 @@ $('.parent-element').clndr({
   // don't want this! See the "Internationalization" section below for more.
   weekOffset: 0,
 
-  // an array of day abbreviation labels. If you have moment.js set to a different language,
-  // it will guess these for you! If for some reason that doesn't work, use this...
+  // an array of day abbreviation labels. If you have moment.js set to a
+  // different language, it will guess these for you! If for some reason that
+  // doesn't work, use this...
   // WARNING: if you are dealing with i18n and multiple languages, you probably
   // don't want this! See the "Internationalization" section below for more.
   daysOfTheWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
@@ -186,7 +189,8 @@ $('.parent-element').clndr({
     selected: "selected"
   }
 
-  // click callbacks! the keyword 'this' is set to the clndr instance in all callbacks.
+  // click callbacks! the keyword 'this' is set to the clndr instance in all
+  // callbacks.
   clickEvents: {
     // fired whenever a calendar box is clicked.
     // returns a 'target' object containing the DOM element, any events,
@@ -255,21 +259,41 @@ $('.parent-element').clndr({
   // defaults to true.
   showAdjacentMonths: true,
   // when days from adjacent months are clicked, switch the current month.
-  // fires nextMonth/previousMonth/onMonthChange click callbacks. defaults to false.
+  // fires nextMonth/previousMonth/onMonthChange click callbacks. defaults to
+  // false.
   adjacentDaysChangeMonth: false,
   // always make the calendar six rows tall (42 days) so that every month has a
   // consistent height. defaults to 'false'.
   forceSixRows: null,
   // set this to true, if you want the plugin to track the last clicked day.
-  // if trackSelectedDate is true, "selected" class will always be applied only to
-  // the most recently clicked date; otherwise - selectedDate will not change.
+  // if trackSelectedDate is true, "selected" class will always be applied only
+  // to the most recently clicked date; otherwise - selectedDate will not change.
   trackSelectedDate: false,
-  // set this, if you want a date to be "selected" (see classes.selected) after plugin init.
+  // set this, if you want a date to be "selected" (see classes.selected) after
+  // plugin init.
   // defualts to null - no initially selected date
-  selectedDate: null
+  selectedDate: null,
+
+  // CLNDR can render in any time interval!
+  // You can specify if you want to render one or more months, or one ore more
+  // days in the calendar, as well as the paging interval whenever forward or
+  // back is triggered. If both months and days are null, CLNDR will default to
+  // the standard monthly view.
+  lengthOfTime: {
+    // Set to an integer if you want to render one or more months, otherwise
+    // leave this null
+    months: null,
+    // Set to an integer if you want to render one or more days, otherwise
+    // leave this null. Setting this to 14 would render a 2-week calendar.
+    days: null,
+    // This is the amount of months or days that will move forward/back when
+    // paging the calendar. With days=17 and interval=7, you would have a 2-week
+    // calendar that pages forward and backward 1 week at a time.
+    interval: 1
+  },
 
   // anything you want access to in your template
-  extras: { }
+  extras: {},
 
   // if you want to use a different templating language, here's your ticket.
   // Precompile your template (before you call clndr),
@@ -468,7 +492,8 @@ myCalendar.setEvents(newEventsArray);
 // Add events. Note that this triggers a re-render of the calendar.
 myCalendar.addEvents(additionalEventsArray);
 
-// Remove events.  All events for which the passed in function returns true will be removed from the calendar.
+// Remove events.  All events for which the passed in function returns true will
+// be removed from the calendar.
 // Note that this triggers a re-render of the calendar.
 myCalendar.removeEvents(function(event){
   return event.id == idToRemove;
@@ -481,7 +506,8 @@ If you are taking advantage of the `onMonthChange` and `onYearChange` callbacks,
 // month will be set to February and then onMonthChange will be fired.
 myCalendar.setMonth("February", { withCallbacks: true });
 
-// month will increment and onMonthChange, and possibly onYearChange, will be fired.
+// month will increment and onMonthChange, and possibly onYearChange, will be
+// fired.
 myCalendar.next({ withCallbacks: true });
 ```
 
@@ -604,6 +630,8 @@ Todo
 
 Changelog
 =========
+
+`v1.2.11 ~ 2015-06-26`: Added in support for day/month intervals instead of only one month. Added in support for tracking the selected day, optionally using touch events, added a namcespace to click/touch events, and added a properties array to each day object for accessing common attributes about the day.
 
 `v1.2.10 ~ 2015-03-11`: Added a performance optimization that should make rendering multiday events slightly faster in the case that some are <= one day long. This update is backwards-compatible.
 
