@@ -644,7 +644,7 @@
       // if trackSelectedDate is on, we need to handle click on a new day
       if (self.options.trackSelectedDate) {
         // remember new selected date
-        self.options.selectedDate = self.getTargetDate(event.currentTarget);
+        self.options.selectedDate = self.getTargetDateString(event.currentTarget);
 
         // handle "selected" class
         $(event.currentTarget)
