@@ -631,7 +631,9 @@ Todo
 Changelog
 =========
 
-`v1.2.11 ~ 2015-06-26`: Added in support for day/month intervals instead of only one month. Added in support for tracking the selected day, optionally using touch events, added a namcespace to click/touch events, and added a properties array to each day object for accessing common attributes about the day.
+`v1.2.12 ~ 2015-06-26`: Bugfix patch for broken behavior in the selected day PR.
+
+`v1.2.11 ~ 2015-06-25`: Added in support for day/month intervals instead of only one month. Added in support for tracking the selected day, optionally using touch events, added a namcespace to click/touch events, and added a properties array to each day object for accessing common attributes about the day.
 
 `v1.2.10 ~ 2015-03-11`: Added a performance optimization that should make rendering multiday events slightly faster in the case that some are <= one day long. This update is backwards-compatible.
 
