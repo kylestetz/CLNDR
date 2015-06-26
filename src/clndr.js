@@ -689,7 +689,8 @@
     };
     // did we click on a day or just an empty box?
     if(targetWasDay) {
-      target.date = this.getTargetDate(currentTarget);
+      var dateString = this.getTargetDateString(currentTarget);
+      target.date = (dateString) ? moment(dateString) : null;
 
       // do we have events?
       if(this.options.events) {
@@ -703,7 +704,7 @@
         } else {
           target.events = $.makeArray( $(this.options.events).filter( function() {
             // filter the dates down to the ones that match.
-            return this._clndrDateObject.format('YYYY-MM-DD') == target.date;
+            return this._clndrDateObject.format('YYYY-MM-DD') == dateString;
           }) );
         }
       }
@@ -714,21 +715,17 @@
 
   // get moment date object of the date associated with the given target.
   // this method is meant to be called on ".day" elements.
-  Clndr.prototype.getTargetDate = function (target) {
-    var result = null;
-    var dateString;
-
+  Clndr.prototype.getTargetDateString = function(target) {
     // Our identifier is in the list of classNames. Find it!
     var classNameIndex = target.className.indexOf('calendar-day-');
     if(classNameIndex !== -1) {
       // our unique identifier is always 23 characters long.
       // If this feels a little wonky, that's probably because it is.
       // Open to suggestions on how to improve this guy.
-      dateString = target.className.substring(classNameIndex + 13, classNameIndex + 23);
-      result = moment(dateString);
+      return target.className.substring(classNameIndex + 13, classNameIndex + 23);
     }
 
-    return result;
+    return null;
   }
 
   // the click handlers in bindEvents need a context, so these are wrappers
