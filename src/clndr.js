@@ -604,7 +604,7 @@
     };
     // did we click on a day or just an empty box?
     if(targetWasDay) {
-      var dateString = target.date = this.getTargetDate(currentTarget);
+      target.date = this.getTargetDate(currentTarget);
 
       // do we have events?
       if(this.options.events) {
@@ -618,7 +618,7 @@
         } else {
           target.events = $.makeArray( $(this.options.events).filter( function() {
             // filter the dates down to the ones that match.
-            return this._clndrDateObject.format('YYYY-MM-DD') == dateString;
+            return target.date.isSame(this._clndrDateObject, 'day');
           }) );
         }
       }
