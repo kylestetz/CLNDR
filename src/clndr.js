@@ -409,10 +409,16 @@
       }
     }
 
+    var properties = {
+      isInactive: false,
+      isAdjacentMonth: false,
+      isToday: false,
+    };
     var extraClasses = "";
 
     if(now.format("YYYY-MM-DD") == day.format("YYYY-MM-DD")) {
-       extraClasses += (" " + this.options.classes.today);
+      extraClasses += (" " + this.options.classes.today);
+      properties.isToday = true;
     }
     if(day.isBefore(now, 'day')) {
       extraClasses += (" " + this.options.classes.past);
@@ -422,18 +428,20 @@
     }
     if(!this.options.lengthOfTime.days) {
       if(this._currentIntervalStart.month() > day.month()) {
-         extraClasses += (" " + this.options.classes.adjacentMonth);
+        extraClasses += (" " + this.options.classes.adjacentMonth);
+        properties.isAdjacentMonth = true;
 
-         this._currentIntervalStart.year() === day.year()
-             ? extraClasses += (" " + this.options.classes.lastMonth)
-             : extraClasses += (" " + this.options.classes.nextMonth);
+        this._currentIntervalStart.year() === day.year()
+            ? extraClasses += (" " + this.options.classes.lastMonth)
+            : extraClasses += (" " + this.options.classes.nextMonth);
 
       } else if(this._currentIntervalStart.month() < day.month()) {
-         extraClasses += (" " + this.options.classes.adjacentMonth);
+        extraClasses += (" " + this.options.classes.adjacentMonth);
+        properties.isAdjacentMonth = true;
 
-         this._currentIntervalStart.year() === day.year()
-             ? extraClasses += (" " + this.options.classes.nextMonth)
-             : extraClasses += (" " + this.options.classes.lastMonth);
+        this._currentIntervalStart.year() === day.year()
+            ? extraClasses += (" " + this.options.classes.nextMonth)
+            : extraClasses += (" " + this.options.classes.lastMonth);
       }
     }
 
@@ -441,9 +449,11 @@
     if(this.options.constraints) {
       if(this.options.constraints.startDate && day.isBefore(moment( this.options.constraints.startDate ))) {
         extraClasses += (" " + this.options.classes.inactive);
+        properties.isInactive = true;
       }
       if(this.options.constraints.endDate && day.isAfter(moment( this.options.constraints.endDate ))) {
         extraClasses += (" " + this.options.classes.inactive);
+        properties.isInactive = true;
       }
     }
 
@@ -457,7 +467,8 @@
       day: day.date(),
       classes: this.options.targets.day + extraClasses,
       events: eventsToday,
-      date: day
+      date: day,
+      properties: properties
     });
   };
 
