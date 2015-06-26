@@ -94,7 +94,8 @@
       lastMonth: "last-month",
       nextMonth: "next-month",
       adjacentMonth: "adjacent-month",
-      inactive: "inactive"
+      inactive: "inactive",
+      selected: "selected"
     },
     events: [],
     extras: null,
@@ -108,6 +109,8 @@
     ready: null,
     constraints: null,
     forceSixRows: null,
+    trackSelectedDate: false,
+    selectedDate: null,
     lengthOfTime: {
       months: null,
       days: null,
@@ -457,7 +460,19 @@
       }
     }
 
-    // These are important.
+    // validate moment date
+    if (!day.isValid() && day.hasOwnProperty('_d') && day._d != undefined) {
+        day = moment(day._d);
+    }
+
+    // check whether the day is "selected"
+    if (this.options.selectedDate && day.isSame(moment(this.options.selectedDate), 'day')) {
+      extraClasses += (" " + this.options.classes.selected);
+    }
+
+    // we're moving away from using IDs in favor of classes, since when
+    // using multiple calendars on a page we are technically violating the
+    // uniqueness of IDs.
     extraClasses += " calendar-day-" + day.format("YYYY-MM-DD");
 
     // day of week
@@ -626,6 +641,16 @@
           self.forwardActionWithContext(self);
         }
       }
+      // if trackSelectedDate is on, we need to handle click on a new day
+      if (self.options.trackSelectedDate) {
+        // remember new selected date
+        self.options.selectedDate = self.getTargetDate(event.currentTarget);
+
+        // handle "selected" class
+        $(event.currentTarget)
+          .siblings().removeClass(self.options.classes.selected).end()
+          .addClass(self.options.classes.selected);
+      }
     });
     // target the empty calendar boxes as well
     $container.on(eventType +'.clndr', '.'+this.options.targets.empty, function(event) {
@@ -664,19 +689,7 @@
     };
     // did we click on a day or just an empty box?
     if(targetWasDay) {
-      var dateString;
-
-      // Our identifier is in the list of classNames. Find it!
-      var classNameIndex = currentTarget.className.indexOf('calendar-day-');
-      if(classNameIndex !== 0) {
-        // our unique identifier is always 23 characters long.
-        // If this feels a little wonky, that's probably because it is.
-        // Open to suggestions on how to improve this guy.
-        dateString = currentTarget.className.substring(classNameIndex + 13, classNameIndex + 23);
-        target.date = moment(dateString);
-      } else {
-        target.date = null;
-      }
+      target.date = this.getTargetDate(currentTarget);
 
       // do we have events?
       if(this.options.events) {
@@ -690,13 +703,32 @@
         } else {
           target.events = $.makeArray( $(this.options.events).filter( function() {
             // filter the dates down to the ones that match.
-            return this._clndrDateObject.format('YYYY-MM-DD') == dateString;
+            return this._clndrDateObject.format('YYYY-MM-DD') == target.date;
           }) );
         }
       }
     }
 
     return target;
+  }
+
+  // get moment date object of the date associated with the given target.
+  // this method is meant to be called on ".day" elements.
+  Clndr.prototype.getTargetDate = function (target) {
+    var result = null;
+    var dateString;
+
+    // Our identifier is in the list of classNames. Find it!
+    var classNameIndex = target.className.indexOf('calendar-day-');
+    if(classNameIndex !== -1) {
+      // our unique identifier is always 23 characters long.
+      // If this feels a little wonky, that's probably because it is.
+      // Open to suggestions on how to improve this guy.
+      dateString = target.className.substring(classNameIndex + 13, classNameIndex + 23);
+      result = moment(dateString);
+    }
+
+    return result;
   }
 
   // the click handlers in bindEvents need a context, so these are wrappers

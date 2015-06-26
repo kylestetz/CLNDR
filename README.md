@@ -182,7 +182,8 @@ $('.parent-element').clndr({
     lastMonth: "last-month",
     nextMonth: "next-month",
     adjacentMonth: "adjacent-month",
-    inactive: "inactive"
+    inactive: "inactive",
+    selected: "selected"
   }
 
   // click callbacks! the keyword 'this' is set to the clndr instance in all callbacks.
@@ -258,7 +259,14 @@ $('.parent-element').clndr({
   adjacentDaysChangeMonth: false,
   // always make the calendar six rows tall (42 days) so that every month has a
   // consistent height. defaults to 'false'.
-  forceSixRows: false,
+  forceSixRows: null,
+  // set this to true, if you want the plugin to track the last clicked day.
+  // if trackSelectedDate is true, "selected" class will always be applied only to
+  // the most recently clicked date; otherwise - selectedDate will not change.
+  trackSelectedDate: false,
+  // set this, if you want a date to be "selected" (see classes.selected) after plugin init.
+  // defualts to null - no initially selected date
+  selectedDate: null
 
   // anything you want access to in your template
   extras: { }
