@@ -1,5 +1,5 @@
 /*
- *               ~ CLNDR v1.2.12 ~
+ *               ~ CLNDR v1.2.13 ~
  * ==============================================
  *       https://github.com/kylestetz/CLNDR
  * ==============================================
@@ -680,7 +680,7 @@
   // buildTargetObject takes the DOM element that was clicked and returns an object with
   // the DOM element, events, and the date (if the latter two exist). Currently it is based on the id,
   // however it'd be nice to use a data- attribute in the future.
-  Clndr.prototype.buildTargetObject = function(currentTarget, targetWasDay) {
+  Clndr.prototype.buildTargetObject = function(currentTarget, targetWasDay) {z
     // This is our default target object, assuming we hit an empty day with no events.
     var target = {
       element: currentTarget,
@@ -704,7 +704,7 @@
         } else {
           target.events = $.makeArray( $(this.options.events).filter( function() {
             // filter the dates down to the ones that match.
-            return this._clndrDateObject.format('YYYY-MM-DD') == dateString;
+            return this._clndrStartDateObject.format('YYYY-MM-DD') == dateString;
           }) );
         }
       }
@@ -1172,9 +1172,7 @@
     var self = this;
     var i = 0, l = events.length;
     for(i; i < l; i++) {
-      // stuff a _clndrDateObject in each event, which really, REALLY should not be
-      // overriding any existing object... Man that would be weird.
-      // events[i]._clndrDateObject = moment( events[i][self.options.dateParameter] );
+      // add the date as both start and end, since it's a single-day event by default
       events[i]._clndrStartDateObject = moment( events[i][self.options.dateParameter] );
       events[i]._clndrEndDateObject = moment( events[i][self.options.dateParameter] );
     }
