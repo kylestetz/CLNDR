@@ -1,5 +1,5 @@
 /*
- *               ~ CLNDR v1.2.13 ~
+ *               ~ CLNDR v1.2.14 ~
  * ==============================================
  *       https://github.com/kylestetz/CLNDR
  * ==============================================
@@ -680,7 +680,7 @@
   // buildTargetObject takes the DOM element that was clicked and returns an object with
   // the DOM element, events, and the date (if the latter two exist). Currently it is based on the id,
   // however it'd be nice to use a data- attribute in the future.
-  Clndr.prototype.buildTargetObject = function(currentTarget, targetWasDay) {z
+  Clndr.prototype.buildTargetObject = function(currentTarget, targetWasDay) {
     // This is our default target object, assuming we hit an empty day with no events.
     var target = {
       element: currentTarget,
