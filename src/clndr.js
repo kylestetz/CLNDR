@@ -866,8 +866,13 @@
     } else if(self.options.lengthOfTime.months) {
       // set the intervalStart to this month.
       self.intervalStart = moment().startOf('month');
-      self.intervalEnd = self.intervalStart.clone().add(self.options.lengthOfTime.months || self.options.lengthOfTime.interval, 'months').subtract(1, 'days').endOf('month');
+      self.intervalEnd = self.intervalStart.clone()
+        .add(self.options.lengthOfTime.months || self.options.lengthOfTime.interval, 'months')
+        .subtract(1, 'days')
+        .endOf('month');
     } else if(monthChanged) {
+      // reset the start interval for the current month
+      self.intervalStart = moment().startOf('month');
       // no need to re-render if we didn't change months.
       self.render();
 
