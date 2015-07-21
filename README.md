@@ -630,6 +630,11 @@ Todo
 
 Changelog
 =========
+`v1.2.15 ~ 2015-07-21`: Resolves issue 185; next and previous month not working correctly with today under certain configurations.
+
+`v1.2.14 ~ 2015-07-08`: Small typo fixed.
+
+`v1.2.13 ~ 2015-07-08`: Bugfix patch for misnamed variable.
 
 `v1.2.12 ~ 2015-06-26`: Bugfix patch for broken behavior in the selected day PR.
 
