@@ -823,8 +823,8 @@
     self.render();
 
     if(!self.options.lengthOfTime.days && !self.options.lengthOfTime.months) {
-      if(self.options.clickEvents.previousMonth) {
-        self.options.clickEvents.previousMonth.apply( self, [moment(self.month)] );
+      if(self.options.clickEvents.nextMonth) {
+        self.options.clickEvents.nextMonth.apply( self, [moment(self.month)] );
       }
       if(self.options.clickEvents.onMonthChange) {
         self.options.clickEvents.onMonthChange.apply( self, [moment(self.month)] );
