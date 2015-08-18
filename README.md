@@ -630,6 +630,8 @@ Todo
 
 Changelog
 =========
+`v1.2.16 ~ 2015-08-18`: Resolves issue 200; nextMonth click event was firing previousMonth's event erroneously.
+
 `v1.2.15 ~ 2015-07-21`: Resolves issue 185; next and previous month not working correctly with today under certain configurations.
 
 `v1.2.14 ~ 2015-07-08`: Small typo fixed.
