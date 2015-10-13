@@ -1219,7 +1219,6 @@
 
   $.fn.clndr = function(options) {
     if(this.length === 1) {
-      console.log(this.data('plugin_clndr'));
       if(!this.data('plugin_clndr')) {
         var clndr_instance = new Clndr(this, options);
         this.data('plugin_clndr', clndr_instance);
