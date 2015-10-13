@@ -489,8 +489,12 @@
 
   Clndr.prototype.render = function() {
     // get rid of the previous set of calendar parts.
-    // TODO: figure out if this is the right way to ensure proper garbage collection?
-    this.calendarContainer.children().remove();
+    // this should handle garbage collection according to jQuery's docs:
+    // http://api.jquery.com/empty/
+    //  > To avoid memory leaks, jQuery removes other constructs such as
+    //  > data and event handlers from the child elements before removing
+    //  > the elements themselves.
+    this.calendarContainer.empty();
 
     var data = {};
 
@@ -940,7 +944,6 @@
     var self = event.data.context;
     // before we do anything, check if there is an inactive class on the month control.
     // if it does, we want to return and take no action.
-    console.log(self.element.find('.' + self.options.targets.previousYear));
     if(self.element.find('.' + self.options.targets.previousYearButton).hasClass('inactive')) {
       return;
     }
@@ -1206,13 +1209,23 @@
     return $.extend({}, defaults, options);
   }
 
+  Clndr.prototype.destroy = function() {
+    var $container = $( this.calendarContainer );
+    $container.parent().data( 'plugin_clndr', null );
+    this.options = defaults;
+    $container.empty().remove();
+    this.element = null;
+  };
+
   $.fn.clndr = function(options) {
     if(this.length === 1) {
+      console.log(this.data('plugin_clndr'));
       if(!this.data('plugin_clndr')) {
         var clndr_instance = new Clndr(this, options);
         this.data('plugin_clndr', clndr_instance);
         return clndr_instance;
       }
+      return this.data('plugin_clndr');
     } else if(this.length > 1) {
       throw new Error("CLNDR does not support multiple elements yet. Make sure your clndr selector returns only one element.");
     }
