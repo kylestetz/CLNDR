@@ -630,6 +630,8 @@ Todo
 
 Changelog
 =========
+`v1.3.0 ~ 2015-10-13`: Adds destroy and get-instance methods.
+
 `v1.2.16 ~ 2015-08-18`: Resolves issue 200; nextMonth click event was firing previousMonth's event erroneously.
 
 `v1.2.15 ~ 2015-07-21`: Resolves issue 185; next and previous month not working correctly with today under certain configurations.
