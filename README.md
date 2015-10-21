@@ -630,6 +630,8 @@ Todo
 
 Changelog
 =========
+`v1.3.1 ~ 2015-10-21`: Trailing comma removed to work in IE11.
+
 `v1.3.0 ~ 2015-10-13`: Adds destroy and get-instance methods.
 
 `v1.2.16 ~ 2015-08-18`: Resolves issue 200; nextMonth click event was firing previousMonth's event erroneously.
