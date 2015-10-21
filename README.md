@@ -314,7 +314,10 @@ $('.parent-element').clndr({
   constraints: {
     startDate: '2017-12-22',
     endDate: '2018-01-09'
-  }
+  },
+
+  // optionally, you can pass a Moment instance to use instead of the global
+  moment: null
 });
 ```
 

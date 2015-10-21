@@ -115,7 +115,8 @@
       months: null,
       days: null,
       interval: 1
-    }
+    },
+    moment: null
   };
 
   // The actual plugin constructor
@@ -124,6 +125,11 @@
 
     // merge the default options with user-provided options
     this.options = $.extend(true, {}, defaults, options);
+
+    // check if moment was passed in as a dependency
+    if(this.options.moment) {
+      moment = this.options.moment;
+    }
 
     // if there are events, we should run them through our addMomentObjectToEvents function
     // which will add a date object that we can use to make life easier. This is only necessary
