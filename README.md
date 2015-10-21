@@ -633,6 +633,8 @@ Todo
 
 Changelog
 =========
+`v1.3.2 ~ 2015-10-21`: Adding moment instance as a config option to use instead of global moment object.
+
 `v1.3.1 ~ 2015-10-21`: Trailing comma removed to work in IE11.
 
 `v1.3.0 ~ 2015-10-13`: Adds destroy and get-instance methods.
