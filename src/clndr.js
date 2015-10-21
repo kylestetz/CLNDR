@@ -415,7 +415,7 @@
     var properties = {
       isInactive: false,
       isAdjacentMonth: false,
-      isToday: false,
+      isToday: false
     };
     var extraClasses = "";
 
