@@ -111,6 +111,7 @@
     forceSixRows: null,
     trackSelectedDate: false,
     selectedDate: null,
+    ignoreInactiveDaysInSelection: null,
     lengthOfTime: {
       months: null,
       days: null,
@@ -653,6 +654,9 @@
       }
       // if trackSelectedDate is on, we need to handle click on a new day
       if (self.options.trackSelectedDate) {
+        if(self.options.ignoreInactiveDaysInSelection && $(event.currentTarget).hasClass('inactive')) {
+          return;
+        }
         // remember new selected date
         self.options.selectedDate = self.getTargetDateString(event.currentTarget);
 
