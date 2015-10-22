@@ -265,6 +265,7 @@ $('.parent-element').clndr({
   // always make the calendar six rows tall (42 days) so that every month has a
   // consistent height. defaults to 'false'.
   forceSixRows: null,
+
   // set this to true, if you want the plugin to track the last clicked day.
   // if trackSelectedDate is true, "selected" class will always be applied only
   // to the most recently clicked date; otherwise - selectedDate will not change.
@@ -273,6 +274,9 @@ $('.parent-element').clndr({
   // plugin init.
   // defualts to null - no initially selected date
   selectedDate: null,
+  // Set this to true if you don't want `inactive` dates to be selectable.
+  // This will only matter if you are using the `constraints` option.
+  ignoreInactiveDaysInSelection: null,
 
   // CLNDR can render in any time interval!
   // You can specify if you want to render one or more months, or one ore more
@@ -633,6 +637,8 @@ Todo
 
 Changelog
 =========
+`v1.3.3 ~ 2015-10-22`: Adds `ignoreInactiveDaysInSelection` option for disabling selection of inactive dates when using both `trackSelectedDates` and `constraints`.
+
 `v1.3.2 ~ 2015-10-21`: Adding moment instance as a config option to use instead of global moment object.
 
 `v1.3.1 ~ 2015-10-21`: Trailing comma removed to work in IE11.
