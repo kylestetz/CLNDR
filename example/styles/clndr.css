@@ -278,6 +278,12 @@ p {
 .cal2 .clndr .clndr-grid .day.today {
   background-color: #E3C57F;
 }
+.cal2 .clndr .clndr-grid .day.selected {
+  background-color: #E37FD6;
+}
+.cal2 .clndr .clndr-grid .day.inactive {
+  color: gray;
+}
 .cal2 .clndr .clndr-grid .empty,
 .cal2 .clndr .clndr-grid .adjacent-month {
   float: left;

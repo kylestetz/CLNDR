@@ -376,5 +376,23 @@ $('#multiday-mixed-performance-val').text(moment.duration(moment().diff(start)).
     }
   });
 
+  // test selectedDate option
+  // ================================================================================
+  clndr.selectedDate = $('#selected-date').clndr({
+    template: $('#clndr-template').html(),
+    trackSelectedDate: true
+  });
+
+  // test selectedDate option with ignoreInactiveDaysInSelection
+  // ================================================================================
+  clndr.selectedDate = $('#selected-date-ignore-inactive').clndr({
+    template: $('#clndr-template').html(),
+    trackSelectedDate: true,
+    ignoreInactiveDaysInSelection: true,
+    constraints: {
+      startDate: moment().subtract(1, 'months').format('YYYY-MM-DD'),
+      endDate: moment().add(1, 'months').format('YYYY-MM-12')
+    }
+  });
 
 });
