@@ -638,6 +638,15 @@
       eventType = 'touchstart';
     }
 
+    // Make sure we don't already have events
+    $container.off( eventType +'.clndr', '.'+this.options.targets.day )
+    .off( eventType +'.clndr', '.'+this.options.targets.empty )
+    .off( eventType +'.clndr', '.'+self.options.targets.previousButton )
+    .off( eventType +'.clndr', '.'+self.options.targets.nextButton )
+    .off( eventType +'.clndr', '.'+self.options.targets.todayButton )
+    .off( eventType +'.clndr', '.'+self.options.targets.nextYearButton )
+    .off( eventType +'.clndr', '.'+self.options.targets.previousYearButton );
+
     // target the day elements and give them click events
     $container.on(eventType +'.clndr', '.'+this.options.targets.day, function(event) {
       if(self.options.clickEvents.click) {
