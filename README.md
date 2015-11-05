@@ -637,6 +637,8 @@ Todo
 
 Changelog
 =========
+`v1.3.4 ~ 2015-11-05`: Fixed a bug where calling `destroy` and reinstantiating a clndr on the same element would not bind new click handlers.
+
 `v1.3.3 ~ 2015-10-22`: Adds `ignoreInactiveDaysInSelection` option for disabling selection of inactive dates when using both `trackSelectedDates` and `constraints`.
 
 `v1.3.2 ~ 2015-10-21`: Adding moment instance as a config option to use instead of global moment object.
