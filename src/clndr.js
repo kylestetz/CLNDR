@@ -39,9 +39,13 @@
     // This is the default calendar template. This can be overridden.
     var clndrTemplate =
         "<div class='clndr-controls'>" +
-            "<div class='clndr-control-button'><span class='clndr-previous-button'>previous</span></div>" +
+            "<div class='clndr-control-button'>" +
+                "<span class='clndr-previous-button'>previous</span>" +
+            "</div>" +
             "<div class='month'><%= month %> <%= year %></div>" +
-            "<div class='clndr-control-button rightalign'><span class='clndr-next-button'>next</span></div>" +
+            "<div class='clndr-control-button rightalign'>" +
+                "<span class='clndr-next-button'>next</span>" +
+            "</div>" +
         "</div>" +
         "<table class='clndr-table' border='0' cellspacing='0' cellpadding='0'>" +
             "<thead>" +
@@ -56,7 +60,9 @@
                 "<tr>" +
                 "<% for(var j = 0; j < 7; j++){ %>" +
                 "<% var d = j + i * 7; %>" +
-                    "<td class='<%= days[d].classes %>'><div class='day-contents'><%= days[d].day %></div></td>" +
+                    "<td class='<%= days[d].classes %>'>" +
+                        "<div class='day-contents'><%= days[d].day %></div>" +
+                    "</td>" +
                 "<% } %>" +
                 "</tr>" +
             "<% } %>" +
@@ -490,241 +496,291 @@
         return daysArray;
     };
 
-    Clndr.prototype.createDayObject = function(day, monthEvents) {
-    var eventsToday = [];
-    var now = moment();
-    var self = this;
+    Clndr.prototype.createDayObject = function (day, monthEvents) {
+        var j = 0,
+            self = this,
+            now = moment(),
+            eventsToday = [],
+            extraClasses = "",
+            properties = {
+                isToday: false,
+                isInactive: false,
+                isAdjacentMonth: false
+            },
+            startMoment, endMoment, selectedMoment;
 
-    // validate moment date
-    if (!day.isValid() && day.hasOwnProperty('_d') && day._d != undefined) {
-        day = moment(day._d);
-    }
-
-    var j = 0, l = monthEvents.length;
-    for(j; j < l; j++) {
-      // keep in mind that the events here already passed the month/year test.
-      // now all we have to compare is the moment.date(), which returns the day of the month.
-      var start = monthEvents[j]._clndrStartDateObject;
-      var end = monthEvents[j]._clndrEndDateObject;
-      // if today is the same day as start or is after the start, and
-      // if today is the same day as the end or before the end ...
-      // woohoo semantics!
-      if( ( day.isSame(start, 'day') || day.isAfter(start, 'day') ) &&
-        ( day.isSame(end, 'day') || day.isBefore(end, 'day') ) ) {
-        eventsToday.push( monthEvents[j] );
-      }
-    }
-
-    var properties = {
-      isInactive: false,
-      isAdjacentMonth: false,
-      isToday: false
-    };
-    var extraClasses = "";
-
-    if(now.format("YYYY-MM-DD") == day.format("YYYY-MM-DD")) {
-      extraClasses += (" " + this.options.classes.today);
-      properties.isToday = true;
-    }
-    if(day.isBefore(now, 'day')) {
-      extraClasses += (" " + this.options.classes.past);
-    }
-    if(eventsToday.length) {
-      extraClasses += (" " + this.options.classes.event);
-    }
-    if(!this.options.lengthOfTime.days) {
-      if(this._currentIntervalStart.month() > day.month()) {
-        extraClasses += (" " + this.options.classes.adjacentMonth);
-        properties.isAdjacentMonth = true;
-
-        this._currentIntervalStart.year() === day.year()
-            ? extraClasses += (" " + this.options.classes.lastMonth)
-            : extraClasses += (" " + this.options.classes.nextMonth);
-
-      } else if(this._currentIntervalStart.month() < day.month()) {
-        extraClasses += (" " + this.options.classes.adjacentMonth);
-        properties.isAdjacentMonth = true;
-
-        this._currentIntervalStart.year() === day.year()
-            ? extraClasses += (" " + this.options.classes.nextMonth)
-            : extraClasses += (" " + this.options.classes.lastMonth);
-      }
-    }
-
-    // if there are constraints, we need to add the inactive class to the days outside of them
-    if(this.options.constraints) {
-      if(this.options.constraints.startDate && day.isBefore(moment( this.options.constraints.startDate ))) {
-        extraClasses += (" " + this.options.classes.inactive);
-        properties.isInactive = true;
-      }
-      if(this.options.constraints.endDate && day.isAfter(moment( this.options.constraints.endDate ))) {
-        extraClasses += (" " + this.options.classes.inactive);
-        properties.isInactive = true;
-      }
-    }
-
-    // validate moment date
-    if (!day.isValid() && day.hasOwnProperty('_d') && day._d != undefined) {
-        day = moment(day._d);
-    }
-
-    // check whether the day is "selected"
-    if (this.options.selectedDate && day.isSame(moment(this.options.selectedDate), 'day')) {
-      extraClasses += (" " + this.options.classes.selected);
-    }
-
-    // we're moving away from using IDs in favor of classes, since when
-    // using multiple calendars on a page we are technically violating the
-    // uniqueness of IDs.
-    extraClasses += " calendar-day-" + day.format("YYYY-MM-DD");
-
-    // day of week
-    extraClasses += " calendar-dow-" + day.weekday();
-
-    return this.calendarDay({
-      day: day.date(),
-      classes: this.options.targets.day + extraClasses,
-      events: eventsToday,
-      date: day,
-      properties: properties
-    });
-  };
-
-  Clndr.prototype.render = function() {
-    // Get rid of the previous set of calendar parts. This should handle garbage
-    // collection according to jQuery's docs:
-    //   http://api.jquery.com/empty/
-    //   To avoid memory leaks, jQuery removes other constructs such as
-    //   data and event handlers from the child elements before removing
-    //   the elements themselves.
-    var data = {},
-        days, months, eventsThisInterval
-    this.calendarContainer.empty();
-
-    if(this.options.lengthOfTime.days) {
-      days = this.createDaysObject(this.intervalStart.clone(), this.intervalEnd.clone());
-
-      data = {
-        daysOfTheWeek: this.daysOfTheWeek,
-        numberOfRows: Math.ceil(days.length / 7),
-        months: [],
-        days: days,
-        month: null,
-        year: null,
-        intervalStart: this.intervalStart.clone(),
-        intervalEnd: this.intervalEnd.clone(),
-        eventsThisInterval: this.eventsThisInterval,
-        eventsLastMonth: [],
-        eventsNextMonth: [],
-        extras: this.options.extras
-      };
-
-    } else if(this.options.lengthOfTime.months) {
-
-      months = [];
-      eventsThisInterval = [];
-
-      for(i = 0; i < this.options.lengthOfTime.months; i++) {
-        var currentIntervalStart = this.intervalStart.clone().add(i, 'months');
-        var currentIntervalEnd = currentIntervalStart.clone().endOf('month');
-        var days = this.createDaysObject(currentIntervalStart, currentIntervalEnd);
-        // save events processed for each month into a master array of events for
-        // this interval
-        eventsThisInterval.push(this.eventsThisInterval);
-        months.push({
-          month: currentIntervalStart,
-          days: days
-        });
-      }
-
-      data = {
-        daysOfTheWeek: this.daysOfTheWeek,
-        numberOfRows: _.reduce(months, function(memo, monthObj) {
-          return memo + Math.ceil(monthObj.days.length / 7);
-        }, 0),
-        months: months,
-        days: [],
-        month: null,
-        year: null,
-        intervalStart: this.intervalStart,
-        intervalEnd: this.intervalEnd,
-        eventsThisInterval: eventsThisInterval,
-        eventsLastMonth: this.eventsLastMonth,
-        eventsNextMonth: this.eventsNextMonth,
-        extras: this.options.extras
-      };
-    } else {
-      // get an array of days and blank spaces
-      var days = this.createDaysObject(this.month.clone().startOf('month'), this.month.clone().endOf('month'));
-      // this is to prevent a scope/naming issue between this.month and data.month
-      var currentMonth = this.month;
-
-      var data = {
-        daysOfTheWeek: this.daysOfTheWeek,
-        numberOfRows: Math.ceil(days.length / 7),
-        months: [],
-        days: days,
-        month: this.month.format('MMMM'),
-        year: this.month.year(),
-        eventsThisMonth: this.eventsThisInterval,
-        eventsLastMonth: this.eventsLastMonth,
-        eventsNextMonth: this.eventsNextMonth,
-        extras: this.options.extras
-      };
-    }
-
-    // render the calendar with the data above & bind events to its elements
-    if(!this.options.render) {
-      this.calendarContainer.html(this.compiledClndrTemplate(data));
-    } else {
-      this.calendarContainer.html(this.options.render.apply(this, [data]));
-    }
-
-    // if there are constraints, we need to add the 'inactive' class to the controls
-    if(this.options.constraints) {
-      // in the interest of clarity we're just going to remove all inactive classes and re-apply them each render.
-      for(var target in this.options.targets) {
-        if(target != this.options.targets.day) {
-          this.element.find('.' + this.options.targets[target]).toggleClass(this.options.classes.inactive, false);
+        // Validate moment date
+        if (!day.isValid() && day.hasOwnProperty('_d') && day._d != undefined) {
+            day = moment(day._d);
         }
-      }
 
-      var start = null;
-      var end = null;
+        for (j; j < monthEvents.length; j++) {
+            // Keep in mind that the events here already passed the month/year
+            // test. Now all we have to compare is the moment.date(), which
+            // returns the day of the month.
+            var start = monthEvents[j]._clndrStartDateObject,
+                end = monthEvents[j]._clndrEndDateObject;
+            // If today is the same day as start or is after the start, and
+            // if today is the same day as the end or before the end ...
+            // woohoo semantics!
+            if ( (day.isSame(start, 'day') || day.isAfter(start, 'day'))
+                && (day.isSame(end, 'day') || day.isBefore(end, 'day')) )
+            {
+                eventsToday.push( monthEvents[j] );
+            }
+        }
 
-      if(this.options.constraints.startDate) {
-        start = moment(this.options.constraints.startDate);
-      }
-      if(this.options.constraints.endDate) {
-        end = moment(this.options.constraints.endDate);
-      }
-      // deal with the month controls first.
-      // do we have room to go back?
-      if(start && (start.isAfter(this.intervalStart) || start.isSame(this.intervalStart, 'day'))) {
-        this.element.find('.' + this.options.targets.previousButton).toggleClass(this.options.classes.inactive, true);
-      }
-      // do we have room to go forward?
-      if(end && (end.isBefore(this.intervalEnd) || end.isSame(this.intervalEnd, 'day'))) {
-        this.element.find('.' + this.options.targets.nextButton).toggleClass(this.options.classes.inactive, true);
-      }
-      // what's last year looking like?
-      if(start && start.isAfter(this.intervalStart.clone().subtract(1, 'years')) ) {
-        this.element.find('.' + this.options.targets.previousYearButton).toggleClass(this.options.classes.inactive, true);
-      }
-      // how about next year?
-      if(end && end.isBefore(this.intervalEnd.clone().add(1, 'years')) ) {
-        this.element.find('.' + this.options.targets.nextYearButton).toggleClass(this.options.classes.inactive, true);
-      }
-      // today? we could put this in init(), but we want to support the user changing the constraints on a living instance.
-      if(( start && start.isAfter( moment(), 'month' ) ) || ( end && end.isBefore( moment(), 'month' ) )) {
-        this.element.find('.' + this.options.targets.today).toggleClass(this.options.classes.inactive, true);
-      }
-    }
+        if (now.format("YYYY-MM-DD") == day.format("YYYY-MM-DD")) {
+            extraClasses += (" " + this.options.classes.today);
+            properties.isToday = true;
+        }
 
-    if(this.options.doneRendering) {
-      this.options.doneRendering.apply(this, []);
-    }
-  };
+        if (day.isBefore(now, 'day')) {
+            extraClasses += (" " + this.options.classes.past);
+        }
+
+        if (eventsToday.length) {
+            extraClasses += (" " + this.options.classes.event);
+        }
+
+        if (!this.options.lengthOfTime.days) {
+            if (this._currentIntervalStart.month() > day.month()) {
+                extraClasses += (" " + this.options.classes.adjacentMonth);
+                properties.isAdjacentMonth = true;
+
+                this._currentIntervalStart.year() === day.year()
+                    ? extraClasses += (" " + this.options.classes.lastMonth)
+                    : extraClasses += (" " + this.options.classes.nextMonth);
+            }
+            else if (this._currentIntervalStart.month() < day.month()) {
+                extraClasses += (" " + this.options.classes.adjacentMonth);
+                properties.isAdjacentMonth = true;
+
+                this._currentIntervalStart.year() === day.year()
+                    ? extraClasses += (" " + this.options.classes.nextMonth)
+                    : extraClasses += (" " + this.options.classes.lastMonth);
+            }
+        }
+
+        // If there are constraints, we need to add the inactive class to the
+        // days outside of them
+        if (this.options.constraints) {
+            endMoment = moment(this.options.constraints.endDate);
+            startMoment = moment(this.options.constraints.startDate);
+
+            if (this.options.constraints.startDate && day.isBefore(startMoment) {
+                extraClasses += (" " + this.options.classes.inactive);
+                properties.isInactive = true;
+            }
+
+            if (this.options.constraints.endDate && day.isAfter(endMoment)) {
+                extraClasses += (" " + this.options.classes.inactive);
+                properties.isInactive = true;
+            }
+        }
+
+        // Validate moment date
+        if (!day.isValid() && day.hasOwnProperty('_d') && day._d != undefined) {
+            day = moment(day._d);
+        }
+
+        // Check whether the day is "selected"
+        selectedMoment = moment(this.options.selectedDate);
+
+        if (this.options.selectedDate && day.isSame(selectedMoment, 'day')) {
+            extraClasses += (" " + this.options.classes.selected);
+        }
+
+        // We're moving away from using IDs in favor of classes, since when
+        // using multiple calendars on a page we are technically violating the
+        // uniqueness of IDs.
+        extraClasses += " calendar-day-" + day.format("YYYY-MM-DD");
+        // Day of week
+        extraClasses += " calendar-dow-" + day.weekday();
+
+        return this.calendarDay({
+            date: day,
+            day: day.date(),
+            events: eventsToday,
+            properties: properties,
+            classes: this.options.targets.day + extraClasses
+        });
+    };
+
+    Clndr.prototype.render = function () {
+        // Get rid of the previous set of calendar parts. This should handle garbage
+        // collection according to jQuery's docs:
+        //   http://api.jquery.com/empty/
+        //   To avoid memory leaks, jQuery removes other constructs such as
+        //   data and event handlers from the child elements before removing
+        //   the elements themselves.
+        var data = {},
+            end = null,
+            start = null,
+            oneYearFromEnd = this.intervalEnd.clone().add(1, 'years'),
+            oneYearAgo = this.intervalStart.clone().subtract(1, 'years'),
+            days, months, currentMonth, eventsThisInterval;
+        this.calendarContainer.empty();
+
+        if (this.options.lengthOfTime.days) {
+            days = this.createDaysObject(
+                this.intervalStart.clone(),
+                this.intervalEnd.clone());
+            data = {
+                days: days,
+                months: [],
+                year: null,
+                month: null,
+                eventsLastMonth: [],
+                eventsNextMonth: [],
+                extras: this.options.extras,
+                daysOfTheWeek: this.daysOfTheWeek,
+                intervalEnd: this.intervalEnd.clone(),
+                numberOfRows: Math.ceil(days.length / 7),
+                intervalStart: this.intervalStart.clone(),
+                eventsThisInterval: this.eventsThisInterval
+            };
+        }
+        else if (this.options.lengthOfTime.months) {
+            months = [];
+            eventsThisInterval = [];
+
+            for (i = 0; i < this.options.lengthOfTime.months; i++) {
+                var currentIntervalStart = this.intervalStart
+                    .clone()
+                    .add(i, 'months'),
+                var currentIntervalEnd = currentIntervalStart
+                    .clone()
+                    .endOf('month');
+                var days = this.createDaysObject(
+                    currentIntervalStart,
+                    currentIntervalEnd);
+                // Save events processed for each month into a master array of
+                // events for this interval
+                eventsThisInterval.push(this.eventsThisInterval);
+                months.push({
+                    days: days,
+                    month: currentIntervalStart
+                });
+            }
+
+            data = {
+                days: [],
+                year: null,
+                month: null,
+                months: months,
+                extras: this.options.extras,
+                intervalEnd: this.intervalEnd,
+                intervalStart: this.intervalStart,
+                daysOfTheWeek: this.daysOfTheWeek,
+                eventsLastMonth: this.eventsLastMonth,
+                eventsNextMonth: this.eventsNextMonth,
+                eventsThisInterval: eventsThisInterval,
+                // @TODO -- remove _.reduce to remove underscore dependency
+                numberOfRows: _.reduce(months, function (memo, monthObj) {
+                    return memo + Math.ceil(monthObj.days.length / 7);
+                }, 0)
+            };
+        }
+        else {
+            // Get an array of days and blank spaces
+            days = this.createDaysObject(
+                this.month.clone().startOf('month'),
+                this.month.clone().endOf('month'));
+            // This is to prevent a scope/naming issue between this.month and
+            // data.month
+            currentMonth = this.month;
+
+            data = {
+                days: days,
+                months: [],
+                year: this.month.year(),
+                extras: this.options.extras,
+                month: this.month.format('MMMM'),
+                daysOfTheWeek: this.daysOfTheWeek,
+                eventsLastMonth: this.eventsLastMonth,
+                eventsNextMonth: this.eventsNextMonth,
+                numberOfRows: Math.ceil(days.length / 7),
+                eventsThisMonth: this.eventsThisInterval
+            };
+        }
+
+        // Render the calendar with the data above & bind events to its
+        // elements
+        if ( !this.options.render) {
+            this.calendarContainer.html(
+                this.compiledClndrTemplate(data));
+        } else {
+            this.calendarContainer.html(
+                this.options.render.apply(this, [data]));
+        }
+
+        // If there are constraints, we need to add the 'inactive' class to
+        // the controls.
+        if (this.options.constraints) {
+            // In the interest of clarity we're just going to remove all
+            // inactive classes and re-apply them each render.
+            for (var target in this.options.targets) {
+                if (target != this.options.targets.day) {
+                    this.element.find('.' + this.options.targets[target])
+                        .toggleClass(
+                            this.options.classes.inactive,
+                            false);
+                }
+            }
+
+            if (this.options.constraints.startDate) {
+                start = moment(this.options.constraints.startDate);
+            }
+
+            if (this.options.constraints.endDate) {
+                end = moment(this.options.constraints.endDate);
+            }
+
+            // Deal with the month controls first. Do we have room to go back?
+            if (start
+                && (start.isAfter(this.intervalStart)
+                    || start.isSame(this.intervalStart, 'day')))
+            {
+                this.element.find('.' + this.options.targets.previousButton)
+                    .toggleClass(this.options.classes.inactive, true);
+            }
+
+            // Do we have room to go forward?
+            if (end
+                && (end.isBefore(this.intervalEnd)
+                    || end.isSame(this.intervalEnd, 'day')))
+            {
+                this.element.find('.' + this.options.targets.nextButton)
+                    .toggleClass(this.options.classes.inactive, true);
+            }
+
+            // What's last year looking like?
+            if (start && start.isAfter(oneYearAgo)) {
+                this.element.find('.' + this.options.targets.previousYearButton)
+                    .toggleClass(this.options.classes.inactive, true);
+            }
+
+            // How about next year?
+            if (end && end.isBefore(oneYearFromEnd)) {
+                this.element.find('.' + this.options.targets.nextYearButton)
+                    .toggleClass(this.options.classes.inactive, true);
+            }
+
+            // Today? We could put this in init(), but we want to support the
+            // user changing the constraints on a living instance.
+            if ( (start && start.isAfter( moment(), 'month' ))
+                || (end && end.isBefore( moment(), 'month' )) )
+            {
+                this.element.find('.' + this.options.targets.today)
+                    .toggleClass(this.options.classes.inactive, true);
+            }
+        }
+
+        if (this.options.doneRendering) {
+            this.options.doneRendering.apply(this, []);
+        }
+    };
 
   Clndr.prototype.bindEvents = function() {
     var $container = $(this.element);
