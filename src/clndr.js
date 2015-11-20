@@ -25,10 +25,12 @@
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
         define(['jquery', 'moment'], factory);
-    } else if (typeof exports === 'object') {
+    }
+    else if (typeof exports === 'object') {
         // Node/CommonJS
         factory(require('jquery'), require('moment'));
-    } else {
+    }
+    else {
         // Browser globals
         factory(jQuery, moment);
     }
@@ -782,74 +784,98 @@
         }
     };
 
-  Clndr.prototype.bindEvents = function() {
-    var $container = $(this.element);
-    var self = this;
-    var eventType = 'click';
-    if (self.options.useTouchEvents === true) {
-      eventType = 'touchstart';
-    }
+    Clndr.prototype.bindEvents = function() {
+        var self = this,
+            $container = $(this.element),
+            targets = this.options.targets,
+            classes = self.options.classes,
+            eventType = (this.options.useTouchEvents === true)
+                ? 'touchstart'
+                : 'click',
+            eventName = eventType + '.clndr';
 
-    // Make sure we don't already have events
-    $container.off( eventType +'.clndr', '.'+this.options.targets.day )
-      .off( eventType +'.clndr', '.'+this.options.targets.empty )
-      .off( eventType +'.clndr', '.'+this.options.targets.previousButton )
-      .off( eventType +'.clndr', '.'+this.options.targets.nextButton )
-      .off( eventType +'.clndr', '.'+this.options.targets.todayButton )
-      .off( eventType +'.clndr', '.'+this.options.targets.nextYearButton )
-      .off( eventType +'.clndr', '.'+this.options.targets.previousYearButton );
+        // Make sure we don't already have events
+        $container
+            .off(eventName, '.' + targets.day)
+            .off(eventName, '.' + targets.empty)
+            .off(eventName, '.' + targets.previousButton)
+            .off(eventName, '.' + targets.nextButton)
+            .off(eventName, '.' + targets.todayButton)
+            .off(eventName, '.' + targets.nextYearButton)
+            .off(eventName, '.' + targets.previousYearButton);
 
-    // target the day elements and give them click events
-    $container.on(eventType +'.clndr', '.'+this.options.targets.day, function(event) {
-      if(self.options.clickEvents.click) {
-        var target = self.buildTargetObject(event.currentTarget, true);
-        self.options.clickEvents.click.apply(self, [target]);
-      }
-      // if adjacentDaysChangeMonth is on, we need to change the month here.
-      if(self.options.adjacentDaysChangeMonth) {
-        if($(event.currentTarget).is( '.' + self.options.classes.lastMonth )) {
-          self.backActionWithContext(self);
-        } else if($(event.currentTarget).is( '.' + self.options.classes.nextMonth )) {
-          self.forwardActionWithContext(self);
-        }
-      }
-      // if trackSelectedDate is on, we need to handle click on a new day
-      if (self.options.trackSelectedDate) {
-        if(self.options.ignoreInactiveDaysInSelection && $(event.currentTarget).hasClass('inactive')) {
-          return;
-        }
-        // remember new selected date
-        self.options.selectedDate = self.getTargetDateString(event.currentTarget);
+        // Target the day elements and give them click events
+        $container.on(eventName, '.' + targets.day, function (event) {
+            var currentTarget = $(event.currentTarget),
+                target;
 
-        // handle "selected" class
-        $(event.currentTarget)
-          .siblings().removeClass(self.options.classes.selected).end()
-          .addClass(self.options.classes.selected);
-      }
-    });
-    // target the empty calendar boxes as well
-    $container.on(eventType +'.clndr', '.'+this.options.targets.empty, function(event) {
-      if(self.options.clickEvents.click) {
-        var target = self.buildTargetObject(event.currentTarget, false);
-        self.options.clickEvents.click.apply(self, [target]);
-      }
-      if(self.options.adjacentDaysChangeMonth) {
-        if($(event.currentTarget).is( '.' + self.options.classes.lastMonth )) {
-          self.backActionWithContext(self);
-        } else if($(event.currentTarget).is( '.' + self.options.classes.nextMonth )) {
-          self.forwardActionWithContext(self);
-        }
-      }
-    });
+            if (self.options.clickEvents.click) {
+                target = self.buildTargetObject(event.currentTarget, true);
+                self.options.clickEvents.click.apply(self, [target]);
+            }
 
-    // bind the previous, next and today buttons
-    $container
-      .on(eventType +'.clndr', '.'+this.options.targets.previousButton, { context: this }, this.backAction)
-      .on(eventType +'.clndr', '.'+this.options.targets.nextButton, { context: this }, this.forwardAction)
-      .on(eventType +'.clndr', '.'+this.options.targets.todayButton, { context: this }, this.todayAction)
-      .on(eventType +'.clndr', '.'+this.options.targets.nextYearButton, { context: this }, this.nextYearAction)
-      .on(eventType +'.clndr', '.'+this.options.targets.previousYearButton, { context: this }, this.previousYearAction);
-  }
+            // If adjacentDaysChangeMonth is on, we need to change the
+            // month here.
+            if (self.options.adjacentDaysChangeMonth) {
+                if ($currentTarget.is('.' + classes.lastMonth)) {
+                    self.backActionWithContext(self);
+                }
+                else if ($currentTarget.is('.' + classes.nextMonth)) {
+                    self.forwardActionWithContext(self);
+                }
+            }
+
+            // if trackSelectedDate is on, we need to handle click on a new day
+            if (self.options.trackSelectedDate) {
+                if (self.options.ignoreInactiveDaysInSelection
+                    && $currentTarget.hasClass(classes.inactive))
+                {
+                    return;
+                }
+
+                // Remember new selected date
+                self.options.selectedDate =
+                    self.getTargetDateString(event.currentTarget);
+                // Handle "selected" class
+                $currentTarget
+                    .siblings().removeClass(classes.selected).end()
+                    .addClass(classes.selected);
+            }
+        });
+
+        // Target the empty calendar boxes as well
+        $container.on(eventName, '.' + targets.empty, function (event) {
+            var $eventTarget = $(event.currentTarget),
+                target;
+
+            if (self.options.clickEvents.click) {
+                target = self.buildTargetObject(event.currentTarget, false);
+                self.options.clickEvents.click.apply(self, [target]);
+            }
+
+            if (self.options.adjacentDaysChangeMonth) {
+                if ($eventTarget.is('.' + classes.lastMonth)) {
+                    self.backActionWithContext(self);
+                }
+                else if ($eventTarget.is('.' + classes.nextMonth)) {
+                    self.forwardActionWithContext(self);
+                }
+            }
+        });
+
+        // Bind the previous, next and today buttons. We pass the current
+        // context along with the event so that it can update this instance.
+        data = {
+            context: this
+        };
+
+        $container
+            on(eventName, '.' + targets.previousButton, data, this.backAction)
+            on(eventName, '.' + targets.nextButton, data, this.forwardAction)
+            on(eventName, '.' + targets.todayButton, data, this.todayAction)
+            on(eventName, '.' + targets.nextYearButton, data, this.nextYearAction)
+            on(eventName, '.' + targets.previousYearButton, data, this.previousYearAction);
+    };
 
   // If the user provided a click callback we'd like to give them something nice to work with.
   // buildTargetObject takes the DOM element that was clicked and returns an object with
@@ -886,7 +912,7 @@
     }
 
     return target;
-  }
+  };
 
   // get moment date object of the date associated with the given target.
   // this method is meant to be called on ".day" elements.
@@ -901,7 +927,7 @@
     }
 
     return null;
-  }
+  };
 
   // the click handlers in bindEvents need a context, so these are wrappers
   // to the actual functions. Todo: better way to handle this?
@@ -1174,7 +1200,7 @@
     }
 
     return this;
-  }
+  };
 
   Clndr.prototype.back = function(options) {
     if(!this.options.lengthOfTime.days) {
@@ -1208,13 +1234,13 @@
     }
 
     return this;
-  }
+  };
 
   // alternate names for convenience
   Clndr.prototype.next = function(options) {
     this.forward(options);
     return this;
-  }
+  };
 
   Clndr.prototype.previous = function(options) {
     this.back(options);
@@ -1278,7 +1304,7 @@
       }
     }
     return this;
-  }
+  };
 
   Clndr.prototype.previousYear = function(options) {
     this.month.subtract(1, 'year');
@@ -1294,7 +1320,7 @@
       }
     }
     return this;
-  }
+  };
 
   Clndr.prototype.setYear = function(newYear, options) {
     this.month.year(newYear);
@@ -1310,7 +1336,7 @@
       }
     }
     return this;
-  }
+  };
 
   Clndr.prototype.setEvents = function(events) {
     // go through each event and add a moment object
@@ -1356,7 +1382,7 @@
       events[i]._clndrEndDateObject = moment( events[i][self.options.dateParameter] );
     }
     return events;
-  }
+  };
 
   Clndr.prototype.addMultiDayMomentObjectsToEvents = function(events) {
     var self = this;
@@ -1373,7 +1399,7 @@
       }
     }
     return events;
-  }
+  };
 
   Clndr.prototype.calendarDay = function(options) {
     var defaults = { day: "", classes: this.options.targets.empty, events: [], date: null };
@@ -1399,6 +1425,6 @@
     } else if(this.length > 1) {
       throw new Error("CLNDR does not support multiple elements yet. Make sure your clndr selector returns only one element.");
     }
-  }
+  };
 
 }));
