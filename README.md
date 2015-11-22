@@ -1,54 +1,58 @@
 CLNDR.js
 ========
 
-CLNDR is a jQuery calendar plugin. It was created- you've heard this before- out of frustration with the lack of truly dynamic front-end calendar plugins out there.
+CLNDR is a jQuery calendar plugin. It was created -- you've heard this before --
+out of frustration with the lack of truly dynamic front-end calendar plugins out
+there.
 
 See a demo: [kylestetz.github.io/CLNDR/](http://kylestetz.github.io/CLNDR/)
 
---------
-
-#### Clndr.js version 2.0 is coming
-If you are using clndr.js and have any feedback or ideas about a new version, please take a moment to contribute to [#151](https://github.com/kylestetz/CLNDR/issues/151). If you are interested in helping to develop the new version, give a shout in [#136](https://github.com/kylestetz/CLNDR/issues/136). Thanks!
-
---------
-
 - [Download](https://github.com/kylestetz/CLNDR#download)
 - [Dependencies](https://github.com/kylestetz/CLNDR#dependencies)
-  - [Using Bower](https://github.com/kylestetz/CLNDR#using-bower)
-  - [Clndr using Angular.js](https://github.com/kylestetz/CLNDR#clndr-using-angular)
-  - [Clndr using Rails](https://github.com/kylestetz/CLNDR#clndr-using-rails)
+    - [Using Bower](https://github.com/kylestetz/CLNDR#using-bower)
+    - [Clndr using Angular.js](https://github.com/kylestetz/CLNDR#clndr-using-angular)
+    - [Clndr using Rails](https://github.com/kylestetz/CLNDR#clndr-using-rails)
 - [Introduction: You Write The Markup](https://github.com/kylestetz/CLNDR#introduction-you-write-the-markup)
-  - [The 'days' Array](https://github.com/kylestetz/CLNDR#the-days-array)
-  - [Pass in your Events](https://github.com/kylestetz/CLNDR#pass-in-your-events)
+    - [The 'days' Array](https://github.com/kylestetz/CLNDR#the-days-array)
+    - [Pass in your Events](https://github.com/kylestetz/CLNDR#pass-in-your-events)
 - [Usage](https://github.com/kylestetz/CLNDR#usage)
-  - [Multi-day Events](https://github.com/kylestetz/CLNDR#multi-day-events)
-  - [Custom Classes](https://github.com/kylestetz/CLNDR#custom-classes)
-  - [Constraints & Datepickers](https://github.com/kylestetz/CLNDR#constraints--datepickers)
-  - [Returning the Instance / API](https://github.com/kylestetz/CLNDR#returning-the-instance--public-api)
-  - [Template Requirements](https://github.com/kylestetz/CLNDR#template-requirements)
+    - [Multi-day Events](https://github.com/kylestetz/CLNDR#multi-day-events)
+    - [Custom Classes](https://github.com/kylestetz/CLNDR#custom-classes)
+    - [Constraints & Datepickers](https://github.com/kylestetz/CLNDR#constraints--datepickers)
+    - [Returning the Instance / API](https://github.com/kylestetz/CLNDR#returning-the-instance--public-api)
+    - [Template Requirements](https://github.com/kylestetz/CLNDR#template-requirements)
 - [Configuration](https://github.com/kylestetz/CLNDR#some-configuration)
-  - [Template Rendering Engine](https://github.com/kylestetz/CLNDR#template-rendering-engine)
-  - [Internationalization](https://github.com/kylestetz/CLNDR#internationalization)
-  - [Underscore Template Delimiters](https://github.com/kylestetz/CLNDR#underscore-template-delimiters)
-  - [Internet Explorer Issues](https://github.com/kylestetz/CLNDR#internet-explorer-issues)
+    - [Template Rendering Engine](https://github.com/kylestetz/CLNDR#template-rendering-engine)
+    - [Internationalization](https://github.com/kylestetz/CLNDR#internationalization)
+    - [Underscore Template Delimiters](https://github.com/kylestetz/CLNDR#underscore-template-delimiters)
+    - [Internet Explorer Issues](https://github.com/kylestetz/CLNDR#internet-explorer-issues)
 - [Changelog](https://github.com/kylestetz/CLNDR#changelog)
 
 Download
 --------
 
-- development ~ [clndr.js](https://raw.github.com/kylestetz/CLNDR/master/src/clndr.js)
-- production ~ [clndr.min.js](https://raw.github.com/kylestetz/CLNDR/master/clndr.min.js)
+- Development: [clndr.js](https://raw.github.com/kylestetz/CLNDR/master/src/clndr.js)
+- Production: [clndr.min.js](https://raw.github.com/kylestetz/CLNDR/master/clndr.min.js)
 
-Returning to grab a new version? Have a look at the [changelog](https://github.com/kylestetz/CLNDR#changelog) to see what's new.
+Returning to grab a new version? Have a look at the
+[changelog](https://github.com/kylestetz/CLNDR#changelog) to see what's new.
 
-If you'd like to run some tests in a particular browser or environment, `example/test.html` contains a list of basic functionality tests. When contributing, please run these (and add to them when appropriate) before submitting a pull request!
+If you'd like to run some tests in a particular browser or environment,
+`example/test.html` contains a list of basic functionality tests. When
+contributing, please run these (and add to them when appropriate) before
+submitting a pull request!
 
 Dependencies
 ------------
 
-[jQuery](http://jquery.com/download/) and [Moment.js](http://momentjs.com/) are depended upon. By default CLNDR tries to use [Underscore.js](http://underscorejs.org/)'s `_.template()` function, however if you specify a custom rendering function (see documentation below) underscore will not be used at all.
+[jQuery](http://jquery.com/download/) and [Moment.js](http://momentjs.com/) are
+depended upon. By default CLNDR tries to use
+[Underscore.js](http://underscorejs.org/)'s `_.template()` function, however if
+you specify a custom rendering function (see documentation below) underscore
+will not be used at all.
 
-Because their APIs are the same, [Lo-Dash](http://lodash.com/)'s `_.template()` function will work as well! Just include Lo-Dash instead of underscore.
+Because their APIs are the same, [Lo-Dash](http://lodash.com/)'s `_.template()`
+function will work as well! Just include Lo-Dash instead of underscore.
 
 ### Using Bower
 
@@ -58,60 +62,78 @@ You can install CLNDR via [Bower](http://bower.io/):
 bower install clndr
 ```
 
-Underscore is not installed by default. This allows you to use whichever templating engine you want to. If you want to use the default `template` option with Underscore, just install it as a dependency of your project: `bower install underscore`.
+Underscore is not installed by default. This allows you to use whichever
+templating engine you want to. If you want to use the default `template` option
+with Underscore, just install it as a dependency of your project:
+`bower install underscore`.
 
 ### Clndr Using Angular
 
-If you want to integrate clndr into an [angular.js](http://angularjs.org/) site, get started with this directive: [angular-clndr](https://github.com/10KB/angular-clndr).
+If you want to integrate clndr into an [angular.js](http://angularjs.org/) site,
+get started with this directive:
+[angular-clndr](https://github.com/10KB/angular-clndr).
 
 ### Clndr Using Rails
 
-If you're building a rails application you may be interested in this gem by [@sedx](https://github.com/sedx): [clndr-rails](https://github.com/sedx/clndr-rails).
+If you're building a rails application you may be interested in this gem by
+[@sedx](https://github.com/sedx):
+[clndr-rails](https://github.com/sedx/clndr-rails).
 
 
 Introduction: You Write The Markup
 ==================================
 
-There are wonderful and feature-rich calendar modules out there and they all suffer the same problem: they give you markup (and often a good heap of JS) that you have to work with and style. This leads to a lot of hacking, pushing, pulling, and annoying why-can't-it-do-what-I-want scenarios.
+There are wonderful and feature-rich calendar modules out there and they all
+suffer the same problem: they give you markup (and often a good heap of JS)
+that you have to work with and style. This leads to a lot of hacking, pushing,
+pulling, and annoying why-can't-it-do-what-I-want scenarios.
 
-CLNDR doesn't generate markup (well, it has some reasonable defaults, but that's an aside). Instead, CLNDR asks you to create a template and in return it supplies your template with a great set of objects that will get you up and running in a few lines.
+CLNDR doesn't generate markup (well, it has some reasonable defaults, but
+that's an aside). Instead, CLNDR asks you to create a template and in return it
+supplies your template with a great set of objects that will get you up and
+running in a few lines.
 
 The 'Days' Array
 ----------------
 
-Here's a typical CLNDR template. It's got a controller section and a grid section.
+Here's a typical CLNDR template. It's got a controller section and a grid
+section.
 
 ```html
 <div class="clndr-controls">
-  <div class="clndr-previous-button">&lsaquo;</div>
-  <div class="month"><%= month %></div>
-  <div class="clndr-next-button">&rsaquo;</div>
+    <div class="clndr-previous-button">&lsaquo;</div>
+    <div class="month"><%= month %></div>
+    <div class="clndr-next-button">&rsaquo;</div>
 </div>
 <div class="clndr-grid">
-  <div class="days-of-the-week">
-    <% _.each(daysOfTheWeek, function(day) { %>
-      <div class="header-day"><%= day %></div>
-    <% }); %>
-    <div class="days">
-      <% _.each(days, function(day) { %>
+    <div class="days-of-the-week">
+        <% _.each(daysOfTheWeek, function(day) { %>
+        <div class="header-day"><%= day %></div>
+        <% }); %>
+        <div class="days">
+        <% _.each(days, function(day) { %>
         <div class="<%= day.classes %>"><%= day.day %></div>
-      <% }); %>
+        <% }); %>
+        </div>
     </div>
-  </div>
 </div>
 ```
 
-The `days` array contains most of the stuff we need to make a calendar. Its structure looks like this:
+The `days` array contains most of the stuff we need to make a calendar. Its
+structure looks like this:
+
 ```javascript
 {
-  day: 5,
-  classes: "day",
-  events: [],
-  date: moment("2013-05-29")
+    day: 5,
+    events: [],
+    classes: "day",
+    date: moment("2015-12-31")
 }
 ```
 
-This makes quick work of generating a grid. `days.classes` contains extra classes depending on the circumstance: if a given day is today, 'today' will show up, as well as an 'event' class when an event lands on that day.
+This makes quick work of generating a grid. `days.classes` contains extra
+classes depending on the circumstance: if a given day is today, 'today' will
+show up, as well as an 'event' class when an event lands on that day.
 
 Pass In Your Events
 -------------------
@@ -120,11 +142,17 @@ CLNDR accepts events as an array of objects:
 
 ```javascript
 events = [
-  { date: "YYYY-MM-DD or some other ISO Date format", and: "anything else" }
+    {
+        date: "YYYY-MM-DD or some other ISO Date format",
+        and: "anything else"
+    }
 ]
 ```
 
-CLNDR looks through the objects in your events array for a `date` field unless you specify otherwise using the `dateParameter` option. In your template the `days` array will auto-magically contain these event objects in their entirety. See the examples for a demonstration of how events populate the `days` array.
+CLNDR looks through the objects in your events array for a `date` field unless
+you specify otherwise using the `dateParameter` option. In your template the
+`days` array will auto-magically contain these event objects in their entirety.
+See the examples for a demonstration of how events populate the `days` array.
 
 Usage
 =====
@@ -189,35 +217,44 @@ $('.parent-element').clndr({
     selected: "selected"
   }
 
-  // click callbacks! the keyword 'this' is set to the clndr instance in all
+  // Click callbacks! The keyword 'this' is set to the clndr instance in all
   // callbacks.
   clickEvents: {
-    // fired whenever a calendar box is clicked.
-    // returns a 'target' object containing the DOM element, any events,
-    // and the date as a moment.js object.
-    click: function(target){ },
-    // fired when a user goes forward a month.
-    // returns a moment.js object set to the correct month.
-    nextMonth: function(month){ },
-    // fired when a user goes back a month.
-    // returns a moment.js object set to the correct month.
-    previousMonth: function(month){ },
-    // fired when the next year button is clicked.
+    // Fired whenever a calendar box is clicked. Returns a 'target' object
+    // containing the DOM element, any events, and the date as a moment.js
+    // object.
+    click: function (target) {...},
+    // Fired when a user goes to the current month and year. Returns a moment.js
+    // object set to the correct month.
+    today: function (month) {...},
+    // Fired when a user goes forward a month. Returns a moment.js object set
+    // to the correct month.
+    nextMonth: function (month) {...},
+    // Fired when a user goes back a month. Returns a moment.js object set to
+    // the correct month.
+    previousMonth: function (month) {...},
+    // Fires any time the month changes as a result of a click action. Returns
+    // a moment.js object set to the correct month.
+    onMonthChange: function (month) {...},
+    // Fired when the next year button is clicked.
     // returns a moment.js object set to the correct month and year.
-    nextYear: function(month) { },
+    nextYear: function (month) {...},
     // fired when the previous year button is clicked.
     // returns a moment.js object set to the correct month and year.
-    previousYear: function(month) { },
-    // fires any time the month changes as a result of a click action.
-    // returns a moment.js object set to the correct month.
-    onMonthChange: function(month) { },
-    // fires any time the year changes as a result of a click action.
-    // if onMonthChange is also set, it is fired BEFORE onYearChange.
-    // returns a moment.js object set to the correct month and year.
-    onYearChange: function(month) { },
-    // fired when a user goes to the current month & year.
-    // returns a moment.js object set to the correct month.
-    today: function(month){ }
+    previousYear: function (month) {...},
+    // Fires any time the year changes as a result of a click action. If
+    // onMonthChange is also set, it is fired BEFORE onYearChange. Returns a
+    // moment.js object set to the correct month and year.
+    onYearChange: function (month) {...},
+    // Fired when a user goes forward a period. Returns moment.js objects for
+    // the updated start and end date.
+    nextPeriod: function (start, end) {...},
+    // Fired when a user goes bac a period. Returns moment.js objects for the
+    // updated start and end date.
+    previousPeriod: function (start, end) {...},
+    // Fired whenever the time period changes as configured in lengthOfTime.
+    // Returns moment.js objects for the updated start and end date.
+    onPeriodChange: function (start, end) {...}
   },
 
   // use the 'touchstart' event instead of 'click'
