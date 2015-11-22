@@ -62,7 +62,7 @@ match `month` in format, so that now in "April" you also have access to the
 strings "March" and "May". This update is backwards-compatible.
 
 `v1.2.7 ~ 2015-01-21`
-Added the ability to mix multi-day and single-day events using the new
+> Added the ability to mix multi-day and single-day events using the new
 `multiDayEvents.singleDay` property. Also introduced lazy setting of `startDate`
 and `endDate` in multi-day events so that if one of them is missing they will
 both be set to the value that is present. This update is backwards-compatible.
@@ -133,7 +133,7 @@ cause errors, so stop using it now please!
 >  - Public API functions (forward, back, setMonth, setYear) now accept an
 object with options. The only option at the moment is `withCallbacks`, which if
 set to `true` will fire the `onMonthChange` and `onYearChange` callbacks.
-> - There are tests! example/test.html contains a list of human-powered tests
+>  - There are tests! example/test.html contains a list of human-powered tests
 that cover all of the basic functionality.
 >
 > The only backward-compatibility break is the removal of the `days.id` field
