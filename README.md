@@ -106,12 +106,12 @@ section.
 </div>
 <div class="clndr-grid">
     <div class="days-of-the-week">
-        <% _.each(daysOfTheWeek, function(day) { %>
+    <% _.each(daysOfTheWeek, function (day) { %>
         <div class="header-day"><%= day %></div>
-        <% }); %>
+    <% }); %>
         <div class="days">
-        <% _.each(days, function(day) { %>
-        <div class="<%= day.classes %>"><%= day.day %></div>
+        <% _.each(days, function (day) { %>
+            <div class="<%= day.classes %>"><%= day.day %></div>
         <% }); %>
         </div>
     </div>
@@ -596,7 +596,7 @@ myCalendar.addEvents(additionalEventsArray);
 // Remove events.  All events for which the passed in function returns true will
 // be removed from the calendar. Note that this triggers a re-render of the
 // calendar.
-myCalendar.removeEvents(function(event){
+myCalendar.removeEvents(function (event) {
     return event.id == idToRemove;
 });
 
