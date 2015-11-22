@@ -384,29 +384,41 @@ $('.parent-element').clndr({
 All of the things you have access to in your template:
 
 ```javascript
-// an array of day-of-the-week abbreviations,
-// shifted as requested using the weekOffset parameter.
+// An array of day-of-the-week abbreviations, shifted as requested using the
+// weekOffset parameter.
 daysOfTheWeek: ['S', 'M', 'T', etc...]
-// the number of 7-block calendar rows,
-// in the event that you want to do some looping with it
+
+// The number of 7-block calendar rows, in the event that you want to do some
+// looping with it
 numberOfRows: 5
-// the days object, documented in more detail above
-days: [ { day, classes, id, events, date } ]
-// the month name- don't forget that you can do things like
+
+// The days array, documented in more detail above
+days: [{ day, classes, id, events, date }]
+
+// The month name- don't forget that you can do things like
 // month.substring(0, 1) and month.toLowerCase() in your template
-previousMonth: "April"
 month: "May"
-nextMonth: "June"
-// the year that the calendar is currently focused on
+
+// The year that the calendar is currently focused on
 year: "2013"
-// all of the events happening this month
-eventsThisMonth: [ ],
-// all of the events happening last month
-eventsLastMonth: [ ],
-// all of the events happening next month
-eventsNextMonth: [ ],
-// anything you passed into the 'extras' property when creating the clndr
-extras: { }
+
+// All of the events happening this month. This will be empty of the
+// lengthOfTime config option is set.
+eventsThisMonth: []
+// All of the events happening last month. This is only set if
+// showAdjacementMonths is true.
+eventsLastMonth: []
+// All of the events happening next month. This is only set if
+// showAdjacementMonths is true.
+eventsNextMonth: []
+
+// If you specified a custom lengthOfTime, you will have these instead.
+intervalEnd: (moment object)
+intervalStart: (moment object)
+eventsThisInterval: []
+
+// Anything you passed into the 'extras' property when creating the clndr
+extras: {}
 ```
 
 Multi-day Events
