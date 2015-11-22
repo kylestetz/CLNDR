@@ -1289,62 +1289,63 @@
         }, ctx);
     };
 
-    Clndr.prototype.today = function (event /*, ctx */) {
-        // did we switch months when the today button was hit?
-        var monthChanged = !self.month.isSame(moment(), 'month');
-        var yearChanged = !self.month.isSame(moment(), 'year');
+    Clndr.prototype.today = function (options /*, ctx */) {
+        var ctx = ( arguments.length > 1 )
+                ? arguments[ 1 ]
+                : this,
+            timeOpt = ctx.options.lengthOfTime,
+            defaults = {
+                withCallbacks: false
+            },
+            orig = {
+                end: ctx.intervalEnd.clone(),
+                start: ctx.intervalStart.clone()
+            };
 
-        self.month = moment().startOf('month');
+        // Extend any options
+        options = $.extend(true, {}, defaults, options);
+        // @V2-todo Only used for legacy month view
+        ctx.month = moment().startOf('month');
 
-        if(self.options.lengthOfTime.days) {
-          // if there was a startDate specified, we should figure out what the weekday is and
-          // use that as the starting point of our interval. If not, go to today.weekday(0)
-          if(self.options.lengthOfTime.startDate) {
-            self.intervalStart = moment().weekday(self.options.lengthOfTime.startDate.weekday()).startOf('day');
-          } else {
-            self.intervalStart = moment().weekday(0).startOf('day');
-          }
-          self.intervalEnd = self.intervalStart.clone().add(self.options.lengthOfTime.days - 1, 'days').endOf('day');
-
-        } else if(self.options.lengthOfTime.months) {
-          // set the intervalStart to this month.
-          self.intervalStart = moment().startOf('month');
-          self.intervalEnd = self.intervalStart.clone()
-            .add(self.options.lengthOfTime.months || self.options.lengthOfTime.interval, 'months')
-            .subtract(1, 'days')
-            .endOf('month');
-        } else if(monthChanged) {
-          // reset the start interval for the current month
-          self.intervalStart = moment().startOf('month');
-          // no need to re-render if we didn't change months.
-          self.render();
-
-          // fire the today event handler regardless of whether the month changed.
-          if(self.options.clickEvents.today) {
-            self.options.clickEvents.today.apply( self, [moment(self.month)] );
-          }
-
-          // fire the onMonthChange callback
-          if(self.options.clickEvents.onMonthChange) {
-            self.options.clickEvents.onMonthChange.apply( self, [moment(self.month)] );
-          }
-          // maybe fire the onYearChange callback?
-          if(yearChanged) {
-            if(self.options.clickEvents.onYearChange) {
-              self.options.clickEvents.onYearChange.apply( self, [moment(self.month)] );
+        if (timeOpt.days) {
+            // If there was a startDate specified, we should figure out what
+            // the weekday is and use that as the starting point of our
+            // interval. If not, go to today.weekday(0).
+            if (timeOpt.startDate) {
+                ctx.intervalStart = moment()
+                    .weekday(timeOpt.startDate.weekday())
+                    .startOf('day');
+            } else {
+                ctx.intervalStart = moment().weekday(0).startOf('day');
             }
-          }
+
+            ctx.intervalEnd = ctx.intervalStart.clone()
+                .add(timeOpt.days - 1, 'days')
+                .endOf('day');
+        }
+        else {
+            // Set the intervalStart to this month.
+            ctx.intervalStart = moment().startOf('month');
+            ctx.intervalEnd = ctx.intervalStart.clone()
+                .add(timeOpt.months || timeOpt.interval, 'months')
+                .subtract(1, 'days')
+                .endOf('month');
+        }
+        
+        // No need to re-render if we didn't change months.
+        if (!ctx.intervalStart.isSame(orig.start)
+            || !ctx.intervalEnd.isSame(orig.end))
+        {
+            ctx.render();
         }
 
-        if(self.options.lengthOfTime.days || self.options.lengthOfTime.months) {
-          self.render();
-          // fire the today event handler regardless of whether the month changed.
-          if(self.options.clickEvents.today) {
-            self.options.clickEvents.today.apply( self, [moment(self.month)] );
-          }
-          if(self.options.clickEvents.onIntervalChange) {
-            self.options.clickEvents.onIntervalChange.apply( self, [moment(self.intervalStart), moment(self.intervalEnd)] );
-          }
+        // Fire the today event handler regardless of any change
+        if (options.withCallbacks) {
+            if (ctx.options.clickEvents.today) {
+                ctx.options.clickEvents.today.apply(ctx, [moment(ctx.month)]);
+            }
+
+            ctx.triggerEvents(ctx, orig);
         }
     };
 
@@ -1360,59 +1361,89 @@
      * "February", "Mar", etc.
      */
     Clndr.prototype.setMonth = function (newMonth, options) {
-        if (!this.options.lengthOfTime.days && !this.options.lengthOfTime.months) {
-            this.month.month(newMonth);
-      this.intervalStart = this.month.clone().startOf('month');
-      this.intervalEnd = this.intervalStart.clone().endOf('month');
-      this.render();
-      if(options && options.withCallbacks) {
-        if(this.options.clickEvents.onMonthChange) {
-          this.options.clickEvents.onMonthChange.apply( this, [moment(this.month)] );
+        var timeOpt = this.options.lengthOfTime,
+            orig = {
+                end: this.intervalEnd.clone(),
+                start: this.intervalStart.clone()
+            };
+
+        if (timeOpt.days || timeOpt.months) {
+            console.log(
+                'You are using a custom date interval. Use ' +
+                'Clndr.setIntervalStart(startDate) instead.');
+            return this;
         }
-      }
-    } else {
-      console.log('You are using a custom date interval; use Clndr.setIntervalStart(startDate) instead.');
-    }
-    return this;
-  };
+
+        this.month.month(newMonth);
+        this.intervalStart = this.month.clone().startOf('month');
+        this.intervalEnd = this.intervalStart.clone().endOf('month');
+        this.render();
+
+        if (options && options.withCallbacks) {
+            this.triggerEvents(this, orig);
+        }
+
+        return this;
+    };
 
     Clndr.prototype.setYear = function (newYear, options) {
+        var orig = {
+            end: this.intervalEnd.clone(),
+            start: this.intervalStart.clone()
+        };
+
         this.month.year(newYear);
         this.intervalEnd.year(newYear);
         this.intervalStart.year(newYear);
         this.render();
 
         if (options && options.withCallbacks) {
-
+            this.triggerEvents(this, orig);
         }
 
         return this;
     };
 
-  Clndr.prototype.setIntervalStart = function(newDate, options) {
-    // accepts a date string or moment object
-    if(this.options.lengthOfTime.days) {
-      this.intervalStart = moment(newDate).startOf('day');
-      this.intervalEnd = this.intervalStart.clone().add(this.options.lengthOfTime.days - 1, 'days').endOf('day');
-    } else if(this.options.lengthOfTime.months) {
-      this.intervalStart = moment(newDate).startOf('month');
-      this.intervalEnd = this.intervalStart.clone().add(this.options.lengthOfTime.months || this.options.lengthOfTime.interval, 'months').subtract(1, 'days').endOf('month');
-      this.month = this.intervalStart.clone();
-    }
+    /**
+     * Sets the start of the time period according to newDate. newDate can be
+     * a string or a moment object.
+     */
+    Clndr.prototype.setIntervalStart = function (newDate, options) {
+        var timeOpt = this.options.lengthOfTime,
+            orig = {
+                end: this.intervalEnd.clone(),
+                start: this.intervalStart.clone()
+            };
 
-    if(this.options.lengthOfTime.days || this.options.lengthOfTime.months) {
-      this.render();
-
-      if(options && options.withCallbacks) {
-        if(this.options.clickEvents.onIntervalChange) {
-          this.options.clickEvents.onIntervalChange.apply( this, [moment(this.intervalStart), moment(this.intervalEnd)] );
+        if (!timeOpt.days && !timeOpt.months) {
+            console.log(
+                'You are using a custom date interval. Use ' +
+                'Clndr.setIntervalStart(startDate) instead.');
+            return this;
         }
-      }
-    } else {
-      console.log('You are using a custom date interval; use Clndr.setIntervalStart(startDate) instead.');
-    }
-    return this;
-  }
+
+        if (timeOpt.days) {
+            this.intervalStart = moment(newDate).startOf('day');
+            this.intervalEnd = this.intervalStart.clone()
+                .add(timeOpt - 1, 'days')
+                .endOf('day');
+        } else {
+            this.intervalStart = moment(newDate).startOf('month');
+            this.intervalEnd = this.intervalStart.clone()
+                .add(timeOpt.months || timeOpt.interval, 'months')
+                .subtract(1, 'days')
+                .endOf('month');
+        }
+
+        this.month = this.intervalStart.clone();
+        this.render();
+
+        if (options && options.withCallbacks) {
+            this.triggerEvents(this, orig);
+        }
+
+        return this;
+    };
 
     /**
      * Overwrites events in the calendar and triggers a render.
