@@ -742,6 +742,12 @@
                 }
             }
 
+            // Just like the classes we'll set this internal state to true and
+            // handle the disabling below.
+            for (var i in this.constraints) {
+                this.constraints[i] = true;
+            }
+
             if (this.options.constraints.startDate) {
                 start = moment(this.options.constraints.startDate);
             }
@@ -1080,7 +1086,7 @@
 
         // Before we do anything, check if any constraints are limiting this
         if (!ctx.constraints.previous) {
-            return;
+            return ctx;
         }
 
         if (!timeOpt.days) {
@@ -1154,7 +1160,7 @@
 
         // Before we do anything, check if any constraints are limiting this
         if (!ctx.constraints.next) {
-            return;
+            return ctx;
         }
 
         if (ctx.options.lengthOfTime.days) {
@@ -1225,7 +1231,7 @@
 
         // Before we do anything, check if any constraints are limiting this
         if (!ctx.constraints.previousYear) {
-            return;
+            return ctx;
         }
 
         ctx.month.subtract(1, 'year');
@@ -1267,7 +1273,7 @@
 
         // Before we do anything, check if any constraints are limiting this
         if (!ctx.constraints.nextYear) {
-            return;
+            return ctx;
         }
 
         ctx.month.add(1, 'year');
