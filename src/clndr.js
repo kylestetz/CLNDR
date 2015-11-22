@@ -1005,9 +1005,11 @@
         // We want to determine if any of the change conditions have been
         // hit and then trigger our events based off that.
         nextMonth = newInt.start.isAfter( orig.start )
-            && Math.abs(newInt.start.month() - orig.start.month()) == 1;
+            && (Math.abs(newInt.start.month() - orig.start.month()) == 1
+                || orig.start.month() === 11 && newInt.start.month() === 0);
         prevMonth = newInt.start.isBefore( orig.start )
-            && Math.abs(orig.start.month() - newInt.start.month()) == 1;
+            && (Math.abs(orig.start.month() - newInt.start.month()) == 1
+                || orig.start.month() === 0 && newInt.start.month() === 11);
         monthChanged = newInt.start.month() !== orig.start.month()
             || newInt.start.year() !== orig.start.year();
         nextYear = newInt.start.year() - orig.start.year() === 1

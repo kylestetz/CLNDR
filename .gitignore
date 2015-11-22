@@ -1,5 +1,5 @@
 /node_modules
 /bower_components
 .DS_Store
-/example/test/
+/demo/test/
 commit_checklist.md
