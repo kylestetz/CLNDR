@@ -7,6 +7,8 @@ there.
 
 See a demo: [kylestetz.github.io/CLNDR/](http://kylestetz.github.io/CLNDR/)
 
+--------
+
 - [Download](https://github.com/kylestetz/CLNDR#download)
 - [Dependencies](https://github.com/kylestetz/CLNDR#dependencies)
     - [Using Bower](https://github.com/kylestetz/CLNDR#using-bower)
