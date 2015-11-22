@@ -820,9 +820,9 @@
         $container
             .off(eventName, '.' + targets.day)
             .off(eventName, '.' + targets.empty)
-            .off(eventName, '.' + targets.previousButton)
             .off(eventName, '.' + targets.nextButton)
             .off(eventName, '.' + targets.todayButton)
+            .off(eventName, '.' + targets.previousButton)
             .off(eventName, '.' + targets.nextYearButton)
             .off(eventName, '.' + targets.previousYearButton);
 
@@ -892,9 +892,9 @@
         };
 
         $container
-            .on(eventName, '.' + targets.previousButton, data, this.backAction)
-            .on(eventName, '.' + targets.nextButton, data, this.forwardAction)
             .on(eventName, '.' + targets.todayButton, data, this.todayAction)
+            .on(eventName, '.' + targets.nextButton, data, this.forwardAction)
+            .on(eventName, '.' + targets.previousButton, data, this.backAction)
             .on(eventName, '.' + targets.nextYearButton, data, this.nextYearAction)
             .on(eventName, '.' + targets.previousYearButton, data, this.previousYearAction);
     };
@@ -1129,7 +1129,7 @@
     Clndr.prototype.backActionWithContext = function (ctx) {
         ctx.back({
             withCallbacks: true
-        }, ctx );
+        }, ctx);
     };
 
     Clndr.prototype.previous = function (options) {
@@ -1203,7 +1203,7 @@
     Clndr.prototype.forwardActionWithContext = function (ctx) {
         ctx.forward({
             withCallbacks: true
-        }, ctx );
+        }, ctx);
     };
 
     Clndr.prototype.next = function (options) {
