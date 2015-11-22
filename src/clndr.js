@@ -632,7 +632,8 @@
             start = null,
             oneYearFromEnd = this.intervalEnd.clone().add(1, 'years'),
             oneYearAgo = this.intervalStart.clone().subtract(1, 'years'),
-            days, months, currentMonth, eventsThisInterval;
+            days, months, currentMonth, eventsThisInterval,
+            numberOfRows;
         this.calendarContainer.empty();
 
         if (this.options.lengthOfTime.days) {
@@ -657,6 +658,7 @@
         }
         else if (this.options.lengthOfTime.months) {
             months = [];
+            numberOfRows = 0;
             eventsThisInterval = [];
 
             for (i = 0; i < this.options.lengthOfTime.months; i++) {
@@ -678,12 +680,18 @@
                 });
             }
 
+            // Get the total number of rows across all months
+            for (i in months) {
+                numberOfRows += Math.ceil(months[i].days.length / 7);
+            }
+
             data = {
                 days: [],
                 year: null,
                 month: null,
                 months: months,
                 eventsThisMonth: [],
+                numberOfRows: numberOfRows,
                 extras: this.options.extras,
                 intervalEnd: this.intervalEnd,
                 intervalStart: this.intervalStart,
@@ -691,10 +699,6 @@
                 eventsLastMonth: this.eventsLastMonth,
                 eventsNextMonth: this.eventsNextMonth,
                 eventsThisInterval: eventsThisInterval,
-                // @TODO -- remove _.reduce to remove underscore dependency
-                numberOfRows: _.reduce(months, function (memo, monthObj) {
-                    return memo + Math.ceil(monthObj.days.length / 7);
-                }, 0)
             };
         }
         else {

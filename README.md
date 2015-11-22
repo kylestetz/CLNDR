@@ -48,11 +48,11 @@ Dependencies
 [jQuery](http://jquery.com/download/) and [Moment.js](http://momentjs.com/) are
 depended upon. By default CLNDR tries to use
 [Underscore.js](http://underscorejs.org/)'s `_.template()` function, however if
-you specify a custom rendering function (see documentation below) underscore
+you specify a custom rendering function (see documentation below) Underscore
 will not be used at all.
 
 Because their APIs are the same, [Lo-Dash](http://lodash.com/)'s `_.template()`
-function will work as well! Just include Lo-Dash instead of underscore.
+function will work as well! Just include Lo-Dash instead of Underscore.
 
 ### Using Bower
 
@@ -156,9 +156,9 @@ See the examples for a demonstration of how events populate the `days` array.
 Usage
 =====
 
-CLNDR leans on the awesome work done in underscore.js and moment.js. These are
+CLNDR leans on the awesome work done in Underscore and moment. These are
 requirements unless you are using a different rendering engine, in which case
-underscore is not a requirement). Do be sure to include them in your `<head>`
+Underscore is not a requirement). Do be sure to include them in your `<head>`
 before clndr.js. It is a jQuery plugin, so naturally you'll need that as well.
 
 The bare minimum (CLNDR includes a default template):
@@ -667,9 +667,9 @@ $('#my-calendar').clndr({
 
 Where the function must return the HTML result of the rendering operation. In
 this case you would precompile your template elsewhere in your code, since CLNDR
-only cares about your template if it's going to use underscore.
+only cares about your template if it's going to use Underscore.
 
-If you are using your own render method, underscore.js is NOT a dependency of
+If you are using your own render method, Underscore is NOT a dependency of
 this plugin.
 
 CLNDR has been tested successfully with [doT.js](http://olado.github.io/doT/),
