@@ -390,18 +390,18 @@ $( function() {
 
     // Test lengthOfTime.days option (14 days incremented by 7)
     // =========================================================================
-    clndr.oneWeek = $('#one-week').clndr({
+    clndr.twoWeeks = $('#one-week').clndr({
         template: $('#clndr-oneweek-template').html(),
         lengthOfTime: {
             days: 14,
             interval: 7,
-            startDate: moment().add(1, 'weeks').weekday(0)
+            startDate: moment().weekday(0)
         }
     });
 
     // Test lengthOfTime.days option (14 days incremented by 7)
     // =========================================================================
-    clndr.oneWeekWithConstraints = $('#one-week-with-constraints').clndr({
+    clndr.twoWeeksWithConstraints = $('#one-week-with-constraints').clndr({
         template: $('#clndr-oneweek-template').html(),
         events: multidayArray,
         multiDayEvents: {
@@ -411,7 +411,7 @@ $( function() {
         lengthOfTime: {
             days: 14,
             interval: 7,
-            startDate: moment().add(1, 'weeks').weekday(0)
+            startDate: moment().weekday(0)
         },
         constraints: {
             startDate: moment().format('YYYY-MM-') + '04',
