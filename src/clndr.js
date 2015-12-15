@@ -107,7 +107,8 @@
             onYearChange: null,
             previousMonth: null,
             onMonthChange: null,
-            previousInterval: null
+            previousInterval: null,
+            onIntervalChange: null
         },
         targets: {
             day: 'day',

@@ -259,15 +259,15 @@ $('.parent-element').clndr({
 
         // Fired when a user goes forward a period. Returns moment.js objects
         // for the updated start and end date.
-        nextPeriod: function (start, end) {...},
+        nextInterval: function (start, end) {...},
 
-        // Fired when a user goes bac a period. Returns moment.js objects for
+        // Fired when a user goes back an interval. Returns moment.js objects for
         // the updated start and end date.
-        previousPeriod: function (start, end) {...},
+        previousInterval: function (start, end) {...},
 
         // Fired whenever the time period changes as configured in lengthOfTime.
         // Returns moment.js objects for the updated start and end date.
-        onPeriodChange: function (start, end) {...}
+        onPeriodInterval: function (start, end) {...}
     },
 
     // Use the 'touchstart' event instead of 'click'
