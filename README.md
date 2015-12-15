@@ -267,7 +267,7 @@ $('.parent-element').clndr({
 
         // Fired whenever the time period changes as configured in lengthOfTime.
         // Returns moment.js objects for the updated start and end date.
-        onPeriodInterval: function (start, end) {...}
+        onIntervalChange: function (start, end) {...}
     },
 
     // Use the 'touchstart' event instead of 'click'
