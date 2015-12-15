@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-`v1.4.0 ~ 2015-?-?`
+`v1.4.0 ~ 2015-11-25`
 > Updated codebase according to a style convention, re-factored event handling,
 and fixed some small inconsistencies in event firing.
 

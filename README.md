@@ -443,8 +443,8 @@ var lotsOfEvents = [
 $('#calendar').clndr({
     events: lotsOfEvents,
     multiDayEvents: {
-        endDate: 'end'
-        startDate: 'start',
+        endDate: 'end',
+        startDate: 'start'
     }
 });
 ```
