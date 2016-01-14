@@ -1,6 +1,9 @@
 Changelog
 ---------
 
+`v1.4.1 ~ 2015-12-15`
+> Fixed intervals ref in docs, added onIntervalChange to defaults.clickEvents.
+
 `v1.4.0 ~ 2015-11-25`
 > Updated codebase according to a style convention, re-factored event handling,
 and fixed some small inconsistencies in event firing.
