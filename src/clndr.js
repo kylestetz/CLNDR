@@ -672,12 +672,18 @@
                 var days = this.createDaysObject(
                     currentIntervalStart,
                     currentIntervalEnd);
+                    
+                // Get the total number of rows across the month
+                var numberOfRowsMonth = Math.ceil(days.length / 7);
+                    
                 // Save events processed for each month into a master array of
                 // events for this interval
                 eventsThisInterval.push(this.eventsThisInterval);
                 months.push({
                     days: days,
-                    month: currentIntervalStart
+                    month: currentIntervalStart,
+                    year: currentIntervalStart.year(),
+                    numberOfRows: numberOfRowsMonth
                 });
             }
 
