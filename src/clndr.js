@@ -554,7 +554,9 @@
         }
 
         if (eventsToday.length) {
-            extraClasses += (" " + this.options.classes.event);
+            var eventObj = eventsToday[0];
+            var eventUniqueClass = eventObj.type || '';
+            extraClasses += (" " + this.options.classes.event + " " + eventUniqueClass);
         }
 
         if (!this.options.lengthOfTime.days) {
@@ -1349,7 +1351,7 @@
                 .subtract(1, 'days')
                 .endOf('month');
         }
-        
+
         // No need to re-render if we didn't change months.
         if (!ctx.intervalStart.isSame(orig.start)
             || !ctx.intervalEnd.isSame(orig.end))
