@@ -1,5 +1,7 @@
 Changelog
 ---------
+`v1.4.2 ~ 2016-03-25`
+> Added custom unique class names to each event according to events type property.
 
 `v1.4.1 ~ 2015-12-15`
 > Fixed intervals ref in docs, added onIntervalChange to defaults.clickEvents.
