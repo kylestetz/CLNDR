@@ -1,6 +1,5 @@
 Changelog
 ---------
-
 `v1.4.1 ~ 2015-12-15`
 > Fixed intervals ref in docs, added onIntervalChange to defaults.clickEvents.
 

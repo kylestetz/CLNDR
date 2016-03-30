@@ -171,6 +171,12 @@ p {
 .cal1 .clndr .clndr-table tr .day.my-event:hover {
   background: #96d478;
 }
+.cal1 .clndr .clndr-table tr .day.halfDay {
+  background-color: red;
+}
+.cal1 .clndr .clndr-table tr .day.beforeNoon {
+  background-color: blue;
+}
 .cal1 .clndr .clndr-table tr .day.inactive,
 .cal1 .clndr .clndr-table tr .day.my-inactive {
   background: #ddd;
