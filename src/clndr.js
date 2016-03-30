@@ -1,5 +1,5 @@
 /**
- *               ~ CLNDR v1.4.2 ~
+ *               ~ CLNDR v1.4.1 ~
  * ==============================================
  *       https://github.com/kylestetz/CLNDR
  * ==============================================
@@ -555,8 +555,9 @@
 
         if (eventsToday.length) {
             var eventObj = eventsToday[0];
-            var eventUniqueClass = eventObj.type || '';
-            extraClasses += (" " + this.options.classes.event + " " + eventUniqueClass);
+            // If event has 'eventSpecificClass' property defined, than add its value as class name;
+            var eventSpecificClass = eventObj.eventSpecificClass || '';
+            extraClasses += (" " + this.options.classes.event + " " + eventSpecificClass);
         }
 
         if (!this.options.lengthOfTime.days) {

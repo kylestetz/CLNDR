@@ -17,11 +17,15 @@ $(document).ready( function() {
         {
             title: 'Multi-Day Event',
             endDate: thisMonth + '-14',
-            startDate: thisMonth + '-10'
+            startDate: thisMonth + '-10',
+            // This is to style this event diffenrently
+            eventSpecificClass: 'halfDay beforeNoon'
         }, {
             endDate: thisMonth + '-23',
             startDate: thisMonth + '-21',
-            title: 'Another Multi-Day Event'
+            title: 'Another Multi-Day Event',
+            // This is to style this event diffenrently
+            eventSpecificClass: 'halfDay afterNoon'
         }, {
             date: thisMonth + '-27',
             title: 'Single Day Event'
