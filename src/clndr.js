@@ -230,7 +230,7 @@
 
         // If we've got constraints set, make sure the interval is within them.
         if (this.options.constraints) {
-            // First check if the start date exists & is later than now.
+            // First check if the startDate exists & is later than now.
             if (this.options.constraints.startDate) {
                 var startMoment = moment(this.options.constraints.startDate);
 
@@ -242,9 +242,17 @@
                     this.month
                         .set('month', startMoment.month())
                         .set('year', startMoment.year());
+
+                    // Check the intervalEnd is not earlier than now.
+                    if (this.intervalEnd.isBefore(startMoment, 'month')) {
+                        this.intervalEnd
+                            .set('month', startMoment.month())
+                            .set('year', startMoment.year());
+                    }
                 }
             }
-            // Make sure the intervalEnd is before the endDate
+
+            // Make sure the intervalEnd is before the endDate.
             if (this.options.constraints.endDate) {
                 var endMoment = moment(this.options.constraints.endDate);
 
@@ -255,6 +263,13 @@
                     this.month
                         .set('month', endMoment.month())
                         .set('year', endMoment.year());
+
+                    // Check the intervalStart is not later than now.
+                    if (this.intervalStart.isAfter(endMoment, 'month')) {
+                        this.intervalStart
+                            .set('month', endMoment.month())
+                            .set('year', endMoment.year());
+                    }
                 }
             }
         }
@@ -1349,7 +1364,7 @@
                 .subtract(1, 'days')
                 .endOf('month');
         }
-        
+
         // No need to re-render if we didn't change months.
         if (!ctx.intervalStart.isSame(orig.start)
             || !ctx.intervalEnd.isSame(orig.end))
