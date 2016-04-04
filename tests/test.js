@@ -423,7 +423,12 @@ $( function() {
     // =========================================================================
     clndr.selectedDate = $('#selected-date').clndr({
         template: $('#clndr-template').html(),
-        trackSelectedDate: true
+        trackSelectedDate: true,
+        clickEvents: {
+            onDateSelect: function(target) {
+                console.log('on date select');
+            }
+        }
     });
 
     // Test selectedDate option with ignoreInactiveDaysInSelection

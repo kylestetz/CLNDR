@@ -267,7 +267,13 @@ $('.parent-element').clndr({
 
         // Fired whenever the time period changes as configured in lengthOfTime.
         // Returns moment.js objects for the updated start and end date.
-        onIntervalChange: function (start, end) {...}
+        onIntervalChange: function (start, end) {...},
+
+        // Fired whenever a date is selected. This will only matter if
+        // you are using the `trackSelectedDate` option. Returns a 'target' object
+        // containing the DOM element, any events, and the date as a moment.js
+        // object.
+        onDateSelect: function (target) {...}
     },
 
     // Use the 'touchstart' event instead of 'click'

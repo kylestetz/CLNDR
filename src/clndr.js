@@ -108,7 +108,8 @@
             previousMonth: null,
             onMonthChange: null,
             previousInterval: null,
-            onIntervalChange: null
+            onIntervalChange: null,
+            onDateSelect: null
         },
         targets: {
             day: 'day',
@@ -841,8 +842,11 @@
             var $currentTarget = $(event.currentTarget),
                 target;
 
-            if (self.options.clickEvents.click) {
+            if (self.options.clickEvents.click || self.options.clickEvents.onDateSelect) {
                 target = self.buildTargetObject(event.currentTarget, true);
+            }
+
+            if (self.options.clickEvents.click) {
                 self.options.clickEvents.click.apply(self, [target]);
             }
 
@@ -872,6 +876,10 @@
                 $currentTarget
                     .siblings().removeClass(classes.selected).end()
                     .addClass(classes.selected);
+
+                if (self.options.clickEvents.onDateSelect) {
+                    self.options.clickEvents.onDateSelect.apply(self, [target]);
+                }
             }
         });
 
@@ -1349,7 +1357,7 @@
                 .subtract(1, 'days')
                 .endOf('month');
         }
-        
+
         // No need to re-render if we didn't change months.
         if (!ctx.intervalStart.isSame(orig.start)
             || !ctx.intervalEnd.isSame(orig.end))
