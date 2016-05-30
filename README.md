@@ -673,9 +673,10 @@ If you are using your own render method, Underscore is NOT a dependency of
 this plugin.
 
 CLNDR has been tested successfully with [doT.js](http://olado.github.io/doT/),
-[Hogan.js](http://twitter.github.io/hogan.js/), and
-[Handlebars.js](http://handlebarsjs.com/). Please get in touch if you have
-success with other languages and they will be documented here.
+[Hogan.js](http://twitter.github.io/hogan.js/), 
+[Handlebars.js](http://handlebarsjs.com/), and 
+[Mustache.js](https://github.com/janl/mustache.js/). Please get in touch if you
+have success with other languages and they will be documented here.
 
 Here's an example using [doT.js](http://olado.github.io/doT/)...
 
@@ -710,6 +711,41 @@ $('#calendar').clndr({
     render: function (data) {
         return clndrTemplate(data);
     }
+});
+```
+
+Here's an example using [Mustache.js](https://github.com/janl/mustache.js/)...
+
+The markup:
+```html
+<script type="x-tmpl-mustache" id="calendar-tmpl">
+    <div class="controls">
+        <span class="clndr-previous-button">prev</span>
+        <span class="month">{{month}}</span>
+        <span class="year">{{year}}</span>
+        <span class="clndr-next-button">next</span>
+    </div>
+    <div class="days-container">
+        <div class="days">
+            <div class="headers">
+                {{#daysOfTheWeek}}
+                    <div class="day-header">{{.}}</div>
+                {{/daysOfTheWeek}}
+            </div>
+            {{#days}}
+                <div class="{{classes}}" id="{{id}}">{{day}}</div>
+            {{/days}}
+        </div>
+    </div>
+</script>
+```
+
+The Javascript:
+```javascript
+$('#calendar').clndr({
+    render: function (data) {
+        return Mustache.render($('#calendar-tmpl').html(), data);
+    },
 });
 ```
 
