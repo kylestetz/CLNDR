@@ -1081,7 +1081,7 @@
      */
     Clndr.prototype.back = function (options /*, ctx */) {
         var yearChanged = null,
-            ctx = ( arguments.length > 1 )
+            ctx = (arguments.length > 1)
                 ? arguments[ 1 ]
                 : this,
             timeOpt = ctx.options.lengthOfTime,
@@ -1155,8 +1155,8 @@
      * which is an internal method that this library uses.
      */
     Clndr.prototype.forward = function (options /*, ctx */) {
-        var ctx = ( arguments.length > 1 )
-                ? arguments[ 1 ]
+        var ctx = (arguments.length > 1)
+                ? arguments[1]
                 : this,
             timeOpt = ctx.options.lengthOfTime,
             defaults = {
@@ -1227,8 +1227,8 @@
      * Main action to go back one year.
      */
     Clndr.prototype.previousYear = function (options /*, ctx */) {
-        var ctx = ( arguments.length > 1 )
-                ? arguments[ 1 ]
+        var ctx = (arguments.length > 1)
+                ? arguments[1]
                 : this,
             defaults = {
                 withCallbacks: false
@@ -1269,8 +1269,8 @@
      * Main action to go forward one year.
      */
     Clndr.prototype.nextYear = function (options /*, ctx */) {
-        var ctx = ( arguments.length > 1 )
-                ? arguments[ 1 ]
+        var ctx = (arguments.length > 1)
+                ? arguments[1]
                 : this,
             defaults = {
                 withCallbacks: false
@@ -1308,8 +1308,8 @@
     };
 
     Clndr.prototype.today = function (options /*, ctx */) {
-        var ctx = ( arguments.length > 1 )
-                ? arguments[ 1 ]
+        var ctx = (arguments.length > 1)
+                ? arguments[1]
                 : this,
             timeOpt = ctx.options.lengthOfTime,
             defaults = {
@@ -1481,7 +1481,11 @@
     /**
      * Adds additional events to the calendar and triggers a render.
      */
-    Clndr.prototype.addEvents = function (events) {
+    Clndr.prototype.addEvents = function (events /*, reRender*/) {
+        var reRender = (arguments.length > 1)
+            ? arguments[1]
+            : true;
+
         // Go through each event and add a moment object
         if (this.options.multiDayEvents) {
             this.options.events = $.merge(
@@ -1493,7 +1497,10 @@
                 this.addMomentObjectToEvents(events));
         }
 
-        this.render();
+        if (reRender) {
+            this.render();
+        }
+
         return this;
     };
 
