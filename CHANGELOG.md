@@ -1,6 +1,9 @@
 Changelog
 ---------
 
+`v1.4.2 ~ 2016-06-29`
+> Added second option to `addEvents` to suppress the re-render.
+
 `v1.4.1 ~ 2015-12-15`
 > Fixed intervals ref in docs, added onIntervalChange to defaults.clickEvents.
 
