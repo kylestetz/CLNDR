@@ -612,7 +612,7 @@ myCalendar.removeEvents(function (event) {
     return event.id == idToRemove;
 });
 
-// Detroy the clndr instance. This will empty the DOM node containing the
+// Destroy the clndr instance. This will empty the DOM node containing the
 // calendar.
 myCalendar.destroy();
 ```
