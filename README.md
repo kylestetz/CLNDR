@@ -667,9 +667,10 @@ this plugin.
 
 CLNDR has been tested successfully with [doT.js](http://olado.github.io/doT/),
 [Hogan.js](http://twitter.github.io/hogan.js/), 
-[Handlebars.js](http://handlebarsjs.com/), and 
-[Mustache.js](https://github.com/janl/mustache.js/). Please get in touch if you
-have success with other languages and they will be documented here.
+[Handlebars.js](http://handlebarsjs.com/), 
+[Mustache.js](https://github.com/janl/mustache.js/), and
+[Knockout.js](https://github.com/karl-sjogren/clndr-knockout). Please get in touch
+if you have success with other languages and they will be documented here.
 
 Here's an example using [doT.js](http://olado.github.io/doT/)...
 
