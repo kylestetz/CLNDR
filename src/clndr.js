@@ -818,6 +818,7 @@
 
     Clndr.prototype.bindEvents = function () {
         var self = this,
+            data = {},
             $container = $(this.element),
             targets = this.options.targets,
             classes = self.options.classes,
