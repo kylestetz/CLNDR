@@ -243,9 +243,39 @@ $( function() {
         }
     });
 
+    // Test constraints
+    // The 22nd of previous month to the 5th of next month
+    // =========================================================================
+    clndr.prevNextMonthConstriants = $('#prev-next-month-constraints').clndr({
+        constraints: {
+            startDate: moment().subtract(1, 'months').format('YYYY-MM-') + '22',
+            endDate: moment().add(1, 'months').format('YYYY-MM-05')
+        },
+    });
+
+    // Test constraints
+    // The 2nd to the 5th of previous month
+    // =========================================================================
+    clndr.prevMonthConstraints = $('#prev-month-constraints').clndr({
+        constraints: {
+            startDate: moment().subtract(1, 'months').format('YYYY-MM-') + '02',
+            endDate: moment().subtract(1, 'months').format('YYYY-MM-05')
+        },
+    });
+
+    // Test constraints
+    // The 22nd to the 25th of next month
+    // =========================================================================
+    clndr.nextMonthConstraints = $('#next-month-constraints').clndr({
+        constraints: {
+            startDate: moment().add(1, 'months').format('YYYY-MM-') + '22',
+            endDate: moment().add(1, 'months').format('YYYY-MM-25')
+        },
+    });
+
     // Test the start constraint by itself (4th of this month)
     // =========================================================================
-    clndr.startConstriant = $('#start-constraint').clndr({
+    clndr.startConstraint = $('#start-constraint').clndr({
         constraints: {
             startDate: moment().format('YYYY-MM-') + '04'
         }
@@ -253,7 +283,7 @@ $( function() {
 
     // Test the end constraint by itself (12th of next month)
     // =========================================================================
-    clndr.endConstriant = $('#end-constraint').clndr({
+    clndr.endConstraint = $('#end-constraint').clndr({
         constraints: {
             endDate: moment().add(1, 'months').format('YYYY-MM-') + '12'
         }
@@ -416,6 +446,38 @@ $( function() {
         constraints: {
             startDate: moment().format('YYYY-MM-') + '04',
             endDate: moment().add(1, 'months').format('YYYY-MM-12')
+        }
+    });
+
+    // Test lengthOfTime.days option with constraints (14 days incremented by 7)
+    // The 2nd to the 5th of previous month
+    // =========================================================================
+    clndr.twoWeeksWithPrevMonthConstraints = $('#one-week-with-prev-month-constraints').clndr({
+        template: $('#clndr-oneweek-template').html(),
+        lengthOfTime: {
+            days: 14,
+            interval: 7,
+            startDate: moment().weekday(0)
+        },
+        constraints: {
+            startDate: moment().subtract(1, 'months').format('YYYY-MM-') + '02',
+            endDate: moment().subtract(1, 'months').format('YYYY-MM-05')
+        }
+    });
+
+    // Test lengthOfTime.days option with constraints (14 days incremented by 7)
+    // The 22nd to the 25th of next month
+    // =========================================================================
+    clndr.twoWeeksWithNextMonthConstraints = $('#one-week-with-next-month-constraints').clndr({
+        template: $('#clndr-oneweek-template').html(),
+        lengthOfTime: {
+            days: 14,
+            interval: 7,
+            startDate: moment().weekday(0)
+        },
+        constraints: {
+            startDate: moment().add(1, 'months').format('YYYY-MM-') + '22',
+            endDate: moment().add(1, 'months').format('YYYY-MM-25')
         }
     });
 
