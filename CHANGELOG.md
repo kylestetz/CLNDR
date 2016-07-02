@@ -1,6 +1,9 @@
 Changelog
 ---------
 
+`v1.4.3 ~ 2016-07-01`
+> Bug fix for data is not defined, PR from keioka.
+
 `v1.4.2 ~ 2016-06-29`
 > Added second option to `addEvents` to suppress the re-render.
 

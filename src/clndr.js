@@ -1,5 +1,5 @@
 /**
- *               ~ CLNDR v1.4.2 ~
+ *               ~ CLNDR v1.4.3 ~
  * ==============================================
  *       https://github.com/kylestetz/CLNDR
  * ==============================================
@@ -817,8 +817,8 @@
     };
 
     Clndr.prototype.bindEvents = function () {
-        var self = this,
-            data = {},
+        var data = {},
+            self = this,
             $container = $(this.element),
             targets = this.options.targets,
             classes = self.options.classes,
