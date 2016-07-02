@@ -1,6 +1,9 @@
 Changelog
 ---------
 
+`v1.4.4 ~ 2016-07-02`
+> Bug fix for `startWithMonth` when used in a weekly calendar.
+
 `v1.4.3 ~ 2016-07-01`
 > Bug fix for data is not defined, PR from keioka.
 
