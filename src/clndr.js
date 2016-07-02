@@ -137,6 +137,10 @@
      * objects containing event information from the events array.
      */
     function Clndr(element, options) {
+        var dayDiff;
+        var constraintEnd;
+        var constraintStart;
+
         this.element = element;
 
         // Merge the default options with user-provided options
@@ -181,6 +185,7 @@
             if (this.options.lengthOfTime.months) {
                 // Gonna go right ahead and annihilate any chance for bugs here
                 this.options.lengthOfTime.days = null;
+
                 // The length is specified in months. Is there a start date?
                 if (this.options.lengthOfTime.startDate) {
                     this.intervalStart =
@@ -193,6 +198,7 @@
                 } else {
                     this.intervalStart = moment().startOf('month');
                 }
+
                 // Subtract a day so that we are at the end of the interval. We
                 // always want intervalEnd to be inclusive.
                 this.intervalEnd = moment(this.intervalStart)
@@ -205,10 +211,11 @@
                 if (this.options.lengthOfTime.startDate) {
                     this.intervalStart =
                         moment(this.options.lengthOfTime.startDate)
-                            .startOf('day');
+                            .startOf('week');
                 } else {
                     this.intervalStart = moment().weekday(0).startOf('day');
                 }
+
                 this.intervalEnd = moment(this.intervalStart)
                     .add(this.options.lengthOfTime.days - 1, 'days')
                     .endOf('day');
@@ -232,43 +239,81 @@
         if (this.options.constraints) {
             // First check if the startDate exists & is later than now.
             if (this.options.constraints.startDate) {
-                var startMoment = moment(this.options.constraints.startDate);
+                constraintStart = moment(this.options.constraints.startDate);
 
-                if (this.intervalStart.isBefore(startMoment, 'month')) {
-                    // Try to preserve the date by moving only the month...
-                    this.intervalStart
-                        .set('month', startMoment.month())
-                        .set('year', startMoment.year());
-                    this.month
-                        .set('month', startMoment.month())
-                        .set('year', startMoment.year());
+                // We need to handle the constraints differently for weekly
+                // calendars vs. monthly calendars.
+                if (this.options.lengthOfTime.days) {
+                    if (this.intervalStart.isBefore(constraintStart, 'week')) {
+                        this.intervalStart = constraintStart.startOf('week');
+                    }
 
-                    // Check the intervalEnd is not earlier than now.
-                    if (this.intervalEnd.isBefore(startMoment, 'month')) {
+                    // If the new interval period is less than the desired length
+                    // of time, or before the starting interval, then correct it.
+                    dayDiff = this.intervalStart.diff(this.intervalEnd, 'days');
+
+                    if (dayDiff < this.options.lengthOfTime.days
+                        || this.intervalEnd.isBefore(this.intervalStart))
+                    {
+                        this.intervalEnd = moment(this.intervalStart)
+                            .add(this.options.lengthOfTime.days - 1, 'days')
+                            .endOf('day');
+                        this.month = this.intervalStart.clone();
+                    }
+                }
+                else {
+                    if (this.intervalStart.isBefore(constraintStart, 'month')) {
+                        // Try to preserve the date by moving only the month.
+                        this.intervalStart
+                            .set('month', constraintStart.month())
+                            .set('year', constraintStart.year());
+                        this.month
+                            .set('month', constraintStart.month())
+                            .set('year', constraintStart.year());
+                    }
+
+                    // Check if the ending interval is earlier than now.
+                    if (this.intervalEnd.isBefore(constraintStart, 'month')) {
                         this.intervalEnd
-                            .set('month', startMoment.month())
-                            .set('year', startMoment.year());
+                            .set('month', constraintStart.month())
+                            .set('year', constraintStart.year());
                     }
                 }
             }
 
             // Make sure the intervalEnd is before the endDate.
             if (this.options.constraints.endDate) {
-                var endMoment = moment(this.options.constraints.endDate);
+                constraintEnd = moment(this.options.constraints.endDate);
 
-                if (this.intervalEnd.isAfter(endMoment, 'month')) {
-                    this.intervalEnd
-                        .set('month', endMoment.month())
-                        .set('year', endMoment.year());
-                    this.month
-                        .set('month', endMoment.month())
-                        .set('year', endMoment.year());
+                // We need to handle the constraints differently for weekly
+                // calendars vs. monthly calendars.
+                if (this.options.lengthOfTime.days) {
+                    // The starting interval is after our ending constraint.
+                    if (this.intervalStart.isAfter(constraintEnd, 'week')) {
+                        this.intervalStart = moment(constraintEnd)
+                            .endOf('week')
+                            .subtract(this.options.lengthOfTime.days - 1, 'days')
+                            .startOf('day');
+                        this.intervalEnd = moment(constraintEnd)
+                            .endOf('week');
+                        this.month = this.intervalStart.clone();
+                    }
+                }
+                else {
+                    if (this.intervalEnd.isAfter(constraintEnd, 'month')) {
+                        this.intervalEnd
+                            .set('month', constraintEnd.month())
+                            .set('year', constraintEnd.year());
+                        this.month
+                            .set('month', constraintEnd.month())
+                            .set('year', constraintEnd.year());
+                    }
 
-                    // Check the intervalStart is not later than now.
-                    if (this.intervalStart.isAfter(endMoment, 'month')) {
+                    // Check if the starting interval is later than the ending.
+                    if (this.intervalStart.isAfter(constraintEnd, 'month')) {
                         this.intervalStart
-                            .set('month', endMoment.month())
-                            .set('year', endMoment.year());
+                            .set('month', constraintEnd.month())
+                            .set('year', constraintEnd.year());
                     }
                 }
             }

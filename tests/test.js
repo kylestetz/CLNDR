@@ -156,7 +156,7 @@ $( function() {
             title: 'Multi2',
             endDate: moment().format('YYYY-MM-') + '27',
             startDate: moment().format('YYYY-MM-') + '24'
-        },
+        }
     ];
 
     // Add ten events every day this month that are only a day long,
@@ -248,9 +248,9 @@ $( function() {
     // =========================================================================
     clndr.prevNextMonthConstriants = $('#prev-next-month-constraints').clndr({
         constraints: {
-            startDate: moment().subtract(1, 'months').format('YYYY-MM-') + '22',
-            endDate: moment().add(1, 'months').format('YYYY-MM-05')
-        },
+            endDate: moment().add(1, 'months').format('YYYY-MM-05'),
+            startDate: moment().subtract(1, 'months').format('YYYY-MM-') + '22'
+        }
     });
 
     // Test constraints
@@ -258,9 +258,9 @@ $( function() {
     // =========================================================================
     clndr.prevMonthConstraints = $('#prev-month-constraints').clndr({
         constraints: {
-            startDate: moment().subtract(1, 'months').format('YYYY-MM-') + '02',
-            endDate: moment().subtract(1, 'months').format('YYYY-MM-05')
-        },
+            endDate: moment().subtract(1, 'months').format('YYYY-MM-05'),
+            startDate: moment().subtract(1, 'months').format('YYYY-MM-') + '02'
+        }
     });
 
     // Test constraints
@@ -268,9 +268,9 @@ $( function() {
     // =========================================================================
     clndr.nextMonthConstraints = $('#next-month-constraints').clndr({
         constraints: {
-            startDate: moment().add(1, 'months').format('YYYY-MM-') + '22',
-            endDate: moment().add(1, 'months').format('YYYY-MM-25')
-        },
+            endDate: moment().add(1, 'months').format('YYYY-MM-25'),
+            startDate: moment().add(1, 'months').format('YYYY-MM-') + '22'
+        }
     });
 
     // Test the start constraint by itself (4th of this month)
@@ -444,7 +444,7 @@ $( function() {
             startDate: moment().weekday(0)
         },
         constraints: {
-            startDate: moment().format('YYYY-MM-') + '04',
+            startDate: moment().format('YYYY-MM-04'),
             endDate: moment().add(1, 'months').format('YYYY-MM-12')
         }
     });
@@ -460,8 +460,8 @@ $( function() {
             startDate: moment().weekday(0)
         },
         constraints: {
-            startDate: moment().subtract(1, 'months').format('YYYY-MM-') + '02',
-            endDate: moment().subtract(1, 'months').format('YYYY-MM-05')
+            endDate: moment().subtract(1, 'months').format('YYYY-MM-05'),
+            startDate: moment().subtract(1, 'months').format('YYYY-MM-02')
         }
     });
 
@@ -476,16 +476,16 @@ $( function() {
             startDate: moment().weekday(0)
         },
         constraints: {
-            startDate: moment().add(1, 'months').format('YYYY-MM-') + '22',
-            endDate: moment().add(1, 'months').format('YYYY-MM-25')
+            endDate: moment().add(1, 'months').format('YYYY-MM-25'),
+            startDate: moment().add(1, 'months').format('YYYY-MM-22')
         }
     });
 
     // Test selectedDate option
     // =========================================================================
     clndr.selectedDate = $('#selected-date').clndr({
-        template: $('#clndr-template').html(),
-        trackSelectedDate: true
+        trackSelectedDate: true,
+        template: $('#clndr-template').html()
     });
 
     // Test selectedDate option with ignoreInactiveDaysInSelection
@@ -496,7 +496,7 @@ $( function() {
         ignoreInactiveDaysInSelection: true,
         constraints: {
             endDate: moment().add(1, 'months').format('YYYY-MM-12'),
-            startDate: moment().subtract(1, 'months').format('YYYY-MM-DD'),
+            startDate: moment().subtract(1, 'months').format('YYYY-MM-DD')
         }
     });
 });
