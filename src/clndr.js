@@ -225,7 +225,11 @@
         if (this.options.startWithMonth) {
             this.month = moment(this.options.startWithMonth).startOf('month');
             this.intervalStart = moment(this.month);
-            this.intervalEnd = moment(this.month).endOf('month');
+            this.intervalEnd = (this.options.lengthOfTime.days)
+                ? moment(this.month)
+                    .add(this.options.lengthOfTime.days - 1, 'days')
+                    .endOf('day')
+                : moment(this.month).endOf('month');
         }
 
         // If we've got constraints set, make sure the interval is within them.
