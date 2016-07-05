@@ -843,8 +843,8 @@
 
         // Target the day elements and give them click events
         $container.on(eventName, '.' + targets.day, function (event) {
-            var $currentTarget = $(event.currentTarget),
-                target;
+            var target,
+                $currentTarget = $(event.currentTarget);
 
             if (self.options.clickEvents.click) {
                 target = self.buildTargetObject(event.currentTarget, true);
@@ -873,16 +873,18 @@
                 // Remember new selected date
                 self.options.selectedDate =
                     self.getTargetDateString(event.currentTarget);
-                // Handle "selected" class
-                $container.find('.' + classes.selected).removeClass(classes.selected);
+                // Handle "selected" class. This handles more complex templates
+                // that may have the selected elements nested.
+                $container.find('.' + classes.selected)
+                    .removeClass(classes.selected);
                 $currentTarget.addClass(classes.selected);
             }
         });
 
         // Target the empty calendar boxes as well
         $container.on(eventName, '.' + targets.empty, function (event) {
-            var $eventTarget = $(event.currentTarget),
-                target;
+            var target,
+                $eventTarget = $(event.currentTarget);
 
             if (self.options.clickEvents.click) {
                 target = self.buildTargetObject(event.currentTarget, false);
