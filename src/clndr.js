@@ -874,9 +874,8 @@
                 self.options.selectedDate =
                     self.getTargetDateString(event.currentTarget);
                 // Handle "selected" class
-                $currentTarget
-                    .siblings().removeClass(classes.selected).end()
-                    .addClass(classes.selected);
+                $container.find('.' + classes.selected).removeClass(classes.selected);
+                $currentTarget.addClass(classes.selected);
             }
         });
 
