@@ -1,11 +1,14 @@
 Changelog
 ---------
 
+`v1.4.5 ~ 2016-07-05`
+> Bug fix for marking selected dates for more complex templates, PR from @pkostic.
+
 `v1.4.4 ~ 2016-07-02`
 > Bug fix for `startWithMonth` when used in a weekly calendar.
 
 `v1.4.3 ~ 2016-07-01`
-> Bug fix for data is not defined, PR from keioka.
+> Bug fix for data is not defined, PR from @keioka.
 
 `v1.4.2 ~ 2016-06-29`
 > Added second option to `addEvents` to suppress the re-render.

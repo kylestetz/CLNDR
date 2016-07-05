@@ -129,12 +129,12 @@ p {
 .cal1 .clndr .clndr-table .header-days .header-day {
   vertical-align: middle;
   text-align: center;
-  border-left: 1px solid #000;
-  border-top: 1px solid #000;
+  border-left: 1px solid #000000;
+  border-top: 1px solid #000000;
   color: #fff;
 }
 .cal1 .clndr .clndr-table .header-days .header-day:last-child {
-  border-right: 1px solid #000;
+  border-right: 1px solid #000000;
 }
 .cal1 .clndr .clndr-table tr {
   height: 85px;
@@ -143,8 +143,8 @@ p {
   vertical-align: top;
 }
 .cal1 .clndr .clndr-table tr .day {
-  border-left: 1px solid #000;
-  border-top: 1px solid #000;
+  border-left: 1px solid #000000;
+  border-top: 1px solid #000000;
   width: 100%;
   height: inherit;
 }
@@ -176,7 +176,7 @@ p {
   background: #ddd;
 }
 .cal1 .clndr .clndr-table tr .day:last-child {
-  border-right: 1px solid #000;
+  border-right: 1px solid #000000;
 }
 .cal1 .clndr .clndr-table tr .day .day-contents {
   box-sizing: border-box;
@@ -188,8 +188,8 @@ p {
 .cal1 .clndr .clndr-table tr .adjacent-month,
 .cal1 .clndr .clndr-table tr .my-empty,
 .cal1 .clndr .clndr-table tr .my-adjacent-month {
-  border-left: 1px solid #000;
-  border-top: 1px solid #000;
+  border-left: 1px solid #000000;
+  border-top: 1px solid #000000;
   width: 100%;
   height: inherit;
   background: #eee;
@@ -204,15 +204,15 @@ p {
 .cal1 .clndr .clndr-table tr .adjacent-month:last-child,
 .cal1 .clndr .clndr-table tr .my-empty:last-child,
 .cal1 .clndr .clndr-table tr .my-adjacent-month:last-child {
-  border-right: 1px solid #000;
+  border-right: 1px solid #000000;
 }
 .cal1 .clndr .clndr-table tr:last-child .day,
 .cal1 .clndr .clndr-table tr:last-child .my-day {
-  border-bottom: 1px solid #000;
+  border-bottom: 1px solid #000000;
 }
 .cal1 .clndr .clndr-table tr:last-child .empty,
 .cal1 .clndr .clndr-table tr:last-child .my-empty {
-  border-bottom: 1px solid #000;
+  border-bottom: 1px solid #000000;
 }
 .cal2 {
   max-width: 177px;
