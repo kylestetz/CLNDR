@@ -211,7 +211,7 @@
                 if (this.options.lengthOfTime.startDate) {
                     this.intervalStart =
                         moment(this.options.lengthOfTime.startDate)
-                            .startOf('week');
+                            .startOf('day');
                 } else {
                     this.intervalStart = moment().weekday(0).startOf('day');
                 }
