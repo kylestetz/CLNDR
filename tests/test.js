@@ -246,7 +246,7 @@ $( function() {
     // Test constraints
     // The 22nd of previous month to the 5th of next month
     // =========================================================================
-    clndr.prevNextMonthConstriants = $('#prev-next-month-constraints').clndr({
+    clndr.prevNextMonthConstraints = $('#prev-next-month-constraints').clndr({
         constraints: {
             endDate: moment().add(1, 'months').format('YYYY-MM-05'),
             startDate: moment().subtract(1, 'months').format('YYYY-MM-') + '22'
