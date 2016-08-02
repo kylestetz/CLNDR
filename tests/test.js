@@ -156,7 +156,7 @@ $( function() {
             title: 'Multi2',
             endDate: moment().format('YYYY-MM-') + '27',
             startDate: moment().format('YYYY-MM-') + '24'
-        },
+        }
     ];
 
     // Add ten events every day this month that are only a day long,
@@ -243,9 +243,39 @@ $( function() {
         }
     });
 
+    // Test constraints
+    // The 22nd of previous month to the 5th of next month
+    // =========================================================================
+    clndr.prevNextMonthConstraints = $('#prev-next-month-constraints').clndr({
+        constraints: {
+            endDate: moment().add(1, 'months').format('YYYY-MM-05'),
+            startDate: moment().subtract(1, 'months').format('YYYY-MM-') + '22'
+        }
+    });
+
+    // Test constraints
+    // The 2nd to the 5th of previous month
+    // =========================================================================
+    clndr.prevMonthConstraints = $('#prev-month-constraints').clndr({
+        constraints: {
+            endDate: moment().subtract(1, 'months').format('YYYY-MM-05'),
+            startDate: moment().subtract(1, 'months').format('YYYY-MM-') + '02'
+        }
+    });
+
+    // Test constraints
+    // The 22nd to the 25th of next month
+    // =========================================================================
+    clndr.nextMonthConstraints = $('#next-month-constraints').clndr({
+        constraints: {
+            endDate: moment().add(1, 'months').format('YYYY-MM-25'),
+            startDate: moment().add(1, 'months').format('YYYY-MM-') + '22'
+        }
+    });
+
     // Test the start constraint by itself (4th of this month)
     // =========================================================================
-    clndr.startConstriant = $('#start-constraint').clndr({
+    clndr.startConstraint = $('#start-constraint').clndr({
         constraints: {
             startDate: moment().format('YYYY-MM-') + '04'
         }
@@ -253,7 +283,7 @@ $( function() {
 
     // Test the end constraint by itself (12th of next month)
     // =========================================================================
-    clndr.endConstriant = $('#end-constraint').clndr({
+    clndr.endConstraint = $('#end-constraint').clndr({
         constraints: {
             endDate: moment().add(1, 'months').format('YYYY-MM-') + '12'
         }
@@ -414,16 +444,48 @@ $( function() {
             startDate: moment().weekday(0)
         },
         constraints: {
-            startDate: moment().format('YYYY-MM-') + '04',
+            startDate: moment().format('YYYY-MM-04'),
             endDate: moment().add(1, 'months').format('YYYY-MM-12')
+        }
+    });
+
+    // Test lengthOfTime.days option with constraints (14 days incremented by 7)
+    // The 2nd to the 5th of previous month
+    // =========================================================================
+    clndr.twoWeeksWithPrevMonthConstraints = $('#one-week-with-prev-month-constraints').clndr({
+        template: $('#clndr-oneweek-template').html(),
+        lengthOfTime: {
+            days: 14,
+            interval: 7,
+            startDate: moment().weekday(0)
+        },
+        constraints: {
+            endDate: moment().subtract(1, 'months').format('YYYY-MM-05'),
+            startDate: moment().subtract(1, 'months').format('YYYY-MM-02')
+        }
+    });
+
+    // Test lengthOfTime.days option with constraints (14 days incremented by 7)
+    // The 22nd to the 25th of next month
+    // =========================================================================
+    clndr.twoWeeksWithNextMonthConstraints = $('#one-week-with-next-month-constraints').clndr({
+        template: $('#clndr-oneweek-template').html(),
+        lengthOfTime: {
+            days: 14,
+            interval: 7,
+            startDate: moment().weekday(0)
+        },
+        constraints: {
+            endDate: moment().add(1, 'months').format('YYYY-MM-25'),
+            startDate: moment().add(1, 'months').format('YYYY-MM-22')
         }
     });
 
     // Test selectedDate option
     // =========================================================================
     clndr.selectedDate = $('#selected-date').clndr({
-        template: $('#clndr-template').html(),
-        trackSelectedDate: true
+        trackSelectedDate: true,
+        template: $('#clndr-template').html()
     });
 
     // Test selectedDate option with ignoreInactiveDaysInSelection
@@ -434,7 +496,7 @@ $( function() {
         ignoreInactiveDaysInSelection: true,
         constraints: {
             endDate: moment().add(1, 'months').format('YYYY-MM-12'),
-            startDate: moment().subtract(1, 'months').format('YYYY-MM-DD'),
+            startDate: moment().subtract(1, 'months').format('YYYY-MM-DD')
         }
     });
 });

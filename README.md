@@ -346,7 +346,7 @@ $('.parent-element').clndr({
         days: null,
 
         // This is the amount of months or days that will move forward/back when
-        // paging the calendar. With days=17 and interval=7, you would have a
+        // paging the calendar. With days=14 and interval=7, you would have a
         // 2-week calendar that pages forward and backward 1 week at a time.
         interval: 1
     },
