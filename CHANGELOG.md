@@ -1,6 +1,9 @@
 Changelog
 ---------
 
+`v1.4.6 ~ 216-08-02`
+> Fixed bugs with the constraints.
+
 `v1.4.5 ~ 2016-07-05`
 > Bug fix for marking selected dates for more complex templates, PR from @pkostic.
 
