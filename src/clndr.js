@@ -1,5 +1,5 @@
 /**
- *               ~ CLNDR v1.4.6 ~
+ *               ~ CLNDR v1.4.7 ~
  * ==============================================
  *       https://github.com/kylestetz/CLNDR
  * ==============================================
@@ -123,6 +123,7 @@
             past: "past",
             today: "today",
             event: "event",
+            extraClasses: "",
             inactive: "inactive",
             selected: "selected",
             lastMonth: "last-month",
@@ -372,8 +373,7 @@
 
         // Create the parent element that will hold the plugin and save it
         // for later
-        $(this.element).html("<div class='clndr'></div>");
-        this.calendarContainer = $('.clndr', this.element);
+        this.calendarContainer = $(this.element).addClass("clndr");
 
         // Attach event handlers for clicks on buttons/cells
         this.bindEvents();
@@ -619,6 +619,18 @@
 
         if (eventsToday.length) {
             extraClasses += (" " + this.options.classes.event);
+            eventsToday.forEach( function( event){
+              if(event.extraClasses !== null){
+                if(Array.isArray(event.extraClasses)){
+                  event.extraClasses.forEach(function(extraClasses){
+                    extraClasses += (" "+extraClasses)
+                  })
+                }else{
+                  extraClasses += (" "+event.extraClasses)
+                }
+
+              }
+            } )
         }
 
         if (!this.options.lengthOfTime.days) {
@@ -1509,7 +1521,7 @@
         if (timeOpt.days) {
             this.intervalStart = moment(newDate).startOf('day');
             this.intervalEnd = this.intervalStart.clone()
-                .add(timeOpt - 1, 'days')
+                .add(timeOpt.days - 1, 'days')
                 .endOf('day');
         } else {
             this.intervalStart = moment(newDate).startOf('month');
