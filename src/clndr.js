@@ -620,16 +620,13 @@
         if (eventsToday.length) {
             extraClasses += (" " + this.options.classes.event);
             eventsToday.forEach( function( event){
-              if(event.extraClasses !== null){
-                if(Array.isArray(event.extraClasses)){
-                  event.extraClasses.forEach(function(extraClasses){
-                    extraClasses += (" "+extraClasses)
-                  })
-                }else{
-                  extraClasses += (" "+event.extraClasses)
-                }
 
+              if(event.extraClasses !== null){
+                Array.isArray( event.extraClasses )
+                    ? extraClasses += (" " + event.extraClasses.join(" ") )
+                    : extraClasses += (" " + event.extraClasses)
               }
+
             } )
         }
 
