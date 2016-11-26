@@ -492,12 +492,12 @@
             }
 
             if (this.options.showAdjacentMonths) {
-                for (var i = 0; i < diff; i++) {
+                for (var i = 1; i <= diff; i++) {
                     var day = moment([
                         startDate.year(),
                         startDate.month(),
-                        i - diff + 1
-                    ]);
+                        i
+                    ]).subtract(diff, 'days');
                     daysArray.push(
                         this.createDayObject(
                             day,
