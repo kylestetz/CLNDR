@@ -1,7 +1,10 @@
 Changelog
 ---------
 
-`v1.4.6 ~ 216-08-02`
+`v1.4.7 ~ 2016-11-26`
+> Fixed compatibility issue with momentjs v2.17.0
+
+`v1.4.6 ~ 2016-08-02`
 > Fixed bugs with the constraints.
 
 `v1.4.5 ~ 2016-07-05`
