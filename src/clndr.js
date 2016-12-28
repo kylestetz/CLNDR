@@ -911,17 +911,6 @@
                 self.options.clickEvents.click.apply(self, [target]);
             }
 
-            // If adjacentDaysChangeMonth is on, we need to change the
-            // month here.
-            if (self.options.adjacentDaysChangeMonth) {
-                if ($currentTarget.is('.' + classes.lastMonth)) {
-                    self.backActionWithContext(self);
-                }
-                else if ($currentTarget.is('.' + classes.nextMonth)) {
-                    self.forwardActionWithContext(self);
-                }
-            }
-
             // if trackSelectedDate is on, we need to handle click on a new day
             if (self.options.trackSelectedDate) {
                 if (self.options.ignoreInactiveDaysInSelection
@@ -939,6 +928,17 @@
                     .removeClass(classes.selected);
                 $currentTarget.addClass(classes.selected);
             }
+            
+            // If adjacentDaysChangeMonth is on, we need to change the
+            // month here.
+            if (self.options.adjacentDaysChangeMonth) {
+                if ($currentTarget.is('.' + classes.lastMonth)) {
+                    self.backActionWithContext(self);
+                }
+                else if ($currentTarget.is('.' + classes.nextMonth)) {
+                    self.forwardActionWithContext(self);
+                }
+            }           
         });
 
         // Target the empty calendar boxes as well
