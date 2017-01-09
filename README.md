@@ -375,7 +375,9 @@ $('.parent-element').clndr({
         endDate: '2018-01-09'
     },
 
-    // Optionally, you can pass a Moment instance to use instead of the global
+    // Optionally, you can pass a Moment instance to use instead of the CLNDR settings. 
+    // If you use moment you shouldn't use weekOffset and daysOfTheWeek
+    // See https://github.com/kylestetz/CLNDR#internationalization for more information
     moment: null
 });
 ```
@@ -751,7 +753,22 @@ more about here: [i18n in Moment.js](http://momentjs.com/docs/#/i18n/), you are
 configuring Clndr as well.
 
 If you would prefer to pass in a pre-configured instance of moment, you can do
-this by passing it in as the `moment` config option when initializing CLNDR.
+this by passing it in as the `moment` config option when initializing CLNDR:
+
+```javascript
+
+//To change clndr to German use moment.local('de')
+moment.locale('de');
+
+//Make sure that your locale is Working correctly
+console.log(moment().calendar())
+//returns "heute um 18:43 Uhr"
+
+$('#calendar').clndr({
+        //Pass the moment instance to use your language settings
+        moment: moment
+});
+```
 
 If you are using a moment.js language configuration in which weeks begin on a
 Monday (e.g. French), Clndr will detect this automatically and there is no need
