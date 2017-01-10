@@ -12,8 +12,8 @@ See a demo: [kylestetz.github.io/CLNDR/](http://kylestetz.github.io/CLNDR/)
 - [Download](https://github.com/kylestetz/CLNDR#download)
 - [Dependencies](https://github.com/kylestetz/CLNDR#dependencies)
     - [Using Bower](https://github.com/kylestetz/CLNDR#using-bower)
-    - [Clndr using Angular.js](https://github.com/kylestetz/CLNDR#clndr-using-angular)
-    - [Clndr using Rails](https://github.com/kylestetz/CLNDR#clndr-using-rails)
+    - [CLNDR using Angular.js](https://github.com/kylestetz/CLNDR#clndr-using-angular)
+    - [CLNDR using Rails](https://github.com/kylestetz/CLNDR#clndr-using-rails)
 - [Introduction: You Write The Markup](https://github.com/kylestetz/CLNDR#introduction-you-write-the-markup)
     - [The 'days' Array](https://github.com/kylestetz/CLNDR#the-days-array)
     - [Pass in your Events](https://github.com/kylestetz/CLNDR#pass-in-your-events)
@@ -68,13 +68,13 @@ templating engine you want to. If you want to use the default `template` option
 with Underscore, just install it as a dependency of your project:
 `bower install underscore`.
 
-### Clndr Using Angular
+### CLNDR Using Angular
 
 If you want to integrate clndr into an [angular.js](http://angularjs.org/) site,
 get started with this directive:
 [angular-clndr](https://github.com/10KB/angular-clndr).
 
-### Clndr Using Rails
+### CLNDR Using Rails
 
 If you're building a rails application you may be interested in this gem by
 [@sedx](https://github.com/sedx):
@@ -424,7 +424,7 @@ extras: {}
 
 ### Multi-day Events
 
-Clndr accepts events lasting more than one day. You just need to tell it how to
+CLNDR accepts events lasting more than one day. You just need to tell it how to
 access the start and end dates of your events:
 
 ```javascript
@@ -571,7 +571,7 @@ are functions to increment or set the month or year. You can also provide a new
 events array.
 
 ```javascript
-// Create a Clndr and save the instance as myCalendar
+// Create a CLNDR and save the instance as myCalendar
 var myCalendar = $('#myCalendar').clndr();
 
 // Go to the next month
@@ -633,7 +633,7 @@ myCalendar.next({ withCallbacks: true });
 CLNDR is structured so that you don't really _need_ anything in your template.
 
 ```javascript
-<% _.each(days, function (day){ %>
+<% _.each(days, function (day) { %>
 <div class='<%= day.classes %>'><%= day.day %></div>
 <% }); %>
 ```
@@ -747,31 +747,30 @@ $('#calendar').clndr({
 
 ### Internationalization
 
-Clndr has support for internationalization insofar as Moment.js supports it. By
+CLNDR has support for internationalization insofar as Moment.js supports it. By
 configuring your Moment.js instance to a different language, which you can read
 more about here: [i18n in Moment.js](http://momentjs.com/docs/#/i18n/), you are
-configuring Clndr as well.
+configuring CLNDR as well.
 
 If you would prefer to pass in a pre-configured instance of moment, you can do
 this by passing it in as the `moment` config option when initializing CLNDR:
 
 ```javascript
-
-//To change clndr to German use moment.local('de')
+// To change clndr to German use moment.local('de')
 moment.locale('de');
 
-//Make sure that your locale is Working correctly
+// Make sure that your locale is Working correctly
 console.log(moment().calendar())
-//returns "heute um 18:43 Uhr"
+// Returns "heute um 18:43 Uhr"
 
 $('#calendar').clndr({
-        //Pass the moment instance to use your language settings
-        moment: moment
+    // Pass the moment instance to use your language settings
+    moment: moment
 });
 ```
 
 If you are using a moment.js language configuration in which weeks begin on a
-Monday (e.g. French), Clndr will detect this automatically and there is no need
+Monday (e.g. French), CLNDR will detect this automatically and there is no need
 to provide a `weekOffset` or a `daysOfTheWeek` array. If you want to reverse
 this behavior, there is a field in each moment.js language config file called
 `dow` which you can set to your liking.
@@ -782,7 +781,6 @@ override them using the `daysOfTheWeek` option. Make sure the array you provide
 begins on the same day of the week as your current language setting.
 **Warning**: using `daysOfTheWeek` and `weekOffset` in conjunction with
 different language settings is _not_ recommended and may cause you headaches.
-
 
 ### Underscore Template Delimiters
 
