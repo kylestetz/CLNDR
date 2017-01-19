@@ -591,6 +591,7 @@
         if (!day.isValid() && day.hasOwnProperty('_d') && day._d != undefined) {
             day = moment(day._d);
         }
+        var dayEnd = day.clone().endOf('day');
 
         for (j; j < monthEvents.length; j++) {
             // Keep in mind that the events here already passed the month/year
@@ -598,13 +599,10 @@
             // returns the day of the month.
             var start = monthEvents[j]._clndrStartDateObject,
                 end = monthEvents[j]._clndrEndDateObject;
-            // If today is the same day as start or is after the start, and
-            // if today is the same day as the end or before the end ...
-            // woohoo semantics!
-            if ( (day.isSame(start, 'day') || day.isAfter(start, 'day'))
-                && (day.isSame(end, 'day') || day.isBefore(end, 'day')) )
-            {
-                eventsToday.push( monthEvents[j] );
+
+            // If the current day intersects with the event dates
+            if (start <= dayEnd && day <= end) {
+                eventsToday.push(monthEvents[j]);
             }
         }
 
@@ -1003,21 +1001,9 @@
             if (this.options.events) {
                 // Are any of the events happening today?
                 if (this.options.multiDayEvents) {
+                    var targetEndDate = target.date.clone().endOf("day");
                     filterFn = function () {
-                        var isSameStart = target.date.isSame(
-                            this._clndrStartDateObject,
-                            'day');
-                        var isAfterStart = target.date.isAfter(
-                            this._clndrStartDateObject,
-                            'day');
-                        var isSameEnd = target.date.isSame(
-                            this._clndrEndDateObject,
-                            'day');
-                        var isBeforeEnd = target.date.isBefore(
-                            this._clndrEndDateObject,
-                            'day');
-                        return (isSameStart || isAfterStart)
-                            && (isSameEnd || isBeforeEnd);
+                        return (this._clndrStartDateObject <= targetEndDate && target.date <= this._clndrEndDateObject);
                     };
                 }
                 else {
