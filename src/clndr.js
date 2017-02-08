@@ -1530,6 +1530,17 @@
     };
 
     /**
+     * Overwrites extras in the calendar and triggers a render.
+     */
+    Clndr.prototype.setExtras = function(extras){
+        this.options.extras = extras;
+
+        this.render();
+
+        return this;
+    };
+
+    /**
      * Overwrites events in the calendar and triggers a render.
      */
     Clndr.prototype.setEvents = function (events) {

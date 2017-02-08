@@ -596,6 +596,9 @@ myCalendar.setYear(1997);
 // Go to today:
 myCalendar.today();
 
+// Overwrite the extras. Note that this triggers a re-render of the calendar.
+myCalendar.setExtras(newExtras);
+
 // Change the events. Note that this triggers a re-render of the calendar.
 myCalendar.setEvents(newEventsArray);
 
