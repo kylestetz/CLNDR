@@ -746,7 +746,7 @@
             }
 
             // Get the total number of rows across all months
-            for (i in months) {
+            for (i = 0; i < months.length; i++) {
                 numberOfRows += Math.ceil(months[i].days.length / 7);
             }
 
