@@ -151,6 +151,9 @@
             moment = this.options.moment;
         }
 
+        // Validate any correct options
+        this.validateOptions();
+
         // Boolean values used to log if any contraints are met
         this.constraints = {
             next: true,
@@ -213,7 +216,9 @@
                         moment(this.options.lengthOfTime.startDate)
                             .startOf('day');
                 } else {
-                    this.intervalStart = moment().weekday(0).startOf('day');
+                    this.intervalStart = moment()
+                        .weekday(this.options.weekOffset)
+                        .startOf('day');
                 }
 
                 this.intervalEnd = moment(this.intervalStart)
@@ -384,6 +389,15 @@
         // If a ready callback has been provided, call it.
         if (this.options.ready) {
             this.options.ready.apply(this, []);
+        }
+    };
+
+    Clndr.prototype.validateOptions = function() {
+        // Fix the week offset. It must be between 0 (Sunday) and
+        // 6 (Saturday).
+        if (this.options.weekOffset > 6 || this.options.weekOffset < 0) {
+            console.log('You have an invalid weekOffset');
+            this.options.weekOffset = 0;
         }
     };
 
@@ -794,7 +808,7 @@
 
         // Render the calendar with the data above & bind events to its
         // elements
-        if ( !this.options.render) {
+        if (!this.options.render) {
             this.calendarContainer.html(
                 this.compiledClndrTemplate(data));
         } else {
