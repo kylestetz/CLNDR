@@ -503,9 +503,9 @@ $( function() {
     // Test selectedDate option with adjacentDaysChangeMonth
     // =========================================================================
     clndr.selectedDateIgnoreInactive = $('#selected-date-adjacent-days').clndr({
-        template: $('#clndr-template').html(),
         trackSelectedDate: true,
         showAdjacentMonths: true,
-        adjacentDaysChangeMonth: true
+        adjacentDaysChangeMonth: true,
+        template: $('#clndr-template').html()
     });
 });
