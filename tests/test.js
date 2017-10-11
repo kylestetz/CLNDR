@@ -499,4 +499,13 @@ $( function() {
             startDate: moment().subtract(1, 'months').format('YYYY-MM-DD')
         }
     });
+
+    // Test selectedDate option with adjacentDaysChangeMonth
+    // =========================================================================
+    clndr.selectedDateIgnoreInactive = $('#selected-date-adjacent-days').clndr({
+        template: $('#clndr-template').html(),
+        trackSelectedDate: true,
+        showAdjacentMonths: true,
+        adjacentDaysChangeMonth: true
+    });
 });
