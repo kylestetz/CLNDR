@@ -396,7 +396,9 @@
         // Fix the week offset. It must be between 0 (Sunday) and
         // 6 (Saturday).
         if (this.options.weekOffset > 6 || this.options.weekOffset < 0) {
-            console.log('You have an invalid weekOffset');
+            console.warn(
+                'clndr.js: An invalid offset ' + this.options.weekOffset +
+                ' was provided (must be 0 - 6); using 0 instead.');
             this.options.weekOffset = 0;
         }
     };
@@ -1466,9 +1468,9 @@
             };
 
         if (timeOpt.days || timeOpt.months) {
-            console.log(
-                'You are using a custom date interval. Use ' +
-                'Clndr.setIntervalStart(startDate) instead.');
+            console.warn(
+                'clndr.js: You are using a custom date interval. ' +
+                'Use Clndr.setIntervalStart(startDate) instead.');
             return this;
         }
 
@@ -1514,9 +1516,9 @@
             };
 
         if (!timeOpt.days && !timeOpt.months) {
-            console.log(
-                'You are using a custom date interval. Use ' +
-                'Clndr.setIntervalStart(startDate) instead.');
+            console.warn(
+                'clndr.js: You are using a custom date interval. ' +
+                'Use Clndr.setIntervalStart(startDate) instead.');
             return this;
         }
 
