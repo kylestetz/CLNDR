@@ -1,6 +1,9 @@
 Changelog
 ---------
 
+`v1.4.9 ~ 2019-05-27`
+> Fixes inconsistencies with selectedDate and showAdjacentMonths, reported by @CookieMichal.
+
 `v1.4.8 ~ 2019-05-27`
 > Fixed a bug with weekOffset, reported by @rexxnar.
 
