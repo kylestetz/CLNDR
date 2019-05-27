@@ -471,9 +471,7 @@
             var afterEnd = this._clndrStartDateObject
               .isAfter(endOfLastMonth);
 
-            return beforeStart || afterEnd
-              : false
-              : true;
+            return !(beforeStart || afterEnd);
           }).toArray();
 
         this.eventsNextMonth = $(this.options.events).filter(
@@ -483,9 +481,7 @@
             var afterEnd = this._clndrStartDateObject
               .isAfter(endOfNextMonth);
 
-            return beforeStart || afterEnd
-              ? false
-              : true;
+            return !(beforeStart || afterEnd);
           }).toArray();
       }
     }
