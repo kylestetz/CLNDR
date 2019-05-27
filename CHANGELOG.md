@@ -1,6 +1,9 @@
 Changelog
 ---------
 
+`v1.4.8 ~ 2019-05-27`
+> Fixed a bug with weekOffset, reported by @rexxnar.
+
 `v1.4.7 ~ 2016-11-26`
 > Fixed compatibility issue with momentjs v2.17.0
 

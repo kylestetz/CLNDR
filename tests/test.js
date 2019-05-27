@@ -500,6 +500,30 @@ $( function() {
         }
     });
 
+    // Test weekOffset option
+    // =========================================================================
+    clndr.weekOffset = $('#week-offset').clndr({
+        template: $('#clndr-oneweek-template').html(),
+        weekOffset: 5,
+        lengthOfTime: {
+            days: 28,
+            interval: 28,
+            startDate: '2016-11-04'
+        }
+    });
+
+    // Test invalid weekOffset option
+    // =========================================================================
+    clndr.weekOffsetInvalid = $('#week-offset-invalid').clndr({
+        template: $('#clndr-oneweek-template').html(),
+        weekOffset: 7,
+        lengthOfTime: {
+            days: 28,
+            interval: 28,
+            startDate: '2016-11-04'
+        }
+    });
+
     // Test selectedDate option with adjacentDaysChangeMonth
     // =========================================================================
     clndr.selectedDateIgnoreInactive = $('#selected-date-adjacent-days').clndr({
