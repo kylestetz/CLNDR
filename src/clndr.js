@@ -916,18 +916,12 @@
     // Target the day elements and give them click events
     $container.on(eventName, '.' + targets.day, function (event) {
       var target;
-      var handleAdjacentDay;
       var $currentTarget = $(event.currentTarget);
-
-      if (self.options.clickEvents.click) {
-        target = self.buildTargetObject(event.currentTarget, true);
-        self.options.clickEvents.click.apply(self, [target]);
-      }
 
       // If adjacentDaysChangeMonth is on, we need to change the
       // month here. Forward and Back trigger render() to be called.
       // This is a callback because it can be triggered in two places.
-      handleAdjacentDay = function () {
+      var handleAdjacentDay = function () {
         if (self.options.adjacentDaysChangeMonth) {
           if ($currentTarget.is('.' + classes.lastMonth)) {
             self.backActionWithContext(self);
@@ -958,6 +952,12 @@
         }
       } else {
         handleAdjacentDay();
+      }
+
+      // Trigger click events after any selected date updates
+      if (self.options.clickEvents.click) {
+        target = self.buildTargetObject(event.currentTarget, true);
+        self.options.clickEvents.click.apply(self, [target]);
       }
     });
 
