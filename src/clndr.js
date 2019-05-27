@@ -620,7 +620,7 @@
             if ( (day.isSame(start, 'day') || day.isAfter(start, 'day'))
                 && (day.isSame(end, 'day') || day.isBefore(end, 'day')) )
             {
-                eventsToday.push( monthEvents[j] );
+                eventsToday.push(monthEvents[j]);
             }
         }
 
@@ -882,8 +882,8 @@
 
             // Today? We could put this in init(), but we want to support the
             // user changing the constraints on a living instance.
-            if ( (start && start.isAfter( moment(), 'month' ))
-                || (end && end.isBefore( moment(), 'month' )) )
+            if ( (start && start.isAfter(moment(), 'month'))
+                || (end && end.isBefore(moment(), 'month')) )
             {
                 this.element.find('.' + this.options.targets.today)
                     .toggleClass(this.options.classes.inactive, true);
@@ -920,6 +920,7 @@
         // Target the day elements and give them click events
         $container.on(eventName, '.' + targets.day, function (event) {
             var target,
+                handleAdjacentDay,
                 $currentTarget = $(event.currentTarget);
 
             if (self.options.clickEvents.click) {
@@ -928,32 +929,41 @@
             }
 
             // If adjacentDaysChangeMonth is on, we need to change the
-            // month here.
-            if (self.options.adjacentDaysChangeMonth) {
-                if ($currentTarget.is('.' + classes.lastMonth)) {
-                    self.backActionWithContext(self);
+            // month here. Forward and Back trigger render() to be called.
+            // This is a callback because it can be triggered in two places.
+            handleAdjacentDay = function () {
+                if (self.options.adjacentDaysChangeMonth) {
+                    if ($currentTarget.is('.' + classes.lastMonth)) {
+                        self.backActionWithContext(self);
+                        return true;
+                    }
+                    else if ($currentTarget.is('.' + classes.nextMonth)) {
+                        self.forwardActionWithContext(self);
+                        return true;
+                    }
                 }
-                else if ($currentTarget.is('.' + classes.nextMonth)) {
-                    self.forwardActionWithContext(self);
+            };
+
+            // If setting is enabled, we want to store the selected date
+            // as a string. When render() is called, the selected date will
+            // get the additional classes added. If there is no re-render,
+            // then just add the classes manually.
+            if (self.options.trackSelectedDate
+                && !(self.options.ignoreInactiveDaysInSelection
+                    && $currentTarget.hasClass(classes.inactive)))
+            {
+                // If there was no re-render, manually update classes
+                if (handleAdjacentDay() !== true) {
+                    // Remember new selected date
+                    self.options.selectedDate =
+                        self.getTargetDateString(event.currentTarget);
+                    $container.find('.' + classes.selected)
+                        .removeClass(classes.selected);
+                    $currentTarget.addClass(classes.selected);
                 }
             }
-
-            // if trackSelectedDate is on, we need to handle click on a new day
-            if (self.options.trackSelectedDate) {
-                if (self.options.ignoreInactiveDaysInSelection
-                    && $currentTarget.hasClass(classes.inactive))
-                {
-                    return;
-                }
-
-                // Remember new selected date
-                self.options.selectedDate =
-                    self.getTargetDateString(event.currentTarget);
-                // Handle "selected" class. This handles more complex templates
-                // that may have the selected elements nested.
-                $container.find('.' + classes.selected)
-                    .removeClass(classes.selected);
-                $currentTarget.addClass(classes.selected);
+            else {
+                handleAdjacentDay();
             }
         });
 

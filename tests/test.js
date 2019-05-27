@@ -508,7 +508,7 @@ $( function() {
         lengthOfTime: {
             days: 28,
             interval: 28,
-            startDate: '2016-11-04'
+            startDate: moment().day(5)
         }
     });
 
@@ -520,7 +520,16 @@ $( function() {
         lengthOfTime: {
             days: 28,
             interval: 28,
-            startDate: '2016-11-04'
+            startDate: moment().day(5)
         }
+    });
+
+    // Test selectedDate option with adjacentDaysChangeMonth
+    // =========================================================================
+    clndr.selectedDateIgnoreInactive = $('#selected-date-adjacent-days').clndr({
+        trackSelectedDate: true,
+        showAdjacentMonths: true,
+        adjacentDaysChangeMonth: true,
+        template: $('#clndr-template').html()
     });
 });
