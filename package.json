@@ -8,6 +8,10 @@
     "type": "git",
     "url": "https://github.com/kylestetz/CLNDR"
   },
+  "scripts": {
+    "lint": "./node_modules/.bin/eslint --fix-dry-run src || exit 0",
+    "fix": "./node_modules/.bin/eslint --fix src || exit 0"
+  },
   "keywords": [
     "clndr",
     "calendar",
@@ -26,6 +30,12 @@
     "moment": ">=2.8.3"
   },
   "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.8.0",
+    "eslint-plugin-standard": "^4.0.0",
     "grunt": "*",
     "grunt-contrib-less": "^2.0.0",
     "grunt-contrib-uglify": "^4.0.1",
