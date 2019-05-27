@@ -535,7 +535,7 @@ $( function() {
 
   // Test selectedDate option with adjacentDaysChangeMonth
   // =========================================================================
-  clndr.selectedDateIgnoreInactive = $('#selected-date-adjacent-days').clndr({
+  clndr.selectedDateAdjacentDays = $('#selected-date-adjacent-days').clndr({
     trackSelectedDate: true,
     showAdjacentMonths: true,
     adjacentDaysChangeMonth: true,
@@ -549,7 +549,8 @@ $( function() {
       day: 'my-day'
     },
     constraints: {
-      startDate: moment().add(10, 'days').format('YYYY-MM-DD')
+      startDate: moment().subtract(1, 'month').format('YYYY-MM-DD'),
+      endDate: moment().add(1, 'month').format('YYYY-MM-DD')
     },
     template: $('#clndr-template').html()
   });

@@ -276,7 +276,8 @@ p {
   height: 25px;
   background: #FF4545;
 }
-.cal2 .clndr .clndr-grid .day {
+.cal2 .clndr .clndr-grid .day,
+.cal2 .clndr .clndr-grid .my-day {
   float: left;
   width: 25px;
   height: 25px;

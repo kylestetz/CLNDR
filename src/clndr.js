@@ -819,7 +819,7 @@
       // In the interest of clarity we're just going to remove all
       // inactive classes and re-apply them each render.
       for (target in this.options.targets) {
-        if (target !== this.options.targets.day) {
+        if (target !== 'day') {
           this.element
             .find('.' + this.options.targets[target])
             .toggleClass(this.options.classes.inactive, false);
