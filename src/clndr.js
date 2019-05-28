@@ -1513,7 +1513,7 @@
     if (timeOpt.days) {
       this.intervalStart = moment(newDate).startOf('day');
       this.intervalEnd = this.intervalStart.clone()
-        .add(timeOpt - 1, 'days')
+        .add(timeOpt.days - 1, 'days')
         .endOf('day');
     } else {
       this.intervalStart = moment(newDate).startOf('month');
