@@ -276,21 +276,26 @@ p {
   height: 25px;
   background: #FF4545;
 }
-.cal2 .clndr .clndr-grid .day {
+.cal2 .clndr .clndr-grid .day,
+.cal2 .clndr .clndr-grid .my-day {
   float: left;
   width: 25px;
   height: 25px;
 }
-.cal2 .clndr .clndr-grid .day.event {
+.cal2 .clndr .clndr-grid .day.event,
+.cal2 .clndr .clndr-grid .my-day.event {
   background-color: #B4E09F;
 }
-.cal2 .clndr .clndr-grid .day.today {
+.cal2 .clndr .clndr-grid .day.today,
+.cal2 .clndr .clndr-grid .my-day.today {
   background-color: #E3C57F;
 }
-.cal2 .clndr .clndr-grid .day.selected {
+.cal2 .clndr .clndr-grid .day.selected,
+.cal2 .clndr .clndr-grid .my-day.selected {
   background-color: #E37FD6;
 }
-.cal2 .clndr .clndr-grid .day.inactive {
+.cal2 .clndr .clndr-grid .day.inactive,
+.cal2 .clndr .clndr-grid .my-day.inactive {
   color: gray;
 }
 .cal2 .clndr .clndr-grid .empty,

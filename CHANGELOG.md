@@ -1,8 +1,14 @@
 Changelog
 ---------
 
+`v1.5.0 ~ 2019-05-28`
+> Added ESLint and ran parser over source and test files. All lint errors have
+been fixed, and all NPM dependencies have been upgraded. A few other runtime
+bugs were patched in this update, and fixes for #330 and #332 are included.
+
 `v1.4.9 ~ 2019-05-27`
-> Fixes inconsistencies with selectedDate and showAdjacentMonths, reported by @CookieMichal.
+> Fixes inconsistencies with selectedDate and showAdjacentMonths, reported by
+@CookieMichal.
 
 `v1.4.8 ~ 2019-05-27`
 > Fixed a bug with weekOffset, reported by @rexxnar.
