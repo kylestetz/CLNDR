@@ -1,530 +1,456 @@
 @import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono);
 
 .clearfix:after {
-    content: ".";
-    display: block;
-    clear: both;
-    visibility: hidden;
-    line-height: 0;
-    height: 0;
+  content: ".";
+  display: block;
+  clear: both;
+  visibility: hidden;
+  line-height: 0;
+  height: 0;
 }
 
 .clearfix {
-    display: inline-block;
+  display: inline-block;
 }
 
 html[xmlns] .clearfix {
-    display: block;
+  display: block;
 }
 
 * html .clearfix {
-    height: 1%;
+  height: 1%;
 }
 
-.noselect
-{
-    -webkit-user-select: none; /* Chrome/Safari */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* IE10+ */
+.noselect {
+  -webkit-user-select: none; /* Chrome/Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+ */
 }
 
-h4
-{
-    width: 75%;
-    text-align: center;
-    font-family: 'Droid Sans Mono';
-    font-weight: normal;
-    color: white;
-    font-size: 14px;
-    margin: 0 auto 1em auto;
-    padding: 1em;
-    background: #b63642;
+h4 {
+  width: 75%;
+  text-align: center;
+  font-family: 'Droid Sans Mono';
+  font-weight: normal;
+  color: white;
+  font-size: 14px;
+  margin: 0 auto 1em auto;
+  padding: 1em;
+  background: #b63642;
 }
 
-h5
-{
-    font-size: 1em;
-    font-weight: bold;
+h5 {
+  font-size: 1em;
+  font-weight: bold;
 }
 
-p
-{
-    text-align: center;
-    font-family: 'Droid Sans Mono';
-    margin: 3em auto 1em auto;
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
-    border-top: 2px solid #414141;
-    background: #f4f4f4;
+p {
+  text-align: center;
+  font-family: 'Droid Sans Mono';
+  margin: 3em auto 1em auto;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border-top: 2px solid #414141;
+  background: #f4f4f4;
 }
 
-.left-align
-{
-    text-align: left;
+.left-align {
+  text-align: left;
 }
 
-.right-align
-{
-    text-align: right;
+.right-align {
+  text-align: right;
 }
 
 //////////////////////////////////
 
 @clndr-border: 1px solid #000;
 
-.cal1
-{
-    margin: 30px auto;
-    max-width: 600px;
-    font-family: 'Droid Sans Mono';
-    font-size: 14px;
+.cal1 {
+  margin: 30px auto;
+  max-width: 600px;
+  font-family: 'Droid Sans Mono';
+  font-size: 14px;
 
-    .clndr
-    {
-        .clndr-controls
-        {
-            .clearfix;
-            width: 100%;
-            position: relative;
-            margin-bottom: 10px;
+  .clndr {
+    .clndr-controls {
+      .clearfix;
+      width: 100%;
+      position: relative;
+      margin-bottom: 10px;
 
-            .month
-            {
-                float: left;
-                width: 33%;
-                text-align: center;
-            }
+      .month {
+        float: left;
+        width: 33%;
+        text-align: center;
+      }
 
-            .clndr-control-button
-            {
-                float: left;
-                width: 33%;
+      .clndr-control-button {
+        float: left;
+        width: 33%;
 
-                &.rightalign
-                {
-                    text-align: right;
-                    width: 34%;
-                }
-                .clndr-next-button
-                {
-                    cursor: pointer;
-                    .noselect;
-                    &:hover { background: #ddd; }
-                    &.inactive
-                    {
-                        opacity: 0.5;
-                        &:hover
-                        {
-                            background: none;
-                            cursor: default;
-                        }
-                    }
-                }
-                .clndr-previous-button
-                {
-                    cursor: pointer;
-                    .noselect;
-                    &:hover { background: #ddd; }
-                    &.inactive
-                    {
-                        opacity: 0.5;
-                        &:hover
-                        {
-                            background: none;
-                            cursor: default;
-                        }
-                    }
-                }
-            }
+        &.rightalign {
+          text-align: right;
+          width: 34%;
         }
-
-        .clndr-table
-        {
-            table-layout: fixed;
-            width: 100%;
-
-            .header-days
-            {
-                height: 30px;
-                font-size: 10px;
-                background: #0D70A6;
-
-                .header-day
-                {
-                    vertical-align: middle;
-                    text-align: center;
-                    border-left: @clndr-border;
-                    border-top: @clndr-border;
-
-                    color: #fff;
-
-                    &:last-child
-                    {
-                        border-right: @clndr-border;
-                    }
-                }
+        .clndr-next-button {
+          cursor: pointer;
+          .noselect;
+          &:hover { background: #ddd; }
+          &.inactive {
+            opacity: 0.5;
+            &:hover {
+              background: none;
+              cursor: default;
             }
-
-            tr
-            {
-                height: 85px;
-
-                td
-                {
-                    vertical-align: top;
-                }
-
-                .day
-                {
-                    border-left: @clndr-border;
-                    border-top: @clndr-border;
-                    width: 100%;
-                    height: inherit;
-
-                    &:hover { background: #eee; }
-
-                    &.today, &.my-today
-                    {
-                        background: #9AD6E3;
-                        &:hover { background: darken(#9AD6E3, 10%); }
-                        &.event
-                        {
-                            background: mix(#B4E09F, #9AD6E3);
-                        }
-                    }
-
-                    &.event, &.my-event
-                    {
-                        background: #B4E09F;
-                        &:hover
-                        {
-                            background: darken(#B4E09F, 10%);
-                        }
-                    }
-
-                    &.inactive, &.my-inactive
-                    {
-                        background: #ddd;
-                    }
-
-                    &:last-child
-                    {
-                        border-right: @clndr-border;
-                    }
-
-                    .day-contents
-                    {
-                        box-sizing: border-box;
-                        // width: 100%;
-                        // height: 100%;
-                        padding: 8px;
-                        font-size: 12px;
-                        text-align: right;
-                    }
-                }
-
-                .empty, .adjacent-month, .my-empty, .my-adjacent-month
-                {
-                    border-left: @clndr-border;
-                    border-top: @clndr-border;
-                    width: 100%;
-                    height: inherit;
-                    background: #eee;
-
-                    &:hover { background: #ddd; }
-
-                    &:last-child
-                    {
-                        border-right: @clndr-border;
-                    }
-                }
-
-                &:last-child
-                {
-                    .day, .my-day
-                    {
-                        border-bottom: @clndr-border;
-                    }
-
-                    .empty, .my-empty
-                    {
-                        border-bottom: @clndr-border;
-                    }
-                }
-            }
+          }
         }
+        .clndr-previous-button {
+          cursor: pointer;
+          .noselect;
+          &:hover { background: #ddd; }
+          &.inactive {
+            opacity: 0.5;
+            &:hover {
+              background: none;
+              cursor: default;
+            }
+          }
+        }
+      }
     }
+
+    .clndr-table {
+      table-layout: fixed;
+      width: 100%;
+
+      .header-days {
+        height: 30px;
+        font-size: 10px;
+        background: #0D70A6;
+
+        .header-day {
+          vertical-align: middle;
+          text-align: center;
+          border-left: @clndr-border;
+          border-top: @clndr-border;
+
+          color: #fff;
+
+          &:last-child {
+            border-right: @clndr-border;
+          }
+        }
+      }
+
+      tr {
+        height: 85px;
+
+        td {
+          vertical-align: top;
+        }
+
+        .day {
+          border-left: @clndr-border;
+          border-top: @clndr-border;
+          width: 100%;
+          height: inherit;
+
+          &:hover { background: #eee; }
+
+          &.today, &.my-today {
+            background: #9AD6E3;
+            &:hover { background: darken(#9AD6E3, 10%); }
+            &.event
+            {
+              background: mix(#B4E09F, #9AD6E3);
+            }
+          }
+
+          &.event, &.my-event {
+            background: #B4E09F;
+            &:hover
+            {
+              background: darken(#B4E09F, 10%);
+            }
+          }
+
+          &.inactive, &.my-inactive {
+            background: #ddd;
+          }
+
+          &:last-child {
+            border-right: @clndr-border;
+          }
+
+          .day-contents {
+            box-sizing: border-box;
+            // width: 100%;
+            // height: 100%;
+            padding: 8px;
+            font-size: 12px;
+            text-align: right;
+          }
+        }
+
+        .empty, .adjacent-month, .my-empty, .my-adjacent-month {
+          border-left: @clndr-border;
+          border-top: @clndr-border;
+          width: 100%;
+          height: inherit;
+          background: #eee;
+
+          &:hover { background: #ddd; }
+
+          &:last-child {
+            border-right: @clndr-border;
+          }
+        }
+
+        &:last-child {
+          .day, .my-day {
+            border-bottom: @clndr-border;
+          }
+
+          .empty, .my-empty {
+            border-bottom: @clndr-border;
+          }
+        }
+      }
+    }
+  }
 
 }
 
 @box-size: 25px;
 
-.cal2
-{
-    max-width: 177px;
-    margin: 30px auto;
+.cal2 {
+  max-width: 177px;
+  margin: 30px auto;
 
-    font-family: 'Droid Sans Mono';
+  font-family: 'Droid Sans Mono';
 
-    .clndr
-    {
-        .clndr-controls
-        {
-            display: block;
-            .clearfix;
-            width: 100%;
-            margin-bottom: 3px;
+  .clndr {
+    .clndr-controls {
+      display: block;
+      .clearfix;
+      width: 100%;
+      margin-bottom: 3px;
 
-            .clndr-previous-button
-            {
-                float: left;
-                width: 10%;
-                text-align: left;
-                cursor: pointer;
-                .noselect;
-                &:hover
-                {
-                    background-color: #f4f4f4;
-                }
-            }
-            .month
-            {
-                float: left;
-                width: 80%;
-                text-align: center;
-            }
-            .clndr-next-button
-            {
-                float: left;
-                width: 10%;
-                text-align: right;
-                cursor: pointer;
-                .noselect;
-                &:hover
-                {
-                    background-color: #f4f4f4;
-                }
-            }
-        }
-
-        .clndr-grid
-        {
-            text-align: center;
-            border: 1px solid #FF4545;
-            .clearfix;
-
-            .header-day
-            {
-                float: left;
-                width: @box-size;
-                height: @box-size;
-                // padding-top: 5px;
-                background: #FF4545;
-            }
-
-            .day
-            {
-                float: left;
-                width: @box-size;
-                height: @box-size;
-
-                &.event
-                {
-                    background-color: #B4E09F;
-                }
-
-                &.today
-                {
-                    background-color: #E3C57F;
-                }
-                &.selected
-                {
-                    background-color: #E37FD6;
-                }
-                &.inactive{
-                    color: gray;
-                }
-            }
-
-            .empty, .adjacent-month
-            {
-                float: left;
-                width: @box-size;
-                height: @box-size;
-                background: #ddd;
-            }
-        }
-
-        .clndr-today-button
-        {
-            width: 100%;
-            text-align: center;
-            cursor: pointer;
-            &:hover
-            {
-                background-color: #ddd;
-            }
-        }
-    }
-
-    .multi-month-controls
-    {
-        .quarter-button
-        {
-            display: inline-block;
-            width: 25%;
-
-            &:hover
-            {
-                cursor: pointer;
-                background-color: #f4f4f4;
-            }
-        }
-    }
-}
-
-.cal2 .day.inactive
-{
-    background-color: #aaa;
-}
-
-.cal3
-{
-    max-width: 354px;
-    margin: 0 auto;
-
-    font-family: 'Droid Sans Mono';
-
-    .cal
-    {
+      .clndr-previous-button {
         float: left;
-        width: 177px;
+        width: 10%;
+        text-align: left;
+        cursor: pointer;
+        .noselect;
+        &:hover {
+          background-color: #f4f4f4;
+        }
+      }
+      .month {
+        float: left;
+        width: 80%;
+        text-align: center;
+      }
+      .clndr-next-button {
+        float: left;
+        width: 10%;
+        text-align: right;
+        cursor: pointer;
+        .noselect;
+        &:hover {
+          background-color: #f4f4f4;
+        }
+      }
     }
 
-    .clndr
-    {
-        .clndr-controls
-        {
-            display: block;
-            .clearfix;
-            width: 100%;
-            margin-bottom: 8px;
+    .clndr-grid {
+      text-align: center;
+      border: 1px solid #FF4545;
+      .clearfix;
 
-            &.top
-            {
-                margin-bottom: -22px;
-                position: relative;
-                z-index: 1;
-            }
+      .header-day {
+        float: left;
+        width: @box-size;
+        height: @box-size;
+        // padding-top: 5px;
+        background: #FF4545;
+      }
 
-            .clndr-previous-button
-            {
-                float: left;
-                width: 10%;
-                text-align: left;
-                cursor: pointer;
-                .noselect;
-                &:hover
-                {
-                    background-color: #f4f4f4;
-                }
-            }
-            .month
-            {
-                text-align: center;
-                width: 80%;
-                margin: 0 auto;
-            }
-            .clndr-next-button
-            {
-                float: right;
-                width: 10%;
-                text-align: right;
-                cursor: pointer;
-                .noselect;
-                &:hover
-                {
-                    background-color: #f4f4f4;
-                }
-            }
+      .day,
+      .my-day {
+        float: left;
+        width: @box-size;
+        height: @box-size;
+
+        &.event {
+          background-color: #B4E09F;
         }
 
-        .clndr-grid
-        {
-            text-align: center;
-            border: 1px solid #FF4545;
-            .clearfix;
-
-            .header-day
-            {
-                float: left;
-                width: @box-size;
-                height: @box-size;
-                // padding-top: 5px;
-                background: #FF4545;
-            }
-
-            .day
-            {
-                float: left;
-                width: @box-size;
-                height: @box-size;
-
-                &.event
-                {
-                    background-color: #B4E09F;
-                }
-
-                &.today
-                {
-                    background-color: #E3C57F;
-                }
-            }
-
-            .empty, .adjacent-month
-            {
-                float: left;
-                width: @box-size;
-                height: @box-size;
-                background: #ddd;
-            }
+        &.today {
+          background-color: #E3C57F;
         }
-
-        .clndr-today-button
-        {
-            width: 100%;
-            text-align: center;
-            cursor: pointer;
-            &:hover
-            {
-                background-color: #ddd;
-            }
+        &.selected {
+          background-color: #E37FD6;
         }
+        &.inactive{
+          color: gray;
+        }
+      }
+
+      .empty, .adjacent-month {
+        float: left;
+        width: @box-size;
+        height: @box-size;
+        background: #ddd;
+      }
     }
 
-    .multi-month-controls
-    {
-        .quarter-button
-        {
-            display: inline-block;
-            width: 25%;
-
-            &:hover
-            {
-                cursor: pointer;
-                background-color: #f4f4f4;
-            }
-        }
+    .clndr-today-button {
+      width: 100%;
+      text-align: center;
+      cursor: pointer;
+      &:hover {
+        background-color: #ddd;
+      }
     }
+  }
+
+  .multi-month-controls {
+    .quarter-button {
+      display: inline-block;
+      width: 25%;
+
+      &:hover {
+        cursor: pointer;
+        background-color: #f4f4f4;
+      }
+    }
+  }
 }
 
-.clndr-next-button, .clndr-previous-button, .clndr-next-year-button, .clndr-previous-year-button
-{
-    .noselect;
+.cal2 .day.inactive {
+  background-color: #aaa;
+}
 
-    &.inactive
-    {
-        opacity: 0.5;
-        cursor: default;
+.cal3 {
+  max-width: 354px;
+  margin: 0 auto;
+
+  font-family: 'Droid Sans Mono';
+
+  .cal {
+    float: left;
+    width: 177px;
+  }
+
+  .clndr {
+    .clndr-controls {
+      display: block;
+      .clearfix;
+      width: 100%;
+      margin-bottom: 8px;
+
+      &.top {
+        margin-bottom: -22px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .clndr-previous-button {
+        float: left;
+        width: 10%;
+        text-align: left;
+        cursor: pointer;
+        .noselect;
+        &:hover {
+          background-color: #f4f4f4;
+        }
+      }
+      .month {
+        text-align: center;
+        width: 80%;
+        margin: 0 auto;
+      }
+      .clndr-next-button {
+        float: right;
+        width: 10%;
+        text-align: right;
+        cursor: pointer;
+        .noselect;
+        &:hover
+        {
+          background-color: #f4f4f4;
+        }
+      }
     }
+
+    .clndr-grid {
+      text-align: center;
+      border: 1px solid #FF4545;
+      .clearfix;
+
+      .header-day {
+        float: left;
+        width: @box-size;
+        height: @box-size;
+        // padding-top: 5px;
+        background: #FF4545;
+      }
+
+      .day {
+        float: left;
+        width: @box-size;
+        height: @box-size;
+
+        &.event {
+          background-color: #B4E09F;
+        }
+
+        &.today {
+          background-color: #E3C57F;
+        }
+      }
+
+      .empty, .adjacent-month {
+        float: left;
+        width: @box-size;
+        height: @box-size;
+        background: #ddd;
+      }
+    }
+
+    .clndr-today-button {
+      width: 100%;
+      text-align: center;
+      cursor: pointer;
+      &:hover {
+        background-color: #ddd;
+      }
+    }
+  }
+
+  .multi-month-controls {
+    .quarter-button {
+      display: inline-block;
+      width: 25%;
+
+      &:hover {
+        cursor: pointer;
+        background-color: #f4f4f4;
+      }
+    }
+  }
+}
+
+.clndr-next-button,
+.clndr-previous-button,
+.clndr-next-year-button,
+.clndr-previous-year-button {
+  .noselect;
+
+  &.inactive {
+    opacity: 0.5;
+    cursor: default;
+  }
 }
