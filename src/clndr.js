@@ -584,6 +584,7 @@
     var end;
     var j = 0;
     var start;
+    var dayEnd;
     var endMoment;
     var startMoment;
     var selectedMoment;
@@ -601,6 +602,9 @@
       day = moment(day._d);
     }
 
+    // Set to the end of the day for comparisons
+    dayEnd = day.clone().endOf('day');
+
     for (j; j < monthEvents.length; j++) {
       // Keep in mind that the events here already passed the month/year
       // test. Now all we have to compare is the moment.date(), which
@@ -611,9 +615,7 @@
       // If today is the same day as start or is after the start, and
       // if today is the same day as the end or before the end ...
       // woohoo semantics!
-      if ((day.isSame(start, 'day') || day.isAfter(start, 'day')) &&
-          (day.isSame(end, 'day') || day.isBefore(end, 'day'))
-      ) {
+      if (start <= dayEnd && day <= end) {
         eventsToday.push(monthEvents[j]);
       }
     }
@@ -1011,6 +1013,7 @@
     };
     var filterFn;
     var dateString;
+    var targetEndDate;
 
     // Did we click on a day or just an empty box?
     if (targetWasDay) {
@@ -1023,21 +1026,10 @@
       if (this.options.events) {
         // Are any of the events happening today?
         if (this.options.multiDayEvents) {
+          targetEndDate = target.date.clone().endOf('day');
           filterFn = function () {
-            var isSameStart = target.date.isSame(
-              this._clndrStartDateObject,
-              'day');
-            var isAfterStart = target.date.isAfter(
-              this._clndrStartDateObject,
-              'day');
-            var isSameEnd = target.date.isSame(
-              this._clndrEndDateObject,
-              'day');
-            var isBeforeEnd = target.date.isBefore(
-              this._clndrEndDateObject,
-              'day');
-
-            return (isSameStart || isAfterStart) && (isSameEnd || isBeforeEnd);
+            return this._clndrStartDateObject <= targetEndDate &&
+              target.date <= this._clndrEndDateObject;
           };
         } else {
           filterFn = function () {
