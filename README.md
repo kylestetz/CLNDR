@@ -194,6 +194,12 @@ $('.parent-element').clndr({
     // for more.
     daysOfTheWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
 
+    // Optional callback function that formats the day in the header. If none
+    // supplied, defaults to moment's `dd` and truncates to one character.
+    // The callback is passed a moment object representing the day, and a string
+    // is to be returned.
+    formatWeekdayHeader: function (day) { return day.format('dd').charAt(0); },
+
     // The target classnames that CLNDR will look for to bind events.
     // these are the defaults.
     targets: {

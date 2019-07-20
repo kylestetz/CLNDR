@@ -554,4 +554,12 @@ $( function() {
     },
     template: $('#clndr-template').html()
   });
+
+  // Test formatWeekdayHeader option (#342)
+  // =========================================================================
+  clndr.formatWeekdayHeader = $('#format-weekday-header').clndr({
+    formatWeekdayHeader: function (day) {
+      return day.format('dddd');
+    }
+  });
 });

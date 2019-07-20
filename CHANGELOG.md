@@ -1,6 +1,10 @@
 Changelog
 ---------
 
+`v1.5.1 ~ 2019-07-20`
+> Added new functional option `formatWeekdayHeader` to format the weekday
+string used in the calendar's header. See the README for more info.
+
 `v1.5.0 ~ 2019-05-28`
 > Added ESLint and ran parser over source and test files. All lint errors have
 been fixed, and all NPM dependencies have been upgraded. A few other runtime
