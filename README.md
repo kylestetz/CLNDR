@@ -11,6 +11,7 @@ See a demo: [kylestetz.github.io/CLNDR/](http://kylestetz.github.io/CLNDR/)
 
 - [Download](https://github.com/kylestetz/CLNDR#download)
 - [Dependencies](https://github.com/kylestetz/CLNDR#dependencies)
+  - [Using NPM](https://github.com/kylestetz/CLNDR#using-npm)
   - [Using Bower](https://github.com/kylestetz/CLNDR#using-bower)
   - [CLNDR using Angular.js](https://github.com/kylestetz/CLNDR#clndr-using-angular)
   - [CLNDR using Rails](https://github.com/kylestetz/CLNDR#clndr-using-rails)
@@ -55,9 +56,22 @@ will not be used at all.
 Because their APIs are the same, [Lo-Dash](http://lodash.com/)'s `_.template()`
 function will work as well! Just include Lo-Dash instead of Underscore.
 
+### Using NPM
+
+You can install CLNDR via [NPM](https://npmjs.org):
+
+```shell
+npm install clndr
+```
+
+Underscore is not installed by default. This allows you to use whichever
+templating engine you want to. If you want to use the default `template` option
+with Underscore, just install it as a dependency of your project:
+`npm install underscore` or `npm install lodash`.
+
 ### Using Bower
 
-You can install CLNDR via [Bower](http://bower.io/):
+You can install CLNDR via [Bower](https://bower.io):
 
 ```shell
 bower install clndr
@@ -66,7 +80,7 @@ bower install clndr
 Underscore is not installed by default. This allows you to use whichever
 templating engine you want to. If you want to use the default `template` option
 with Underscore, just install it as a dependency of your project:
-`bower install underscore`.
+`bower install underscore` or `bower install lodash`.
 
 ### CLNDR Using Angular
 
