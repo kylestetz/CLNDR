@@ -88,6 +88,7 @@
     template: clndrTemplate,
     showAdjacentMonths: true,
     trackSelectedDate: false,
+    formatWeekdayHeader: null,
     adjacentDaysChangeMonth: false,
     ignoreInactiveDaysInSelection: null,
     lengthOfTime: {
@@ -336,17 +337,23 @@
    */
   Clndr.prototype.init = function () {
     var i;
+    var formatWeekday;
 
     // Create the days of the week using moment's current language setting
     this.daysOfTheWeek = this.options.daysOfTheWeek || [];
 
+    // User can supply an optional function to format the weekday header
+    formatWeekday = this.options.formatWeekdayHeader || formatWeekday;
+
     if (!this.options.daysOfTheWeek) {
       this.daysOfTheWeek = [];
 
+      formatWeekday = this.options.formatWeekdayHeader || function (day) {
+        return day.format('dd').charAt(0);
+      };
+
       for (i = 0; i < 7; i++) {
-        this.daysOfTheWeek.push(
-          moment().weekday(i).format('dd').charAt(0)
-        );
+        this.daysOfTheWeek.push(formatWeekday(moment().weekday(i)));
       }
     }
 
