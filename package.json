@@ -1,8 +1,11 @@
 {
   "name": "clndr",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "A jQuery calendar plugin that uses HTML templates.",
   "author": "Kyle Stetz",
+  "contributors": [
+    "Mike Gioia <mike@teachboost.com>"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
