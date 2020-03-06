@@ -24,15 +24,15 @@
   // here, the instance can be passed in at config time.
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define(['jquery', 'moment'], factory);
+    define(['moment'], factory);
   } else if (typeof exports === 'object') {
     // Node/CommonJS
-    factory(require('jquery'), require('moment'));
+    factory( require('moment'));
   } else {
     // Browser globals
-    factory(jQuery, moment);
+    factory(moment);
   }
-}(function ($, moment) {
+}(function (moment) {
   // Namespace
   var pluginName = 'clndr';
 
@@ -143,7 +143,7 @@
     this.element = element;
 
     // Merge the default options with user-provided options
-    this.options = $.extend(true, {}, defaults, options);
+    this.options = {...defaults, ...options};
 
     // Check if moment was passed in as a dependency
     if (this.options.moment) {
@@ -363,7 +363,7 @@
     }
 
     // Quick and dirty test to make sure rendering is possible.
-    if (!$.isFunction(this.options.render)) {
+    if (typeof this.options.render !== 'function') {
       this.options.render = null;
 
       if (typeof _ === 'undefined') {
@@ -379,8 +379,11 @@
 
     // Create the parent element that will hold the plugin and save it
     // for later
-    $(this.element).html("<div class='clndr'></div>");
-    this.calendarContainer = $('.clndr', this.element);
+
+
+    let cont = document.createElement("div").classList.add('clndr');
+    this.element.appendChild(cont);
+    this.calendarContainer = cont;
 
     // Attach event handlers for clicks on buttons/cells
     this.bindEvents();
@@ -450,7 +453,7 @@
       // interval:
       //   startDate | endDate | e.start   | e.end
       //   e.start   | e.end   | startDate | endDate
-      this.eventsThisInterval = $(this.options.events).filter(
+      this.eventsThisInterval = this.options.events.filter(
         function () {
           var afterEnd = this._clndrStartDateObject.isAfter(endDate);
           var beforeStart = this._clndrEndDateObject.isBefore(startDate);
@@ -459,7 +462,7 @@
             return false;
           }
           return true;
-        }).toArray();
+        });
 
       if (this.options.showAdjacentMonths) {
         startOfLastMonth = startDate.clone()
@@ -471,7 +474,7 @@
           .startOf('month');
         endOfNextMonth = startOfNextMonth.clone().endOf('month');
 
-        this.eventsLastMonth = $(this.options.events).filter(
+        this.eventsLastMonth = this.options.events.filter(
           function () {
             var beforeStart = this._clndrEndDateObject
               .isBefore(startOfLastMonth);
@@ -479,9 +482,9 @@
               .isAfter(endOfLastMonth);
 
             return !(beforeStart || afterEnd);
-          }).toArray();
+          });
 
-        this.eventsNextMonth = $(this.options.events).filter(
+        this.eventsNextMonth = this.options.events.filter(
           function () {
             var beforeStart = this._clndrEndDateObject
               .isBefore(startOfNextMonth);
@@ -489,7 +492,7 @@
               .isAfter(endOfNextMonth);
 
             return !(beforeStart || afterEnd);
-          }).toArray();
+          });
       }
     }
 
@@ -904,89 +907,93 @@
   Clndr.prototype.bindEvents = function () {
     var data = {};
     var self = this;
-    var $container = $(this.element);
+    var container = document.querySelector(this.element);
     var targets = this.options.targets;
     var classes = self.options.classes;
     var eventType = this.options.useTouchEvents === true
-      ? 'touchstart'
-      : 'click';
+        ? 'touchstart'
+        : 'click';
     var eventName = eventType + '.clndr';
 
     // Make sure we don't already have events
-    $container
-      .off(eventName, '.' + targets.day)
-      .off(eventName, '.' + targets.empty)
-      .off(eventName, '.' + targets.nextButton)
-      .off(eventName, '.' + targets.todayButton)
-      .off(eventName, '.' + targets.previousButton)
-      .off(eventName, '.' + targets.nextYearButton)
-      .off(eventName, '.' + targets.previousYearButton);
+    container
+        .removeEventListener(eventName, '.' + targets.day)
+        .removeEventListener(eventName, '.' + targets.empty)
+        .removeEventListener(eventName, '.' + targets.nextButton)
+        .removeEventListener(eventName, '.' + targets.todayButton)
+        .removeEventListener(eventName, '.' + targets.previousButton)
+        .removeEventListener(eventName, '.' + targets.nextYearButton)
+        .removeEventListener(eventName, '.' + targets.previousYearButton);
 
     // Target the day elements and give them click events
-    $container.on(eventName, '.' + targets.day, function (event) {
-      var target;
-      var $currentTarget = $(event.currentTarget);
+    container.querySelectorAll('.' + targets.day).forEach(trgDay => {
+      trgDay.addEventListener(eventName, function (event) {
+        var target;
+        var currentTarget = event.currentTarget;
 
-      // If adjacentDaysChangeMonth is on, we need to change the
-      // month here. Forward and Back trigger render() to be called.
-      // This is a callback because it can be triggered in two places.
-      var handleAdjacentDay = function () {
-        if (self.options.adjacentDaysChangeMonth) {
-          if ($currentTarget.is('.' + classes.lastMonth)) {
-            self.backActionWithContext(self);
-            return true;
-          } else if ($currentTarget.is('.' + classes.nextMonth)) {
-            self.forwardActionWithContext(self);
-            return true;
+        // If adjacentDaysChangeMonth is on, we need to change the
+        // month here. Forward and Back trigger render() to be called.
+        // This is a callback because it can be triggered in two places.
+        var handleAdjacentDay = function () {
+          if (self.options.adjacentDaysChangeMonth) {
+            if (currentTarget.matches('.' + classes.lastMonth)) {
+              self.backActionWithContext(self);
+              return true;
+            } else if (currentTarget.matches('.' + classes.nextMonth)) {
+              self.forwardActionWithContext(self);
+              return true;
+            }
           }
-        }
-      };
+        };
 
-      // If setting is enabled, we want to store the selected date
-      // as a string. When render() is called, the selected date will
-      // get the additional classes added. If there is no re-render,
-      // then just add the classes manually.
-      if (self.options.trackSelectedDate &&
-          !(self.options.ignoreInactiveDaysInSelection &&
-            $currentTarget.hasClass(classes.inactive))
-      ) {
-        // If there was no re-render, manually update classes
-        if (handleAdjacentDay() !== true) {
-          // Remember new selected date
-          self.options.selectedDate =
-            self.getTargetDateString(event.currentTarget);
-          $container.find('.' + classes.selected)
-            .removeClass(classes.selected);
-          $currentTarget.addClass(classes.selected);
+        // If setting is enabled, we want to store the selected date
+        // as a string. When render() is called, the selected date will
+        // get the additional classes added. If there is no re-render,
+        // then just add the classes manually.
+        if (self.options.trackSelectedDate &&
+            !(self.options.ignoreInactiveDaysInSelection &&
+                currentTarget.classList.contains(classes.inactive))
+        ) {
+          // If there was no re-render, manually update classes
+          if (handleAdjacentDay() !== true) {
+            // Remember new selected date
+            self.options.selectedDate =
+                self.getTargetDateString(event.currentTarget);
+            container.querySelectorAll('.' + classes.selected)
+                .classList.remove(classes.selected);
+            currentTarget.classList.add(classes.selected);
+          }
+        } else {
+          handleAdjacentDay();
         }
-      } else {
-        handleAdjacentDay();
-      }
 
-      // Trigger click events after any selected date updates
-      if (self.options.clickEvents.click) {
-        target = self.buildTargetObject(event.currentTarget, true);
-        self.options.clickEvents.click.apply(self, [target]);
-      }
+        // Trigger click events after any selected date updates
+        if (self.options.clickEvents.click) {
+          target = self.buildTargetObject(event.currentTarget, true);
+          self.options.clickEvents.click.apply(self, [target]);
+        }
+      });
     });
 
-    // Target the empty calendar boxes as well
-    $container.on(eventName, '.' + targets.empty, function (event) {
-      var target;
-      var $eventTarget = $(event.currentTarget);
+    container.querySelectorAll('.' + targets.empty).forEach(target1 => {
+      // Target the empty calendar boxes as well
+      target1.addEventListener(eventName, function (event) {
+        let target;
+        let eventTarget = event.currentTarget;
 
-      if (self.options.clickEvents.click) {
-        target = self.buildTargetObject(event.currentTarget, false);
-        self.options.clickEvents.click.apply(self, [target]);
-      }
-
-      if (self.options.adjacentDaysChangeMonth) {
-        if ($eventTarget.is('.' + classes.lastMonth)) {
-          self.backActionWithContext(self);
-        } else if ($eventTarget.is('.' + classes.nextMonth)) {
-          self.forwardActionWithContext(self);
+        if (self.options.clickEvents.click) {
+          target = self.buildTargetObject(event.currentTarget, false);
+          self.options.clickEvents.click.apply(self, [target]);
         }
-      }
+
+        if (self.options.adjacentDaysChangeMonth) {
+          if (eventTarget.matches('.' + classes.lastMonth)) {
+            self.backActionWithContext(self);
+          } else if (eventTarget.matches('.' + classes.nextMonth)) {
+            self.forwardActionWithContext(self);
+          }
+        }
+      });
     });
 
     // Bind the previous, next and today buttons. We pass the current
@@ -994,14 +1001,18 @@
     data = {
       context: this
     };
-
-    $container
-      .on(eventName, '.' + targets.todayButton, data, this.todayAction)
-      .on(eventName, '.' + targets.nextButton, data, this.forwardAction)
-      .on(eventName, '.' + targets.previousButton, data, this.backAction)
-      .on(eventName, '.' + targets.nextYearButton, data, this.nextYearAction)
-      .on(eventName, '.' + targets.previousYearButton, data, this.previousYearAction);
-  };
+    //[].forEach.call
+    container.querySelectorAll('.' + targets.todayButton).forEach(target => {
+      target.addEventListener(eventName, this.todayAction, data)
+    }).querySelectorAll('.' + targets.nextButton).forEach(target => {
+      target.addEventListener(eventName, this.forwardAction, data)
+    }).querySelectorAll('.' + targets.previousButton).forEach(target => {
+      target.addEventListener(eventName, this.backAction, data)
+    }).querySelectorAll('.' + targets.nextYearButton).forEach(target => {
+      target.addEventListener(eventName, this.nextYearAction, data)
+    }).querySelectorAll('.' + targets.previousYearButton).forEach(target => {
+      target.addEventListener(eventName, this.previousYearAction, data)
+    });
 
   /**
    * If the user provided a click callback we'd like to give them something
@@ -1045,7 +1056,7 @@
         }
 
         // Filter the dates down to the ones that match.
-        target.events = $.makeArray($(this.options.events).filter(filterFn));
+        target.events = [].slice.call(this.options.events.filter(filterFn));
       }
     }
 
@@ -1175,7 +1186,7 @@
     };
 
     // Extend any options
-    options = $.extend(true, {}, defaults, options);
+    options = {...defaults, ...options};
 
     // Before we do anything, check if any constraints are limiting this
     if (!ctx.constraints.previous) {
@@ -1247,7 +1258,7 @@
     };
 
     // Extend any options
-    options = $.extend(true, {}, defaults, options);
+    options = {...defaults, ...options};
 
     // Before we do anything, check if any constraints are limiting this
     if (!ctx.constraints.next) {
@@ -1316,7 +1327,7 @@
     };
 
     // Extend any options
-    options = $.extend(true, {}, defaults, options);
+    options = {...defaults, ...options};
 
     // Before we do anything, check if any constraints are limiting this
     if (!ctx.constraints.previousYear) {
@@ -1355,7 +1366,7 @@
     };
 
     // Extend any options
-    options = $.extend(true, {}, defaults, options);
+    options = {...defaults, ...options};
 
     // Before we do anything, check if any constraints are limiting this
     if (!ctx.constraints.nextYear) {
@@ -1392,7 +1403,7 @@
     };
 
     // Extend any options
-    options = $.extend(true, {}, defaults, options);
+    options = {...defaults, ...options};
     // @V2-todo Only used for legacy month view
     ctx.month = moment().startOf('month');
 
@@ -1568,13 +1579,9 @@
 
     // Go through each event and add a moment object
     if (this.options.multiDayEvents) {
-      this.options.events = $.merge(
-        this.options.events,
-        this.addMultiDayMomentObjectsToEvents(events));
+      this.options.events = this.options.events.concat(this.addMultiDayMomentObjectsToEvents(events))
     } else {
-      this.options.events = $.merge(
-        this.options.events,
-        this.addMomentObjectToEvents(events));
+      this.options.events = this.options.events.concat(this.addMomentObjectToEvents(events))
     }
 
     if (reRender) {
@@ -1653,41 +1660,43 @@
       classes: this.options.targets.empty
     };
 
-    return $.extend({}, defaults, options);
+    return {...defaults, ...options};
   };
 
   Clndr.prototype.destroy = function () {
-    var $container = $(this.calendarContainer);
-
-    $container.parent().data('plugin_clndr', null);
-    $container.empty().remove();
+    this.calendarContainer.parentElement.getAttribute('data-plugin_clndr');
+    this.calendarContainer.innerHTML = '';
+    delete this.calendarContainer;
 
     this.options = defaults;
     this.element = null;
   };
 
-  $.fn.clndr = function (options) {
-    var clndrInstance;
+  if (window.$) {
 
-    if (this.length > 1) {
-      throw new Error(
-        'CLNDR does not support multiple elements yet. Make sure ' +
-        'your clndr selector returns only one element.'
-      );
-    }
+    $.fn.clndr = function (options) {
+      var clndrInstance;
 
-    if (!this.length) {
-      throw new Error('CLNDR cannot be instantiated on an empty selector.');
-    }
+      if (this.length > 1) {
+        throw new Error(
+            'CLNDR does not support multiple elements yet. Make sure ' +
+            'your clndr selector returns only one element.'
+        );
+      }
 
-    if (!this.data('plugin_clndr')) {
-      clndrInstance = new Clndr(this, options);
+      if (!this.length) {
+        throw new Error('CLNDR cannot be instantiated on an empty selector.');
+      }
 
-      this.data('plugin_clndr', clndrInstance);
+      if (!this.data('plugin_clndr')) {
+        clndrInstance = new Clndr(this, options);
 
-      return clndrInstance;
-    }
+        this.data('plugin_clndr', clndrInstance);
 
-    return this.data('plugin_clndr');
-  };
+        return clndrInstance;
+      }
+
+      return this.data('plugin_clndr');
+    };
+  }
 }));
