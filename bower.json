@@ -16,6 +16,7 @@
     "tests"
   ],
   "dependencies": {
+    "dayjs": "^1.8.22",
     "jquery": ">=1.9",
     "moment": ">=2.8.3"
   },

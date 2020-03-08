@@ -11,7 +11,7 @@ $(document).ready( function() {
     // moment.locale('ru');
 
     // Here's some magic to make sure the dates are happening this month.
-    var thisMonth = moment().format('YYYY-MM');
+    var thisMonth = dayjs().format('YYYY-MM');
     // Events to load into calendar
     var eventArray = [
         {
