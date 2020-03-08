@@ -37,36 +37,37 @@
   let pluginName = 'clndr';
 
   // This is the default calendar template. This can be overridden.
+  // This is the default calendar template. This can be overridden.
   var clndrTemplate =
-    '<div class=\'clndr-controls\'>' +
-    '<div class=\'clndr-control-button\'>' +
-    '<span class=\'clndr-previous-button\'>previous</span>' +
+    "<div class='clndr-controls'>" +
+        "<div class='clndr-control-button'>" +
+            "<span class='clndr-previous-button'>previous</span>" +
+        '</div>' +
+        "<div class='month'><%= month %> <%= year %></div>" +
+        "<div class='clndr-control-button rightalign'>" +
+            "<span class='clndr-next-button'>next</span>" +
+        '</div>' +
     '</div>' +
-    '<div class=\'month\'><%= month %> <%= year %></div>' +
-    '<div class=\'clndr-control-button rightalign\'>' +
-    '<span class=\'clndr-next-button\'>next</span>' +
-    '</div>' +
-    '</div>' +
-    '<table class=\'clndr-table\' border=\'0\' cellspacing=\'0\' cellpadding=\'0\'>' +
-    '<thead>' +
-    '<tr class=\'header-days\'>' +
-    '<% for(var i = 0; i < daysOfTheWeek.length; i++) { %>' +
-    '<td class=\'header-day\'><%= daysOfTheWeek[i] %></td>' +
-    '<% } %>' +
-    '</tr>' +
-    '</thead>' +
-    '<tbody>' +
-    '<% for(var i = 0; i < numberOfRows; i++){ %>' +
-    '<tr>' +
-    '<% for(var j = 0; j < 7; j++){ %>' +
-    '<% var d = j + i * 7; %>' +
-    '<td class=\'<%= days[d].classes %>\'>' +
-    '<div class=\'day-contents\'><%= days[d].day %></div>' +
-    '</td>' +
-    '<% } %>' +
-    '</tr>' +
-    '<% } %>' +
-    '</tbody>' +
+    "<table class='clndr-table' border='0' cellspacing='0' cellpadding='0'>" +
+        '<thead>' +
+            "<tr class='header-days'>" +
+            '<% for(var i = 0; i < daysOfTheWeek.length; i++) { %>' +
+                "<td class='header-day'><%= daysOfTheWeek[i] %></td>" +
+            '<% } %>' +
+            '</tr>' +
+        '</thead>' +
+        '<tbody>' +
+        '<% for(var i = 0; i < numberOfRows; i++){ %>' +
+            '<tr>' +
+            '<% for(var j = 0; j < 7; j++){ %>' +
+            '<% var d = j + i * 7; %>' +
+                "<td class='<%= days[d].classes %>'>" +
+                    "<div class='day-contents'><%= days[d].day %></div>" +
+                '</td>' +
+            '<% } %>' +
+            '</tr>' +
+        '<% } %>' +
+        '</tbody>' +
     '</table>';
 
 // Defaults used throughout the application, see docs.
@@ -964,7 +965,7 @@
     let filterFn;
     let dateString;
     let targetEndDate;
-    let self=this;
+    let self = this;
 
     // Did we click on a day or just an empty box?
     if (targetWasDay) {
@@ -987,7 +988,9 @@
         }
 
         // Filter the dates down to the ones that match.
-        target.events = [].slice.call(self.options.events.filter(dt=>{filterFn(dt)}));
+        target.events = [].slice.call(self.options.events.filter(dt => {
+          filterFn(dt);
+        }));
       }
     }
 
