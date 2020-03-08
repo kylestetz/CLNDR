@@ -8,7 +8,9 @@
     "$": true,
     "_": true,
     "define": true,
-    "moment": true
+    "moment": true,
+    "dayjs": true,
+    "weekday": true
   },
   "extends": ["standard"],
   "plugins": [],
