@@ -24,18 +24,19 @@
   // here, the instance can be passed in at config time.
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define(['jquery', 'moment'], factory);
+    define(['moment'], factory);
   } else if (typeof exports === 'object') {
     // Node/CommonJS
-    factory(require('jquery'), require('moment'));
+    factory(require('moment'));
   } else {
     // Browser globals
-    factory(jQuery, moment);
+    factory(moment);
   }
-}(function ($, moment) {
+}(function (moment) {
   // Namespace
-  var pluginName = 'clndr';
+  let pluginName = 'clndr';
 
+  // This is the default calendar template. This can be overridden.
   // This is the default calendar template. This can be overridden.
   var clndrTemplate =
     "<div class='clndr-controls'>" +
@@ -69,8 +70,8 @@
         '</tbody>' +
     '</table>';
 
-  // Defaults used throughout the application, see docs.
-  var defaults = {
+// Defaults used throughout the application, see docs.
+  let defaults = {
     events: [],
     ready: null,
     extras: null,
@@ -136,14 +137,16 @@
    * objects containing event information from the events array.
    */
   function Clndr (element, options) {
-    var dayDiff;
-    var constraintEnd;
-    var constraintStart;
+    let dayDiff;
+    let constraintEnd;
+    let constraintStart;
 
-    this.element = element;
+    this.element = typeof element === 'string' ? document.querySelector(element) : element;
 
     // Merge the default options with user-provided options
-    this.options = $.extend(true, {}, defaults, options);
+    this.options = {
+      ...defaults, ...options
+    };
 
     // Check if moment was passed in as a dependency
     if (this.options.moment) {
@@ -169,11 +172,9 @@
     // addMomentObjectToEvents.
     if (this.options.events.length) {
       if (this.options.multiDayEvents) {
-        this.options.events =
-          this.addMultiDayMomentObjectsToEvents(this.options.events);
+        this.options.events = this.addMultiDayMomentObjectsToEvents(this.options.events);
       } else {
-        this.options.events =
-          this.addMomentObjectToEvents(this.options.events);
+        this.options.events = this.addMomentObjectToEvents(this.options.events);
       }
     }
 
@@ -221,8 +222,8 @@
           .endOf('day');
         this.month = this.intervalStart.clone();
       }
-    // No length of time specified so we're going to default into using the
-    // current month as the time period.
+      // No length of time specified so we're going to default into using the
+      // current month as the time period.
     } else {
       this.month = moment().startOf('month');
       this.intervalStart = moment(this.month);
@@ -232,11 +233,9 @@
     if (this.options.startWithMonth) {
       this.month = moment(this.options.startWithMonth).startOf('month');
       this.intervalStart = moment(this.month);
-      this.intervalEnd = this.options.lengthOfTime.days
-        ? moment(this.month)
-          .add(this.options.lengthOfTime.days - 1, 'days')
-          .endOf('day')
-        : moment(this.month).endOf('month');
+      this.intervalEnd = this.options.lengthOfTime.days ? moment(this.month)
+        .add(this.options.lengthOfTime.days - 1, 'days')
+        .endOf('day') : moment(this.month).endOf('month');
     }
 
     // If we've got constraints set, make sure the interval is within them.
@@ -257,7 +256,7 @@
           dayDiff = this.intervalStart.diff(this.intervalEnd, 'days');
 
           if (dayDiff < this.options.lengthOfTime.days ||
-              this.intervalEnd.isBefore(this.intervalStart)
+            this.intervalEnd.isBefore(this.intervalStart)
           ) {
             this.intervalEnd = moment(this.intervalStart)
               .add(this.options.lengthOfTime.days - 1, 'days')
@@ -336,8 +335,8 @@
    * events to the rendered calendar, and then stores the node locally.
    */
   Clndr.prototype.init = function () {
-    var i;
-    var formatWeekday;
+    let i;
+    let formatWeekday;
 
     // Create the days of the week using moment's current language setting
     this.daysOfTheWeek = this.options.daysOfTheWeek || [];
@@ -363,7 +362,7 @@
     }
 
     // Quick and dirty test to make sure rendering is possible.
-    if (!$.isFunction(this.options.render)) {
+    if (typeof this.options.render !== 'function') {
       this.options.render = null;
 
       if (typeof _ === 'undefined') {
@@ -379,12 +378,16 @@
 
     // Create the parent element that will hold the plugin and save it
     // for later
-    $(this.element).html("<div class='clndr'></div>");
-    this.calendarContainer = $('.clndr', this.element);
+
+    let cont = document.createElement('div');
+
+    cont.classList.add('clndr');
+
+    this.element.appendChild(cont);
+    this.calendarContainer = cont;
 
     // Attach event handlers for clicks on buttons/cells
     this.bindEvents();
-
     // Do a normal render of the calendar template
     this.render();
 
@@ -405,8 +408,8 @@
   };
 
   Clndr.prototype.shiftWeekdayLabels = function (offset) {
-    var i;
-    var days = this.daysOfTheWeek;
+    let i;
+    let days = this.daysOfTheWeek;
 
     for (i = 0; i < offset; i++) {
       days.push(days.shift());
@@ -421,18 +424,18 @@
    * events and classes depending on the circumstance.
    */
   Clndr.prototype.createDaysObject = function (startDate, endDate) {
-    var i;
-    var day;
-    var diff;
-    var dateIterator;
+    let i;
+    let day;
+    let diff;
+    let dateIterator;
     // This array will hold numbers for the entire grid (even the blank spaces)
-    var daysArray = [];
-    var endOfNextMonth;
-    var endOfLastMonth;
-    var startOfNextMonth;
-    var startOfLastMonth;
-    var date = startDate.clone();
-    var lengthOfInterval = endDate.diff(startDate, 'days');
+    let daysArray = [];
+    let endOfNextMonth;
+    let endOfLastMonth;
+    let startOfNextMonth;
+    let startOfLastMonth;
+    let date = startDate.clone();
+    let lengthOfInterval = endDate.diff(startDate, 'days');
 
     // This is a helper object so that days can resolve their classes
     // correctly. Don't use it for anything please.
@@ -450,16 +453,12 @@
       // interval:
       //   startDate | endDate | e.start   | e.end
       //   e.start   | e.end   | startDate | endDate
-      this.eventsThisInterval = $(this.options.events).filter(
-        function () {
-          var afterEnd = this._clndrStartDateObject.isAfter(endDate);
-          var beforeStart = this._clndrEndDateObject.isBefore(startDate);
+      this.eventsThisInterval = this.options.events.filter(dt => {
+        let afterEnd = dt._clndrStartDateObject.isAfter(endDate);
+        let beforeStart = dt._clndrEndDateObject.isBefore(startDate);
 
-          if (beforeStart || afterEnd) {
-            return false;
-          }
-          return true;
-        }).toArray();
+        return !(beforeStart || afterEnd);
+      });
 
       if (this.options.showAdjacentMonths) {
         startOfLastMonth = startDate.clone()
@@ -471,25 +470,23 @@
           .startOf('month');
         endOfNextMonth = startOfNextMonth.clone().endOf('month');
 
-        this.eventsLastMonth = $(this.options.events).filter(
-          function () {
-            var beforeStart = this._clndrEndDateObject
-              .isBefore(startOfLastMonth);
-            var afterEnd = this._clndrStartDateObject
-              .isAfter(endOfLastMonth);
+        this.eventsLastMonth = this.options.events.filter(dt => {
+          let beforeStart = dt._clndrEndDateObject
+            .isBefore(startOfLastMonth);
+          let afterEnd = dt._clndrStartDateObject
+            .isAfter(endOfLastMonth);
 
-            return !(beforeStart || afterEnd);
-          }).toArray();
+          return !(beforeStart || afterEnd);
+        });
 
-        this.eventsNextMonth = $(this.options.events).filter(
-          function () {
-            var beforeStart = this._clndrEndDateObject
-              .isBefore(startOfNextMonth);
-            var afterEnd = this._clndrStartDateObject
-              .isAfter(endOfNextMonth);
+        this.eventsNextMonth = this.options.events.filter(dt => {
+          let beforeStart = dt._clndrEndDateObject
+            .isBefore(startOfNextMonth);
+          let afterEnd = dt._clndrStartDateObject
+            .isAfter(endOfNextMonth);
 
-            return !(beforeStart || afterEnd);
-          }).toArray();
+          return !(beforeStart || afterEnd);
+        });
       }
     }
 
@@ -588,17 +585,17 @@
   };
 
   Clndr.prototype.createDayObject = function (day, monthEvents) {
-    var end;
-    var j = 0;
-    var start;
-    var dayEnd;
-    var endMoment;
-    var startMoment;
-    var selectedMoment;
-    var now = moment();
-    var eventsToday = [];
-    var extraClasses = '';
-    var properties = {
+    let end;
+    let j = 0;
+    let start;
+    let dayEnd;
+    let endMoment;
+    let startMoment;
+    let selectedMoment;
+    let now = moment();
+    let eventsToday = [];
+    let extraClasses = '';
+    let properties = {
       isToday: false,
       isInactive: false,
       isAdjacentMonth: false
@@ -645,16 +642,12 @@
         extraClasses += (' ' + this.options.classes.adjacentMonth);
         properties.isAdjacentMonth = true;
 
-        this._currentIntervalStart.year() === day.year()
-          ? extraClasses += (' ' + this.options.classes.lastMonth)
-          : extraClasses += (' ' + this.options.classes.nextMonth);
+        this._currentIntervalStart.year() === day.year() ? extraClasses += (' ' + this.options.classes.lastMonth) : extraClasses += (' ' + this.options.classes.nextMonth);
       } else if (this._currentIntervalStart.month() < day.month()) {
         extraClasses += (' ' + this.options.classes.adjacentMonth);
         properties.isAdjacentMonth = true;
 
-        this._currentIntervalStart.year() === day.year()
-          ? extraClasses += (' ' + this.options.classes.nextMonth)
-          : extraClasses += (' ' + this.options.classes.lastMonth);
+        this._currentIntervalStart.year() === day.year() ? extraClasses += (' ' + this.options.classes.nextMonth) : extraClasses += (' ' + this.options.classes.lastMonth);
       }
     }
 
@@ -714,21 +707,21 @@
    * the elements themselves.
    */
   Clndr.prototype.render = function () {
-    var i;
-    var days;
-    var months;
-    var target;
-    var data = {};
-    var end = null;
-    var start = null;
-    var numberOfRows;
-    var eventsThisInterval;
-    var currentIntervalEnd;
-    var currentIntervalStart;
-    var oneYearFromEnd = this.intervalEnd.clone().add(1, 'years');
-    var oneYearAgo = this.intervalStart.clone().subtract(1, 'years');
+    let i;
+    let days;
+    let months;
+    let target;
+    let data = {};
+    let end = null;
+    let start = null;
+    let numberOfRows;
+    let eventsThisInterval;
+    let currentIntervalEnd;
+    let currentIntervalStart;
+    let oneYearFromEnd = this.intervalEnd.clone().add(1, 'years');
+    let oneYearAgo = this.intervalStart.clone().subtract(1, 'years');
 
-    this.calendarContainer.empty();
+    while (this.calendarContainer.firstChild) this.calendarContainer.removeChild(this.calendarContainer.firstChild);
 
     if (this.options.lengthOfTime.days) {
       days = this.createDaysObject(
@@ -771,7 +764,7 @@
         });
       }
 
-            // Get the total number of rows across all months
+      // Get the total number of rows across all months
       for (i = 0; i < months.length; i++) {
         numberOfRows += Math.ceil(months[i].days.length / 7);
       }
@@ -817,9 +810,9 @@
 
     // Render the calendar with the data above & bind events to its elements
     if (this.options.render) {
-      this.calendarContainer.html(this.options.render.apply(this, [data]));
+      this.calendarContainer.innerHTML = this.options.render.apply(this, [data]);
     } else {
-      this.calendarContainer.html(this.compiledClndrTemplate(data));
+      this.calendarContainer.innerHTML = this.compiledClndrTemplate(data);
     }
 
     // If there are constraints, we need to add the 'inactive' class to
@@ -830,8 +823,8 @@
       for (target in this.options.targets) {
         if (target !== 'day') {
           this.element
-            .find('.' + this.options.targets[target])
-            .toggleClass(this.options.classes.inactive, false);
+            .querySelectorAll('.' + this.options.targets[target])
+            .classList.toggle(this.options.classes.inactive, false);
         }
       }
 
@@ -850,20 +843,16 @@
       }
 
       // Deal with the month controls first. Do we have room to go back?
-      if (start &&
-          (start.isAfter(this.intervalStart) ||
-            start.isSame(this.intervalStart, 'day'))
-      ) {
-        this.element.find('.' + this.options.targets.previousButton)
-          .toggleClass(this.options.classes.inactive, true);
+      if (start && (start.isAfter(this.intervalStart) ||
+        start.isSame(this.intervalStart, 'day'))) {
+        this.element.querySelectorAll('.' + this.options.targets.previousButton)
+          .classList.toggle(this.options.classes.inactive, true);
         this.constraints.previous = !this.constraints.previous;
       }
 
       // Do we have room to go forward?
-      if (end &&
-          (end.isBefore(this.intervalEnd) ||
-            end.isSame(this.intervalEnd, 'day'))
-      ) {
+      if (end && (end.isBefore(this.intervalEnd) ||
+        end.isSame(this.intervalEnd, 'day'))) {
         this.element.find('.' + this.options.targets.nextButton)
           .toggleClass(this.options.classes.inactive, true);
         this.constraints.next = !this.constraints.next;
@@ -872,26 +861,26 @@
       // What's last year looking like?
       if (start && start.isAfter(oneYearAgo)) {
         this.element
-          .find('.' + this.options.targets.previousYearButton)
-          .toggleClass(this.options.classes.inactive, true);
+          .querySelectorAll('.' + this.options.targets.previousYearButton)
+          .classList.toggle(this.options.classes.inactive, true);
         this.constraints.previousYear = !this.constraints.previousYear;
       }
 
       // How about next year?
       if (end && end.isBefore(oneYearFromEnd)) {
         this.element
-          .find('.' + this.options.targets.nextYearButton)
-          .toggleClass(this.options.classes.inactive, true);
+          .querySelectorAll('.' + this.options.targets.nextYearButton)
+          .classList.toggle(this.options.classes.inactive, true);
         this.constraints.nextYear = !this.constraints.nextYear;
       }
 
       // Today? We could put this in init(), but we want to support the
       // user changing the constraints on a living instance.
       if ((start && start.isAfter(moment(), 'month')) ||
-          (end && end.isBefore(moment(), 'month'))
+        (end && end.isBefore(moment(), 'month'))
       ) {
-        this.element.find('.' + this.options.targets.today)
-          .toggleClass(this.options.classes.inactive, true);
+        this.element.querySelectorAll('.' + this.options.targets.today)
+          .classList.toggle(this.options.classes.inactive, true);
         this.constraints.today = !this.constraints.today;
       }
     }
@@ -902,105 +891,60 @@
   };
 
   Clndr.prototype.bindEvents = function () {
-    var data = {};
-    var self = this;
-    var $container = $(this.element);
-    var targets = this.options.targets;
-    var classes = self.options.classes;
-    var eventType = this.options.useTouchEvents === true
-      ? 'touchstart'
-      : 'click';
-    var eventName = eventType + '.clndr';
+    let data = {
+      context: this
+    };
+    let container = this.element;
+    let targets = this.options.targets;
+    let eventType = this.options.useTouchEvents === true ? 'touchstart' : 'click';
+    let eventName = eventType + '.clndr';
+    let self = this;
 
     // Make sure we don't already have events
-    $container
-      .off(eventName, '.' + targets.day)
-      .off(eventName, '.' + targets.empty)
-      .off(eventName, '.' + targets.nextButton)
-      .off(eventName, '.' + targets.todayButton)
-      .off(eventName, '.' + targets.previousButton)
-      .off(eventName, '.' + targets.nextYearButton)
-      .off(eventName, '.' + targets.previousYearButton);
 
-    // Target the day elements and give them click events
-    $container.on(eventName, '.' + targets.day, function (event) {
-      var target;
-      var $currentTarget = $(event.currentTarget);
-
-      // If adjacentDaysChangeMonth is on, we need to change the
-      // month here. Forward and Back trigger render() to be called.
-      // This is a callback because it can be triggered in two places.
-      var handleAdjacentDay = function () {
-        if (self.options.adjacentDaysChangeMonth) {
-          if ($currentTarget.is('.' + classes.lastMonth)) {
-            self.backActionWithContext(self);
-            return true;
-          } else if ($currentTarget.is('.' + classes.nextMonth)) {
-            self.forwardActionWithContext(self);
-            return true;
-          }
-        }
-      };
-
-      // If setting is enabled, we want to store the selected date
-      // as a string. When render() is called, the selected date will
-      // get the additional classes added. If there is no re-render,
-      // then just add the classes manually.
-      if (self.options.trackSelectedDate &&
-          !(self.options.ignoreInactiveDaysInSelection &&
-            $currentTarget.hasClass(classes.inactive))
-      ) {
-        // If there was no re-render, manually update classes
-        if (handleAdjacentDay() !== true) {
-          // Remember new selected date
-          self.options.selectedDate =
-            self.getTargetDateString(event.currentTarget);
-          $container.find('.' + classes.selected)
-            .removeClass(classes.selected);
-          $currentTarget.addClass(classes.selected);
-        }
-      } else {
-        handleAdjacentDay();
-      }
-
-      // Trigger click events after any selected date updates
-      if (self.options.clickEvents.click) {
-        target = self.buildTargetObject(event.currentTarget, true);
-        self.options.clickEvents.click.apply(self, [target]);
-      }
-    });
-
-    // Target the empty calendar boxes as well
-    $container.on(eventName, '.' + targets.empty, function (event) {
-      var target;
-      var $eventTarget = $(event.currentTarget);
-
-      if (self.options.clickEvents.click) {
-        target = self.buildTargetObject(event.currentTarget, false);
-        self.options.clickEvents.click.apply(self, [target]);
-      }
-
-      if (self.options.adjacentDaysChangeMonth) {
-        if ($eventTarget.is('.' + classes.lastMonth)) {
-          self.backActionWithContext(self);
-        } else if ($eventTarget.is('.' + classes.nextMonth)) {
-          self.forwardActionWithContext(self);
-        }
-      }
-    });
+    document.removeEventListener(eventName, document);
 
     // Bind the previous, next and today buttons. We pass the current
     // context along with the event so that it can update this instance.
-    data = {
-      context: this
-    };
 
-    $container
-      .on(eventName, '.' + targets.todayButton, data, this.todayAction)
-      .on(eventName, '.' + targets.nextButton, data, this.forwardAction)
-      .on(eventName, '.' + targets.previousButton, data, this.backAction)
-      .on(eventName, '.' + targets.nextYearButton, data, this.nextYearAction)
-      .on(eventName, '.' + targets.previousYearButton, data, this.previousYearAction);
+    document.addEventListener(eventName, function (e) {
+      let target = e.realEvent.target;
+      let realEvent = e.realEvent;
+
+      if (!container.contains(target)) {
+        return;
+      }
+
+      if (target.matches('.' + targets.day)) {
+        self.dayAction(realEvent);
+      }
+      if (target.matches('.' + targets.empty)) {
+        self.emptyDayAction(realEvent);
+      }
+      if (target.matches('.' + targets.nextButton)) {
+        self.forwardAction(data);
+      }
+      if (target.matches('.' + targets.todayButton)) {
+        self.todayAction(data);
+      }
+      if (target.matches('.' + targets.previousButton)) {
+        self.backAction(data);
+      }
+      if (target.matches('.' + targets.nextYearButton)) {
+        self.nextYearAction(data);
+      }
+      if (target.matches('.' + targets.previousYearButton)) {
+        self.previousYearAction(data);
+      }
+    });
+
+    let event = new CustomEvent(eventName, data);
+
+    // Dispatch the event
+    document.addEventListener(eventType, function (e) {
+      event.realEvent = e;
+      document.dispatchEvent(event);
+    });
   };
 
   /**
@@ -1013,39 +957,40 @@
   Clndr.prototype.buildTargetObject = function (currentTarget, targetWasDay) {
     // This is our default target object, assuming we hit an empty day
     // with no events.
-    var target = {
+    let target = {
       date: null,
       events: [],
       element: currentTarget
     };
-    var filterFn;
-    var dateString;
-    var targetEndDate;
+    let filterFn;
+    let dateString;
+    let targetEndDate;
+    let self = this;
 
     // Did we click on a day or just an empty box?
     if (targetWasDay) {
-      dateString = this.getTargetDateString(currentTarget);
-      target.date = dateString
-        ? moment(dateString)
-        : null;
+      dateString = self.getTargetDateString(currentTarget);
+      target.date = dateString ? moment(dateString) : null;
 
       // Do we have events?
       if (this.options.events) {
         // Are any of the events happening today?
         if (this.options.multiDayEvents) {
           targetEndDate = target.date.clone().endOf('day');
-          filterFn = function () {
-            return this._clndrStartDateObject <= targetEndDate &&
+          filterFn = function ($dt) {
+            return $dt._clndrStartDateObject <= targetEndDate &&
               target.date <= this._clndrEndDateObject;
           };
         } else {
-          filterFn = function () {
-            return dateString === this._clndrStartDateObject.format('YYYY-MM-DD');
+          filterFn = function ($dt) {
+            return dateString === $dt._clndrStartDateObject.format('YYYY-MM-DD');
           };
         }
 
         // Filter the dates down to the ones that match.
-        target.events = $.makeArray($(this.options.events).filter(filterFn));
+        target.events = [].slice.call(self.options.events.filter(dt => {
+          filterFn(dt);
+        }));
       }
     }
 
@@ -1058,7 +1003,10 @@
    */
   Clndr.prototype.getTargetDateString = function (target) {
     // Our identifier is in the list of classNames. Find it!
-    var index = target.className.indexOf('calendar-day-');
+    if (!target.className) {
+      return null;
+    }
+    let index = target.className.indexOf('calendar-day-');
 
     if (index !== -1) {
       // Our unique identifier is always 23 characters long.
@@ -1076,23 +1024,23 @@
    * orig contains the original start and end dates.
    */
   Clndr.prototype.triggerEvents = function (ctx, orig) {
-    var nextYear;
-    var prevYear;
-    var nextMonth;
-    var prevMonth;
-    var yearChanged;
-    var monthChanged;
-    var nextInterval;
-    var prevInterval;
-    var intervalChanged;
-    var monthArg = [moment(ctx.month)];
-    var timeOpt = ctx.options.lengthOfTime;
-    var eventsOpt = ctx.options.clickEvents;
-    var newInt = {
+    let nextYear;
+    let prevYear;
+    let nextMonth;
+    let prevMonth;
+    let yearChanged;
+    let monthChanged;
+    let nextInterval;
+    let prevInterval;
+    let intervalChanged;
+    let monthArg = [moment(ctx.month)];
+    let timeOpt = ctx.options.lengthOfTime;
+    let eventsOpt = ctx.options.clickEvents;
+    let newInt = {
       end: ctx.intervalEnd,
       start: ctx.intervalStart
     };
-    var intervalArg = [
+    let intervalArg = [
       moment(ctx.intervalStart),
       moment(ctx.intervalEnd)
     ];
@@ -1106,11 +1054,11 @@
       (Math.abs(orig.start.month() - newInt.start.month()) === 1 ||
         (orig.start.month() === 0 && newInt.start.month() === 11));
     monthChanged = newInt.start.month() !== orig.start.month() ||
-        newInt.start.year() !== orig.start.year();
+      newInt.start.year() !== orig.start.year();
     nextYear = newInt.start.year() - orig.start.year() === 1 ||
-        newInt.end.year() - orig.end.year() === 1;
+      newInt.end.year() - orig.end.year() === 1;
     prevYear = orig.start.year() - newInt.start.year() === 1 ||
-        orig.end.year() - newInt.end.year() === 1;
+      orig.end.year() - newInt.end.year() === 1;
     yearChanged = newInt.start.year() !== orig.start.year();
 
     // Only configs with a time period will get the interval change event
@@ -1164,18 +1112,20 @@
    * is an internal method that this library uses.
    */
   Clndr.prototype.back = function (options /*, ctx */) {
-    var ctx = arguments[ 1 ] || this;
-    var timeOpt = ctx.options.lengthOfTime;
-    var defaults = {
+    let ctx = arguments[1] || this;
+    let timeOpt = ctx.options.lengthOfTime;
+    let defaults = {
       withCallbacks: false
     };
-    var orig = {
+    let orig = {
       end: ctx.intervalEnd.clone(),
       start: ctx.intervalStart.clone()
     };
 
     // Extend any options
-    options = $.extend(true, {}, defaults, options);
+    options = {
+      ...defaults, ...options
+    };
 
     // Before we do anything, check if any constraints are limiting this
     if (!ctx.constraints.previous) {
@@ -1214,7 +1164,7 @@
   };
 
   Clndr.prototype.backAction = function (event) {
-    var ctx = event.data.context;
+    let ctx = event.context;
 
     ctx.backActionWithContext(ctx);
   };
@@ -1236,18 +1186,20 @@
    * which is an internal method that this library uses.
    */
   Clndr.prototype.forward = function (options /*, ctx */) {
-    var ctx = arguments[1] || this;
-    var timeOpt = ctx.options.lengthOfTime;
-    var defaults = {
+    let ctx = arguments[1] || this;
+    let timeOpt = ctx.options.lengthOfTime;
+    let defaults = {
       withCallbacks: false
     };
-    var orig = {
+    let orig = {
       end: ctx.intervalEnd.clone(),
       start: ctx.intervalStart.clone()
     };
 
     // Extend any options
-    options = $.extend(true, {}, defaults, options);
+    options = {
+      ...defaults, ...options
+    };
 
     // Before we do anything, check if any constraints are limiting this
     if (!ctx.constraints.next) {
@@ -1285,8 +1237,73 @@
     return ctx;
   };
 
-  Clndr.prototype.forwardAction = function (event) {
-    var ctx = event.data.context;
+  Clndr.prototype.dayAction = function (event) {
+    let target;
+    let currentTarget = event.target;
+    let self = this;
+
+    // If adjacentDaysChangeMonth is on, we need to change the
+    // month here. Forward and Back trigger render() to be called.
+    // This is a callback because it can be triggered in two places.
+    let handleAdjacentDay = function () {
+      if (self.options.adjacentDaysChangeMonth) {
+        if (currentTarget.matches('.' + self.classes.lastMonth)) {
+          self.backActionWithContext(self);
+          return true;
+        } else if (currentTarget.matches('.' + self.classes.nextMonth)) {
+          self.forwardActionWithContext(self);
+          return true;
+        }
+      }
+    };
+
+    // If setting is enabled, we want to store the selected date
+    // as a string. When render() is called, the selected date will
+    // get the additional classes added. If there is no re-render,
+    // then just add the classes manually.
+    if (self.options.trackSelectedDate &&
+      !(self.options.ignoreInactiveDaysInSelection &&
+        currentTarget.classList.contains(self.classes.inactive))
+    ) {
+      // If there was no re-render, manually update classes
+      if (handleAdjacentDay() !== true) {
+        // Remember new selected date
+        self.options.selectedDate =
+          self.getTargetDateString(currentTarget);
+        self.element.querySelectorAll('.' + self.classes.selected)
+          .classList.remove(self.classes.selected);
+        currentTarget.classList.add(self.classes.selected);
+      }
+    } else {
+      handleAdjacentDay();
+    }
+
+    // Trigger click events after any selected date updates
+    if (self.options.clickEvents.click) {
+      target = self.buildTargetObject(currentTarget, true);
+      self.options.clickEvents.click.apply(self, [target]);
+    }
+  };
+
+  Clndr.prototype.emptyDayAction = function (event) {
+    let target;
+    let eventTarget = event.target;
+
+    if (self.options.clickEvents.click) {
+      target = self.buildTargetObject(eventTarget, false);
+      self.options.clickEvents.click.apply(self, [target]);
+    }
+
+    if (self.options.adjacentDaysChangeMonth) {
+      if (eventTarget.matches('.' + this.classes.lastMonth)) {
+        self.backActionWithContext(self);
+      } else if (eventTarget.matches('.' + this.classes.nextMonth)) {
+        self.forwardActionWithContext(self);
+      }
+    }
+  };
+  Clndr.prototype.forwardAction = function (data) {
+    let ctx = data.context;
 
     ctx.forwardActionWithContext(ctx);
   };
@@ -1306,17 +1323,19 @@
    * Main action to go back one year.
    */
   Clndr.prototype.previousYear = function (options /*, ctx */) {
-    var ctx = arguments[1] || this;
-    var defaults = {
+    let ctx = arguments[1] || this;
+    let defaults = {
       withCallbacks: false
     };
-    var orig = {
+    let orig = {
       end: ctx.intervalEnd.clone(),
       start: ctx.intervalStart.clone()
     };
 
     // Extend any options
-    options = $.extend(true, {}, defaults, options);
+    options = {
+      ...defaults, ...options
+    };
 
     // Before we do anything, check if any constraints are limiting this
     if (!ctx.constraints.previousYear) {
@@ -1336,26 +1355,28 @@
   };
 
   Clndr.prototype.previousYearAction = function (event) {
-    event.data.context.previousYear({
+    event.context.previousYear({
       withCallbacks: true
-    }, event.data.context);
+    }, event.context);
   };
 
   /**
    * Main action to go forward one year.
    */
   Clndr.prototype.nextYear = function (options /*, ctx */) {
-    var ctx = arguments[1] || this;
-    var defaults = {
+    let ctx = arguments[1] || this;
+    let defaults = {
       withCallbacks: false
     };
-    var orig = {
+    let orig = {
       end: ctx.intervalEnd.clone(),
       start: ctx.intervalStart.clone()
     };
 
     // Extend any options
-    options = $.extend(true, {}, defaults, options);
+    options = {
+      ...defaults, ...options
+    };
 
     // Before we do anything, check if any constraints are limiting this
     if (!ctx.constraints.nextYear) {
@@ -1375,24 +1396,26 @@
   };
 
   Clndr.prototype.nextYearAction = function (event) {
-    event.data.context.nextYear({
+    event.context.nextYear({
       withCallbacks: true
-    }, event.data.context);
+    }, event.context);
   };
 
   Clndr.prototype.today = function (options /*, ctx */) {
-    var ctx = arguments[1] || this;
-    var timeOpt = ctx.options.lengthOfTime;
-    var defaults = {
+    let ctx = arguments[1] || this;
+    let timeOpt = ctx.options.lengthOfTime;
+    let defaults = {
       withCallbacks: false
     };
-    var orig = {
+    let orig = {
       end: ctx.intervalEnd.clone(),
       start: ctx.intervalStart.clone()
     };
 
     // Extend any options
-    options = $.extend(true, {}, defaults, options);
+    options = {
+      ...defaults, ...options
+    };
     // @V2-todo Only used for legacy month view
     ctx.month = moment().startOf('month');
 
@@ -1422,7 +1445,7 @@
 
     // No need to re-render if we didn't change months.
     if (!ctx.intervalStart.isSame(orig.start) ||
-        !ctx.intervalEnd.isSame(orig.end)
+      !ctx.intervalEnd.isSame(orig.end)
     ) {
       ctx.render();
     }
@@ -1437,10 +1460,10 @@
     }
   };
 
-  Clndr.prototype.todayAction = function (event) {
-    event.data.context.today({
+  Clndr.prototype.todayAction = function (data) {
+    data.context.today({
       withCallbacks: true
-    }, event.data.context);
+    }, data.context);
   };
 
   /**
@@ -1448,8 +1471,8 @@
    * e.g. "Jan", "February", "Mar", etc.
    */
   Clndr.prototype.setMonth = function (newMonth, options) {
-    var timeOpt = this.options.lengthOfTime;
-    var orig = {
+    let timeOpt = this.options.lengthOfTime;
+    let orig = {
       end: this.intervalEnd.clone(),
       start: this.intervalStart.clone()
     };
@@ -1474,7 +1497,7 @@
   };
 
   Clndr.prototype.setYear = function (newYear, options) {
-    var orig = {
+    let orig = {
       end: this.intervalEnd.clone(),
       start: this.intervalStart.clone()
     };
@@ -1496,8 +1519,8 @@
    * newDate can be a string or a moment object.
    */
   Clndr.prototype.setIntervalStart = function (newDate, options) {
-    var timeOpt = this.options.lengthOfTime;
-    var orig = {
+    let timeOpt = this.options.lengthOfTime;
+    let orig = {
       end: this.intervalEnd.clone(),
       start: this.intervalStart.clone()
     };
@@ -1562,19 +1585,13 @@
    * Adds additional events to the calendar and triggers a render.
    */
   Clndr.prototype.addEvents = function (events /*, reRender */) {
-    var reRender = arguments.length > 1
-      ? arguments[1]
-      : true;
+    let reRender = arguments.length > 1 ? arguments[1] : true;
 
     // Go through each event and add a moment object
     if (this.options.multiDayEvents) {
-      this.options.events = $.merge(
-        this.options.events,
-        this.addMultiDayMomentObjectsToEvents(events));
+      this.options.events = this.options.events.concat(this.addMultiDayMomentObjectsToEvents(events));
     } else {
-      this.options.events = $.merge(
-        this.options.events,
-        this.addMomentObjectToEvents(events));
+      this.options.events = this.options.events.concat(this.addMomentObjectToEvents(events));
     }
 
     if (reRender) {
@@ -1589,7 +1606,7 @@
    * test will be removed from the calendar's events. This triggers a render.
    */
   Clndr.prototype.removeEvents = function (matchingFn) {
-    var i;
+    let i;
 
     for (i = this.options.events.length - 1; i >= 0; i--) {
       if (matchingFn(this.options.events[i]) === true) {
@@ -1603,8 +1620,8 @@
   };
 
   Clndr.prototype.addMomentObjectToEvents = function (events) {
-    var i = 0;
-    var self = this;
+    let i = 0;
+    let self = this;
 
     for (i; i < events.length; i++) {
       // Add the date as both start and end, since it's a single-day
@@ -1619,11 +1636,11 @@
   };
 
   Clndr.prototype.addMultiDayMomentObjectsToEvents = function (events) {
-    var end;
-    var start;
-    var i = 0;
-    var self = this;
-    var multiEvents = self.options.multiDayEvents;
+    let end;
+    let start;
+    let i = 0;
+    let self = this;
+    let multiEvents = self.options.multiDayEvents;
 
     for (i; i < events.length; i++) {
       end = events[i][multiEvents.endDate];
@@ -1631,10 +1648,8 @@
 
       // If we don't find the startDate OR endDate fields, look for singleDay
       if (!end && !start) {
-        events[i]._clndrEndDateObject =
-          moment(events[i][multiEvents.singleDay]);
-        events[i]._clndrStartDateObject =
-          moment(events[i][multiEvents.singleDay]);
+        events[i]._clndrEndDateObject = moment(events[i][multiEvents.singleDay]);
+        events[i]._clndrStartDateObject = moment(events[i][multiEvents.singleDay]);
       } else {
         // Otherwise use startDate and endDate, or whichever one is present
         events[i]._clndrEndDateObject = moment(end || start);
@@ -1646,48 +1661,51 @@
   };
 
   Clndr.prototype.calendarDay = function (options) {
-    var defaults = {
+    let defaults = {
       day: '',
       date: null,
       events: [],
       classes: this.options.targets.empty
     };
 
-    return $.extend({}, defaults, options);
+    return {
+      ...defaults, ...options
+    };
   };
 
   Clndr.prototype.destroy = function () {
-    var $container = $(this.calendarContainer);
-
-    $container.parent().data('plugin_clndr', null);
-    $container.empty().remove();
+    this.calendarContainer.parentElement.getAttribute('data-plugin_clndr');
+    this.calendarContainer.innerHTML = '';
+    delete this.calendarContainer;
 
     this.options = defaults;
     this.element = null;
   };
 
-  $.fn.clndr = function (options) {
-    var clndrInstance;
+  if (window.$) {
+    $.fn.clndr = function (options) {
+      let clndrInstance;
 
-    if (this.length > 1) {
-      throw new Error(
-        'CLNDR does not support multiple elements yet. Make sure ' +
-        'your clndr selector returns only one element.'
-      );
-    }
+      if (this.length > 1) {
+        throw new Error(
+          'CLNDR does not support multiple elements yet. Make sure ' +
+          'your clndr selector returns only one element.'
+        );
+      }
 
-    if (!this.length) {
-      throw new Error('CLNDR cannot be instantiated on an empty selector.');
-    }
+      if (!this.length) {
+        throw new Error('CLNDR cannot be instantiated on an empty selector.');
+      }
 
-    if (!this.data('plugin_clndr')) {
-      clndrInstance = new Clndr(this, options);
+      if (!this.data('plugin_clndr')) {
+        clndrInstance = new Clndr(this.get(0), options);
 
-      this.data('plugin_clndr', clndrInstance);
+        this.data('plugin_clndr', clndrInstance);
 
-      return clndrInstance;
-    }
+        return clndrInstance;
+      }
 
-    return this.data('plugin_clndr');
-  };
+      return this.data('plugin_clndr');
+    };
+  }
 }));

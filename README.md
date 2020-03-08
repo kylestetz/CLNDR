@@ -1,7 +1,7 @@
 CLNDR.js
 ========
 
-CLNDR is a jQuery calendar plugin. It was created -- you've heard this before --
+CLNDR is a vanilla Javascript calendar plugin. It was created -- you've heard this before --
 out of frustration with the lack of truly dynamic front-end calendar plugins out
 there.
 
@@ -47,7 +47,7 @@ submitting a pull request or issue!
 Dependencies
 ------------
 
-[jQuery](http://jquery.com/download/) and [Moment.js](http://momentjs.com/) are
+[Moment.js](http://momentjs.com/) are
 depended upon. By default CLNDR tries to use
 [Underscore.js](http://underscorejs.org/)'s `_.template()` function, however if
 you specify a custom rendering function (see documentation below) Underscore
@@ -106,6 +106,8 @@ CLNDR doesn't generate markup (well, it has some reasonable defaults, but
 that's an aside). Instead, CLNDR asks you to create a template and in return it
 supplies your template with a great set of objects that will get you up and
 running in a few lines.
+
+CLNDR can be used along with jQuery or with simple javascript
 
 ### The 'Days' Array
 
@@ -172,12 +174,17 @@ Usage
 CLNDR leans on the awesome work done in Underscore and moment. These are
 requirements unless you are using a different rendering engine, in which case
 Underscore is not a requirement). Do be sure to include them in your `<head>`
-before clndr.js. It is a jQuery plugin, so naturally you'll need that as well.
+before clndr.js.
 
 The bare minimum (CLNDR includes a default template):
 
 ```javascript
 $('.parent-element').clndr();
+
+//OR
+
+new Clndr('.parent-element')
+
 ```
 
 With all of the available options:
@@ -475,6 +482,17 @@ $('#calendar').clndr({
     startDate: 'start'
   }
 });
+
+//OR
+
+new Clndr('#calendar',{
+            events: lotsOfEvents,
+            multiDayEvents: {
+              endDate: 'end',
+              startDate: 'start'
+            }
+          });
+
 ```
 
 When looping through days in my template, 'Monday to Friday Event' will be
@@ -553,6 +571,15 @@ $('#calendar').clndr({
     startDate: '2015-05-06'
   }
 });
+
+//OR
+
+new Clndr('#calendar',{
+                        constraints: {
+                          endDate: '2015-07-16',
+                          startDate: '2015-05-06'
+                        }
+                      });
 ```
 
 Now your calendar's next and previous buttons will only work within this date
@@ -601,6 +628,7 @@ events array.
 ```javascript
 // Create a CLNDR and save the instance as myCalendar
 var myCalendar = $('#myCalendar').clndr();
+//OR var my calendar =new Clndr('#calendar')
 
 // Go to the next month
 myCalendar.forward();
