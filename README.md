@@ -851,3 +851,9 @@ GitHub issues and support tickets are to be submitted only for bugs. We sadly
 don't have the time or manpower to answer implementation questions, debug your
 application code, or anything that isn't directly related to a CLNDR bug :D
 There are many wonderful places to seek help, like Stack Overflow.
+
+## Sponsor
+![Scheduling API](https://user-images.githubusercontent.com/9488406/125080407-0dd25780-e0c5-11eb-9f70-ef958968674a.png)
+
+This repo is sponsored by [**Spurwing**](https://www.spurwing.io/), where their API Makes Adding Scheduling Quick, Reliable and Scalable.
+Use Spurwing to build and integrate Scheduling, Booking & Calendar features in your project. Read more about Spurwing [**Scheduling API on GitHub**](https://github.com/Spurwing/Appointment-Scheduling-API).
