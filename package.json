@@ -4,7 +4,8 @@
   "description": "A jQuery calendar plugin that uses HTML templates.",
   "author": "Kyle Stetz",
   "contributors": [
-    "Mike Gioia <mike@teachboost.com>"
+    "Mike Gioia <mike@teachboost.com>",
+    "George Sotiropoulos <geo.sotis@gmail.com> (https://github.com/GeoSot)"
   ],
   "license": "MIT",
   "repository": {
