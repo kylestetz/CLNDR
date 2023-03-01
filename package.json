@@ -29,6 +29,7 @@
   "homepage": "https://github.com/kylestetz/CLNDR",
   "main": "src/clndr.js",
   "dependencies": {
+    "dayjs": "^1.8.22",
     "jquery": ">=1.9",
     "moment": ">=2.8.3"
   },
